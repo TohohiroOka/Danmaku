@@ -54,18 +54,24 @@ void BaseBullet::Update()
 		isAlive = false;
 	}
 
-	Ray ray;
-	ray.start = { pos.x,pos.y,pos.z,1 };
-	ray.dir = { moveVec.x,moveVec.y,moveVec.z,0 };
-	RAYCAST_HIT raycastHit;
+	//Ray ray;
+	//ray.useEnd = true;
+	//ray.start = { pos.x- move.x, pos.y - move.y, pos.z - move.z, 0 };
+	//ray.end = { pos.x, pos.y, pos.z, 0 };
+	//Vector3 moveV = { move.x,move.y,move.z };
+	//Vector3 NmoveV = moveV.normalize();
+	//ray.dir = { NmoveV.x,NmoveV.y,NmoveV.z,1.0f };
+	//RAYCAST_HIT raycastHit;
+	//float distance = moveV.length();
 
-	//レイの距離
-	float distance = sqrtf(move.x * move.x + move.y * move.y + move.z + move.z);
+	//if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, distance)) {
+	//	isAlive = false;
+	//}
 
 	//カプセル
 	Capsule capsule;
 	capsule.startPosition = { pos.x,pos.y,pos.z };
-	capsule.endPosition = { pos.x + move.x,pos.y + move.y,pos.z + move.z };
+	capsule.endPosition = { pos.x - move.x,pos.y - move.y,pos.z - move.z };
 	capsule.radius = scale;
 	if (CollisionManager::GetInstance()->QueryCapsule(capsule, COLLISION_ATTR_LANDSHAPE))
 	{

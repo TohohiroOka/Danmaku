@@ -4,16 +4,17 @@
 #include "DirectInput.h"
 #include <imgui.h>
 #include "DebugText.h"
+#include "WindowApp.h"
 
 using namespace DirectX;
 
 void Title::Initialize()
 {
-	Sprite::LoadTexture("amm", "Resources/amm.jpg", true);
-	sp = Sprite::Create("amm");
-	sp->SetPosition({ 500,500 });
-	sp->SetTexSize({ 1000, 1000 });
-	sp->SetSize({ 100,100 });
+	Sprite::LoadTexture("title", "Resources/Sprite/title.png", true);
+	sp = Sprite::Create("title");
+	sp->SetPosition({ 0,0 });
+	sp->SetTexSize({ float(WindowApp::GetWindowWidth()),float(WindowApp::GetWindowHeight()) });
+	sp->SetSize({ 1280, 720 });
 	sp->Update();
 
 }
@@ -30,7 +31,7 @@ void Title::Update()
 	}
 
 	DebugText* text = DebugText::GetInstance();
-	text->Print("push enter", 100, 200, { 0.0f,0.9f,0.0f }, 5.0f);
+	text->Print("push enter", 100, 500, { 0.0f,0.9f,0.0f }, 5.0f);
 	text = nullptr;
 }
 
@@ -45,8 +46,8 @@ void Title::Draw()
 void Title::DrawNotPostA()
 {
 	Sprite::PreDraw(cmdList);
-	DebugText::GetInstance()->DrawAll();
 	sp->Draw();
+	DebugText::GetInstance()->DrawAll();
 	Sprite::PostDraw();
 }
 

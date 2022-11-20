@@ -21,7 +21,9 @@ protected:
 	enum class SPRITE {
 		BOSS_HP_IN,//ボスhpバー中身
 		BOSS_HP_OUT,//ボスhpバー外枠
-		PLAYER_HP_DOWN,//プレイヤーhpが少なくなった時のエフェクト
+		PLAYER_HP_PANEL,//ハートパネル
+		PLAYER_HP_IN, //プレイヤーhpバー中身
+		PLAYER_HP_OUT,//プレイヤーhpバー外枠
 	};
 
 public:

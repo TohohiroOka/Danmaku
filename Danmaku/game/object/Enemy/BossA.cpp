@@ -174,6 +174,26 @@ void BossA::Update()
 
 void BossA::Draw()
 {
+	if (isDamageStaging) {
+		damageTimer++;
+		if (damageTimer % 5) {
+			if (isDraw)
+			{
+				isDraw = false;
+			} else
+			{
+				isDraw = true;
+			}
+		}
+		if (damageTimer > 50)
+		{
+			isDamageStaging = false;
+			isDraw = true;
+			damageTimer = 0;
+		}
+	}
+
+	if (!isDraw) { return; }
 	BaseEnemy::Draw();
 	for (auto& i : parts) {
 		i->Draw();

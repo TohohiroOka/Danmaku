@@ -3,6 +3,14 @@
 
 class BossHpUi : public BaseUi
 {
+private:
+
+	struct GAUGE {
+		float maxNum = 0;//このゲージのm元になる数値の最大値
+		XMFLOAT2 pos = {};
+		XMFLOAT2 maxSize = {};//最大の大きさ
+	};
+
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -37,10 +45,6 @@ private:
 
 	//スプライト
 	std::array<std::unique_ptr<Sprite>, sprite_num> sprite;
-	//ゲージの最大サイズ
-	XMFLOAT2 gaugeSizeMax;
-	//サイズ変換時の割合
-	float gaugeRatioX;
-	//実際のゲージサイズ
-	XMFLOAT2 bossHPGaugeSizeMax;
+	//ゲージの情報
+	GAUGE hpGauge;
 };

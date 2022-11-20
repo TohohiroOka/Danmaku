@@ -24,6 +24,12 @@ void BaseEnemy::StaticUpdate(const XMFLOAT3& _playerPos)
 void BaseEnemy::Initialize()
 {
 	isAlive = true;
+	//ダメージ演出
+	isDamageStaging = false;
+	//ダメージタイマー
+	damageTimer = 0;
+	//描画フラグ
+	isDraw = true;
 
 	// コライダーの追加
 	float radius = 3.0f;
@@ -45,6 +51,25 @@ void BaseEnemy::Update()
 
 void BaseEnemy::Draw()
 {
+	if (isDamageStaging) {
+		damageTimer++;
+		if (damageTimer % 5) {
+			if (isDraw)
+			{
+				isDraw = false;
+			} else
+			{
+				isDraw = true;
+			}
+		}
+		if (damageTimer > 50)
+		{
+			isDamageStaging = false;
+			isDraw = true;
+			damageTimer = 0;
+		}
+	}
+
 	if (!isAlive) { return; }
 	object->Draw();
 }

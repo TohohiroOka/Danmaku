@@ -154,9 +154,9 @@ bool BulletManager::CheckPlayerBulletToEnemyCollision(const XMFLOAT3& _pos, floa
 
 			float eneTobul1 = sqrt(x + y + z);
 			XMFLOAT3 beforepos = itr->GetMove();
-			x = powf(bulletPos.x - beforepos.x - bulletPos.x, 2);
-			y = powf(bulletPos.y - beforepos.y - bulletPos.y, 2);
-			z = powf(bulletPos.z - beforepos.z - bulletPos.z, 2);
+			x = powf(beforepos.x, 2);
+			y = powf(beforepos.y, 2);
+			z = powf(beforepos.z, 2);
 
 			float eneTobul2 = sqrt(x + y + z);
 

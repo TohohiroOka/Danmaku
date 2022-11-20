@@ -81,7 +81,7 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
 	}
 
 	// ‰Šú‰»
-	instance->Initialize(_name, { 0.5f,0.5f });
+	instance->Initialize(_name);
 
 	//XV
 	instance->Update();
@@ -90,12 +90,9 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
 	return std::unique_ptr<Sprite>(instance);
 }
 
-void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _anchorpoint, bool _isFlipX, bool _isFlipY)
+void Sprite::Initialize(const std::string& _name)
 {
 	this->name = _name;
-	this->anchorpoint = _anchorpoint;
-	this->isFlipX = _isFlipX;
-	this->isFlipY = _isFlipY;
 
 	HRESULT result = S_FALSE;
 

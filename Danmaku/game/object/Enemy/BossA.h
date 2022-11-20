@@ -93,8 +93,6 @@ private:
 	std::array<std::unique_ptr<Object3d>, partsNum> parts;
 	//タイマー
 	int timer;
-	//地面についているか
-	bool onGround;
 	//移動フラグ
 	bool isMove;
 	//移動タイマー

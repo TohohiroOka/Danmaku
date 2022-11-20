@@ -126,10 +126,7 @@ public: // メンバ関数
 	/// 初期化
 	/// </summary>
 	/// <param name="_name">テクスチャ保存名</param>
-	/// <param name="_anchorpoint">アンカーポイント</param>
-	/// <param name="_isFlipX">左右反転するか</param>
-	/// <param name="_isFlipY">上下反転するか</param>
-	void Initialize(const std::string& _name, const XMFLOAT2& _anchorpoint,bool _isFlipX = false, bool _isFlipY = false);
+	void Initialize(const std::string& _name);
 
 	/// <summary>
 	/// 更新

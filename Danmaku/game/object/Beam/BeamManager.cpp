@@ -69,7 +69,38 @@ void BeamManager::Reset()
 	beam.clear();
 }
 
-bool BeamManager::CheckPlayerBulletToEnemyCollision(const XMFLOAT3& _pos, float _scale)
+bool BeamManager::CheckBeamToPlayerCollision(const XMFLOAT3& _pos, float _scale)
 {
+	//プレイヤー情報
+	Sphere sphere;
+	sphere.center = { _pos.x,_pos.y,_pos.z,0 };
+	sphere.radius = _scale;
+
+	for (auto& itr : beam)
+	{
+		if (!itr->GetIsAlive()) { continue; }
+
+		//弾情報
+		XMFLOAT3 beamPos = itr->GetPosition();
+		XMFLOAT3 beamSize = itr->GetScale();
+		XMFLOAT3 moveVec = itr->GetMoveVec();
+		moveVec.x *= beamSize.z;
+		moveVec.y *= beamSize.z;
+		moveVec.z *= beamSize.z;
+
+		//移動方向のレイ情報
+		Capsule capsule;
+		capsule.startPosition = { beamPos.x - moveVec.x,beamPos.y - moveVec.y,beamPos.z - moveVec.z };
+		capsule.endPosition = { beamPos.x + moveVec.x,beamPos.y + moveVec.y,beamPos.z + moveVec.z };
+		capsule.radius = beamSize.x;
+
+		float dist = 0.0f;
+
+		if (Collision::CheckSphereCapsule(sphere, capsule, &dist))
+		{
+			return true;
+		}
+	}
 	return false;
+
 }

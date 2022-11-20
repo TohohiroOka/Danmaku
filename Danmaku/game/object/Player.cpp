@@ -31,7 +31,7 @@ Player::Player(const XMFLOAT3& _pos)
 	moveVec[0] = { 0,0,0 };
 	moveVec[1] = { 0,0,0 };
 	speed = { 0,0,0 };
-	hp = 10;
+	hp = maxHp;
 	moveObjAngle = { 0,0,0 };
 	cameraAngle = 0.0f;
 	isDamageStaging = false;

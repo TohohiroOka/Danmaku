@@ -6,30 +6,31 @@ using namespace DirectX;
 
 BossHpUi::BossHpUi(const int _maxHp)
 { 
-	//ゲージの最大サイズ
-	gaugeSizeMax = spriteName[SPRITE::BOSS_HP_OUT].texSize;
-	//サイズ変換時の割合
-	gaugeRatioX = gaugeSizeMax.x / float(_maxHp);
-	//実際のゲージサイズ
-	bossHPGaugeSizeMax = { _maxHp * gaugeRatioX, gaugeSizeMax.y };
-
 	//ウィンドウの幅
 	float windowWidth = float(WindowApp::GetWindowWidth());
+
+	//ゲージの最大サイズ
+	XMFLOAT2 inSize = spriteName[SPRITE::BOSS_HP_IN].texSize;
+	//このゲージの元になる数値の最大値
+	hpGauge.maxNum = float(_maxHp);
+	//ゲージ最大サイズ
+	hpGauge.maxSize = inSize;
+
+	//ゲージの座標
+	hpGauge.pos = { windowWidth / 2.0f - inSize.x / 2.0f,30.0f };
 
 	//バー外枠
 	float difference = 3.0f;
 	sprite[0] = Sprite::Create(spriteName[SPRITE::BOSS_HP_OUT].name);
-	sprite[0]->SetAnchorpoint({ 0,0 });
-	sprite[0]->SetPosition({ windowWidth / 2.0f - gaugeSizeMax.x / 2.0f - difference, 30.0f });
+	sprite[0]->SetPosition(hpGauge.pos);
 	sprite[0]->SetTexSize(spriteName[SPRITE::BOSS_HP_OUT].texSize);
-	sprite[0]->SetSize({ 700, 60.0f });
+	sprite[0]->SetSize(spriteName[SPRITE::BOSS_HP_OUT].texSize);
 	sprite[0]->Update();
 	//バー中身
 	sprite[1] = Sprite::Create(spriteName[SPRITE::BOSS_HP_IN].name);
-	sprite[1]->SetAnchorpoint({ 0,0 });
-	sprite[1]->SetPosition({ windowWidth / 2.0f - gaugeSizeMax.x / 2, 95.0f });
+	sprite[1]->SetPosition({ hpGauge.pos.x + 3,hpGauge.pos.y + 47.0f });
 	sprite[1]->SetTexSize(spriteName[SPRITE::BOSS_HP_IN].texSize);
-	sprite[1]->SetSize({ 694,20 });
+	sprite[1]->SetSize(hpGauge.maxSize);
 	sprite[1]->Update();
 }
 
@@ -46,9 +47,14 @@ std::unique_ptr<BossHpUi> BossHpUi::Create(const int _maxHp)
 
 void BossHpUi::Update(const int _bossHp)
 {
-	bossHPGaugeSizeMax.x = float(_bossHp) * gaugeRatioX;
-	sprite[1]->SetPosition({ float(WindowApp::GetWindowWidth()) / 2.0f - gaugeSizeMax.x / 2, 95.0f });
-	sprite[1]->SetSize({ bossHPGaugeSizeMax.x, 20.0f });
+	//現在のhpと最大hpから割合を出す
+	float hpRatio = float(_bossHp) / hpGauge.maxNum;
+
+	//大きさ
+	XMFLOAT2 nowSize = { hpGauge.maxSize.x * hpRatio, hpGauge.maxSize.y };
+	sprite[1]->SetSize(nowSize);
+
+	//更新
 	sprite[1]->Update();
 }
 

@@ -7,6 +7,7 @@ private:
 
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMVECTOR = DirectX::XMVECTOR;
 
 public:
 
@@ -40,11 +41,11 @@ public:
 	void Reset();
 
 	/// <summary>
-	/// 弾と地形、エネミーとの当たり判定
+	/// ビームとプレイヤーの当たり判定
 	/// </summary>
 	/// <param name="_pos">プレイヤー座標</param>
 	/// <param name="_scale">大きさ</param>
-	bool CheckPlayerBulletToEnemyCollision(const XMFLOAT3& _pos, float _scale);
+	bool CheckBeamToPlayerCollision(const XMFLOAT3& _pos, float _scale);
 
 private:
 

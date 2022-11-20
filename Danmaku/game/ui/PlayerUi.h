@@ -3,6 +3,14 @@
 
 class PlayerUi : public BaseUi
 {
+private:
+
+	struct GAUGE {
+		float maxNum = 0;//このゲージの元になる数値の最大値
+		XMFLOAT2 pos = {};//座標
+		XMFLOAT2 maxSize = {};//最大の大きさ
+	};
+
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -31,10 +39,14 @@ public:
 
 private:
 
-	//プレイヤーの最大hp
-	int maxHp;
-	//スプライト
-	std::unique_ptr<Sprite> damage;
-	//ダメージスプライトのα値
-	float damageAlpha;
+	static const int sprite_num = 2;
+
+private:
+
+	//ハートパネル
+	std::unique_ptr<Sprite> heartPanel;
+	//hpゲージ
+	std::array<std::unique_ptr<Sprite>, sprite_num> hp;
+	//ゲージの情報
+	GAUGE hpGauge;
 };

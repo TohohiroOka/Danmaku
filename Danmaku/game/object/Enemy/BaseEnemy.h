@@ -87,6 +87,12 @@ protected:
 	float scale;
 	//地面についているか
 	bool onGround;
+	//ダメージ演出
+	bool isDamageStaging;
+	//ダメージタイマー
+	int damageTimer;
+	//描画フラグ
+	bool isDraw;
 
 public:
 
@@ -94,7 +100,9 @@ public:
 	XMFLOAT3 GetPosition() { return pos; }
 	float GetScale() { return scale; }
 	void SetIsAlive(bool _isAlive) { isAlive = _isAlive; }
-	void Damage() { 
+	void Damage() {
+		damageTimer = 0;
+		isDamageStaging = true;
 		hp--;
 		isAlive = hp != 0;
 	}

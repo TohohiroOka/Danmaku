@@ -94,6 +94,7 @@ void Boss1::Update()
 	}
 	else if (scene == SCENE::PLAY)
 	{
+		bool playerDamage = false;
 		//プレイヤー更新
 		player->Update(cameraAngle);
 
@@ -101,11 +102,14 @@ void Boss1::Update()
 		bullet->Update(playerPos);
 		if (bullet->CheckEnemyBulletToPlayerCollision())
 		{
-			player->Damage();
+			playerDamage = true;
 		}
 
 		//ビームの更新
 		beam->Update();
+		if (beam->CheckBeamToPlayerCollision(playerPos, player->GetScale().x)) {
+			playerDamage = true;
+		}
 
 		//敵の更新
 		enemy->Update(playerPos);
@@ -118,6 +122,11 @@ void Boss1::Update()
 		//ボスとプレイヤー弾の判定
 		if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPosition(), boss->GetScale())) {
 			boss->Damage();
+		}
+
+		//最後にプレイヤーへのダメージ
+		if (playerDamage) {
+			player->Damage();
 		}
 
 		//ui更新
