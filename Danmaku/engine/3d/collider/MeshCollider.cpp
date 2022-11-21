@@ -499,10 +499,7 @@ bool MeshCollider::CheckCollisionCapsule(const Capsule& _capsule, float* _distan
 		for (; it != colliderMeshes[Octree[i]].cend(); ++it) {
 			const ONE_MESH& mesh = *it;
 
-			float distance;
-			if (Collision::CheckSphereCapsule(mesh.sphere, localCapsule, &distance))
-			/*if (!Collision::CheckSphereCapsule(mesh.sphere, localCapsule, &distance))continue;
-			if (Collision::CheckTriangleCapsule(mesh.triangle, localCapsule))*/{
+			if (Collision::CheckTriangleCapsule(mesh.triangle, localCapsule, _distance, _inter)){
 				return true;
 			}
 		}

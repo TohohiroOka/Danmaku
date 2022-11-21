@@ -102,7 +102,18 @@ public:
 	/// <param name="capsule">カプセル</param>
 	/// <param name="_distance">距離（出力用）</param>
 	/// <returns></returns>
-	static bool CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance);
+	static bool CheckSphereCapsule(const Sphere& _sphere, const Capsule& _capsule, float* _distance);
+
+	/// <summary>
+	/// 三角形とカプセル
+	/// </summary>
+	/// <param name="sphere">球</param>
+	/// <param name="capsule">カプセル</param>
+	/// <param name="_distance">距離（出力用）</param>
+	/// <param name="_inter">交点（出力用）</param>
+	/// <returns></returns>
+	static bool CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule,
+		float* _distance, DirectX::XMVECTOR* _inter);
 
 	/// <summary>
 	/// カプセルとカプセル
@@ -111,14 +122,6 @@ public:
 	/// <param name="capsule2">カプセル</param>
 	/// <returns></returns>
 	static bool CheckCapsuleCapsule(const Capsule& capsule1, const Capsule& capsule2);
-
-	/// <summary>
-	/// 三角形とカプセルの当たり判定
-	/// </summary>
-	/// <param name="_triangle">三角形</param>
-	/// <param name="_capsule">カプセル</param>
-	/// <returns>交差しているか否か</returns>
-	static bool CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule);
 
 	/// <summary>
 	/// 線分と線分の距離の二乗を求める

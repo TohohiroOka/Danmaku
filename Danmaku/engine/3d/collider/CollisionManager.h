@@ -68,8 +68,8 @@ public:// メンバ関数
 	/// </summary>
 	/// <param name="_sphere">カプセル</param>
 	/// <param name="_hitInfo">衝突情報</param>
-	/// <param name="_maxDistance">最大距離</param>
-	bool QueryCapsule(const Capsule& _capsule, const unsigned short& _attribute);
+	/// <param name="_inter">交点までのベクトル</param>
+	bool QueryCapsule(const Capsule& _capsule, const unsigned short& _attribute, DirectX::XMVECTOR* _inter);
 
 private:
 	CollisionManager() = default;

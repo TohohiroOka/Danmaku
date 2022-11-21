@@ -183,7 +183,7 @@ void CollisionManager::QuerySphere(const Sphere& _sphere, QueryCallback* _callba
 	}
 }
 
-bool CollisionManager::QueryCapsule(const Capsule& _capsule, const unsigned short& _attribute)
+bool CollisionManager::QueryCapsule(const Capsule& _capsule, const unsigned short& _attribute, XMVECTOR* _inter)
 {
 	bool result = false;
 	std::forward_list<BaseCollider*>::iterator it;
@@ -214,7 +214,7 @@ bool CollisionManager::QueryCapsule(const Capsule& _capsule, const unsigned shor
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 
 			float tempDistance;
-			if (!meshCollider->CheckCollisionCapsule(_capsule, &tempDistance, nullptr)) continue;
+			if (!meshCollider->CheckCollisionCapsule(_capsule, &tempDistance, _inter)) continue;
 			//if (tempDistance >= distance) continue;
 
 			result = true;

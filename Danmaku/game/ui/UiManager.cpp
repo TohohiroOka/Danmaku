@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-std::unique_ptr<UiManager> UiManager::Create(const int _playerMaxHp, const int _bossMaxHp)
+std::unique_ptr<UiManager> UiManager::Create(const int _playerMaxHp, const float _bulletEnergyMax, const int _bossMaxHp)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	UiManager* instance = new UiManager();
@@ -12,21 +12,21 @@ std::unique_ptr<UiManager> UiManager::Create(const int _playerMaxHp, const int _
 	}
 
 	// 初期化
-	instance->Initialize(_playerMaxHp,_bossMaxHp);
+	instance->Initialize(_playerMaxHp, _bulletEnergyMax,_bossMaxHp);
 
 	return std::unique_ptr<UiManager>(instance);
 }
 
-void UiManager::Initialize(const int _playerMaxHp, const int _bossMaxHp)
+void UiManager::Initialize(const int _playerMaxHp, const float _bulletEnergyMax, const int _bossMaxHp)
 {
 	BaseUi::StaticInitialize();
-	playerUi = PlayerUi::Create(_playerMaxHp);
+	playerUi = PlayerUi::Create(_playerMaxHp, _bulletEnergyMax);
 	bossHp = BossHpUi::Create(_bossMaxHp);
 }
 
-void UiManager::Update(const int _playerHp, const int _bossHp)
+void UiManager::Update(const int _playerHp, const float _bulletEnergy, const int _bossHp)
 {
-	playerUi->Update(_playerHp);
+	playerUi->Update(_playerHp, _bulletEnergy);
 	bossHp->Update(_bossHp);
 }
 

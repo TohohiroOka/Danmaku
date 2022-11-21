@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "Boss1.h"
 #include "DirectInput.h"
+#include "XInputManager.h"
 #include <imgui.h>
 #include "DebugText.h"
 #include "WindowApp.h"
@@ -22,16 +23,17 @@ void Title::Initialize()
 void Title::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
+	XInputManager* xinput = XInputManager::GetInstance();
 
 	//ƒV[ƒ“‚ÌˆÚs
-	if (input->TriggerKey(DIK_RETURN))
+	if (input->TriggerKey(DIK_RETURN)|| xinput->PushButton(XInputManager::PUD_BUTTON::PAD_A))
 	{
 		Boss1* nextScene = new Boss1();
 		SceneManager::SetNextScene(nextScene);
 	}
 
 	DebugText* text = DebugText::GetInstance();
-	text->Print("push enter", 100, 500, { 0.0f,0.9f,0.0f }, 5.0f);
+	text->Print("push enter or pad A", 100, 500, { 0.0f,0.9f,0.0f }, 5.0f);
 	text = nullptr;
 }
 

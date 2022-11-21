@@ -24,6 +24,7 @@ protected:
 		PLAYER_HP_PANEL,//ハートパネル
 		PLAYER_HP_IN, //プレイヤーhpバー中身
 		PLAYER_HP_OUT,//プレイヤーhpバー外枠
+		PLAYER_BULLET_ENERGY,//バレットエネルギー
 	};
 
 public:

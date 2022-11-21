@@ -16,6 +16,23 @@ public:
 	/// <returns></returns>
 	static std::unique_ptr<Player> Create(const XMFLOAT3& _pos);
 
+private:
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+
+	/// <summary>
+	/// 押し戻し有の当たり判定
+	/// </summary>
+	void Collider();
+
+	/// <summary>
+	/// 弾のセット
+	/// </summary>
+	void SetBullet();
+
 public:
 
 	/// <summary>
@@ -46,24 +63,15 @@ public:
 	/// </summary>
 	void Reset();
 
-	/// <summary>
-	/// 押し戻し有の当たり判定
-	/// </summary>
-	void Collider();
-
-	/// <summary>
-	/// 弾のセット
-	/// </summary>
-	void SetBullet();
-
 private:
 
 	std::unique_ptr<Model> model = nullptr;
 	std::unique_ptr<Object3d> object = nullptr;
 
 	XMFLOAT3 position;
-	std::array<Vector3, 2> moveVec;
+	std::array<Vector3, 3> moveVec;
 	XMFLOAT3 speed;
+	float scale;
 
 	//描画するか否か
 	bool isDraw;
@@ -81,6 +89,10 @@ private:
 	//ダメージ演出
 	bool isDamageStaging;
 	int damageTimer;
+
+	//エネルギー
+	const float bulletEnergyMax = 50.0f;
+	float bulletEnergy;
 
 public:
 
@@ -114,5 +126,17 @@ public:
 	/// </summary>
 	/// <returns>現hp</returns>
 	int GetHp() { return  hp; }
+
+	/// <summary>
+	/// bulletEnergy最大取得
+	/// </summary>
+	/// <returns>bulletEnergy最大値</returns>
+	float GetBulletEnergyMax() { return  bulletEnergyMax; }
+
+	/// <summary>
+	/// bulletEnergy取得
+	/// </summary>
+	/// <returns>bulletEnergy</returns>
+	float GetBulletEnergy() { return  bulletEnergy; }
 
 };

@@ -19,4 +19,5 @@ void BaseUi::StaticInitialize()
 	KeepName("Resources/Sprite/heartPanel.png", SPRITE::PLAYER_HP_PANEL, { 128,128 });
 	KeepName("Resources/Sprite/gaugeIn.png", SPRITE::PLAYER_HP_IN, { 512,128 });
 	KeepName("Resources/Sprite/gaugeOut.png", SPRITE::PLAYER_HP_OUT, { 512,128 });
+	KeepName("Resources/Sprite/Energy.png", SPRITE::PLAYER_BULLET_ENERGY, { 128,128 });
 }

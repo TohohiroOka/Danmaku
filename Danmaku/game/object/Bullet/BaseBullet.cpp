@@ -50,7 +50,7 @@ void BaseBullet::Update()
 	if (!isAlive) { return; }
 
 	//最大値にいったら生存フラグを消す
-	if (pos.x < 0.0f || pos.x>mapSize || pos.y > 710 || pos.y < -1.0f || pos.z < 0.0f || pos.z>mapSize) {
+	if (pos.x < 0.0f || pos.x>mapSize || pos.y > 430 || pos.y < -1.0f || pos.z < 0.0f || pos.z>mapSize) {
 		isAlive = false;
 	}
 
@@ -71,11 +71,13 @@ void BaseBullet::Update()
 	//カプセル
 	Capsule capsule;
 	capsule.startPosition = { pos.x,pos.y,pos.z };
-	capsule.endPosition = { pos.x - move.x,pos.y - move.y,pos.z - move.z };
+	capsule.endPosition = { pos.x + move.x,pos.y + move.y,pos.z + move.z };
 	capsule.radius = scale;
-	if (CollisionManager::GetInstance()->QueryCapsule(capsule, COLLISION_ATTR_LANDSHAPE))
+
+	if (CollisionManager::GetInstance()->QueryCapsule(capsule, COLLISION_ATTR_LANDSHAPE, nullptr))
 	{
 		isAlive = false;
+		return;
 	}
 
 	XMFLOAT3 bPos = pos;

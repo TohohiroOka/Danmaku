@@ -273,24 +273,24 @@ bool Collision::CheckRay2Sphere(const Ray & lay, const Sphere & sphere, float*di
 	return true;
 }
 
-bool Collision::CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance)
+bool Collision::CheckSphereCapsule(const Sphere& _sphere, const Capsule& _capsule, float* _distance)
 {
 	//1.カプセル内の線分のスタート位置からエンド位置へのベクトルを作る
-	Vector3 vStartToEnd = capsule.endPosition - capsule.startPosition;
+	Vector3 vStartToEnd = _capsule.endPosition - _capsule.startPosition;
 
 	//2.1.のベクトルを単位ベクトル(normalize)し、用意する
 	Vector3 n = vStartToEnd;
 	n.normalize();
 
-	Vector3 sCenter = { sphere.center.m128_f32[0],sphere.center.m128_f32[1] ,sphere.center.m128_f32[2] };
+	Vector3 sCenter = { _sphere.center.m128_f32[0],_sphere.center.m128_f32[1] ,_sphere.center.m128_f32[2] };
 
 	//3.Ps->Pcへのベクトルと2.で求めたnとの内積を計算する
 	//nを何倍すれば	ベクトルPs->Pnになるか、倍率(t)が求まる
-	float t = (sCenter - capsule.startPosition).length() / n.length();
+	float t = (sCenter - _capsule.startPosition).length() / n.length();
 
 	//4.Ps->Pnベクトルを求めておく、また、Pnの座標を求めておく
 	Vector3 vPsPn = n * t;
-	Vector3 posPn = vPsPn + capsule.startPosition;
+	Vector3 posPn = vPsPn + _capsule.startPosition;
 
 	//5.比率 t/(Ps->Peの長さ)を求める
 	float lengthRate = t / vStartToEnd.length();
@@ -299,20 +299,37 @@ bool Collision::CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule,
 	//0.0以下
 	if (lengthRate < 0.0f)
 	{
-		*distance = (sCenter - capsule.startPosition).length();
+		*_distance = (sCenter - _capsule.startPosition).length();
 	}
 	//0.0f <= lengthRate <= 1.0f
 	else if (lengthRate <= 1.0f)
 	{
-		*distance = (sCenter - posPn).length();
+		*_distance = (sCenter - posPn).length();
 	}
 	//1.0f < lengthRate
 	else
 	{
-		*distance = (sCenter - capsule.endPosition).length();
+		*_distance = (sCenter - _capsule.endPosition).length();
 	}
 
-	return *distance < capsule.radius + sphere.radius;
+	return *_distance < _capsule.radius + _sphere.radius;
+}
+
+bool Collision::CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule,
+	float* _distance, DirectX::XMVECTOR* _inter)
+{
+	//1.カプセル内の線分のスタート位置からエンド位置へのベクトルを作る
+	Vector3 vStartToEnd = _capsule.endPosition - _capsule.startPosition;
+
+	//2.1.のベクトルを単位ベクトル(normalize)し、用意する
+	Vector3 n = vStartToEnd;
+	n.normalize();
+
+	Ray ray;
+	ray.start = { _capsule.startPosition.x,_capsule.startPosition.y,_capsule.startPosition.z,0.0f };
+	ray.dir = { n.x,n.y,n.z,1.0f };
+
+	return CheckRay2Triangle(ray, _triangle, _distance, _inter);
 }
 
 bool Collision::CheckCapsuleCapsule(const Capsule& capsule1, const Capsule& capsule2)
@@ -325,45 +342,6 @@ bool Collision::CheckCapsuleCapsule(const Capsule& capsule1, const Capsule& caps
 
 	//衝突判定
 	return (sqDistance < r* r);
-}
-
-bool Collision::CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule)
-{
-	//三角形の頂点
-	XMVECTOR cStart = { _capsule.startPosition.x,_capsule.startPosition.y,_capsule.startPosition.z };
-	XMVECTOR cEnd = { _capsule.endPosition.x,_capsule.endPosition.y,_capsule.endPosition.z };
-
-	//線分と線分の距離を調べる
-	float distance[3];
-	CheckSegmentSegment(cStart, cEnd, _triangle.p0, _triangle.p1, &distance[0]);
-	CheckSegmentSegment(cStart, cEnd, _triangle.p1, _triangle.p2, &distance[1]);
-	CheckSegmentSegment(cStart, cEnd, _triangle.p2, _triangle.p0, &distance[2]);
-
-	bool isHit = false;
-	if (distance[0] < distance[1] && distance[0] < distance[2])
-	{
-		if (distance[0] < _capsule.radius * 4.0f)
-		{
-			isHit = true;
-		}
-	}
-	else if (distance[1] < distance[0] && distance[1] < distance[2])
-
-	{
-		if (distance[1] < _capsule.radius * 4.0f)
-		{
-			isHit = true;
-		}
-	}
-	else
-	{
-		if (distance[2] < _capsule.radius * 4.0f)
-		{
-			isHit = true;
-		}
-	}
-
-	return isHit;
 }
 
 float Collision::sqDistanceSegmentSegment(const Vector3& p1, const Vector3& q1, const Vector3& p2, const Vector3& q2)

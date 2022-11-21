@@ -60,7 +60,7 @@ void Boss1::Initialize()
 	boss = BossA::Create(jBossMoveData->movePoint[0].pos, 0);
 
 	//UI
-	ui = UiManager::Create(player->GetMaxHp(),boss->GetMaxHp());
+	ui = UiManager::Create(player->GetMaxHp(), player->GetBulletEnergyMax(), boss->GetMaxHp());
 }
 
 void Boss1::Update()
@@ -130,7 +130,7 @@ void Boss1::Update()
 		}
 
 		//ui更新
-		ui->Update(player->GetHp(), boss->GetHp());
+		ui->Update(player->GetHp(), player->GetBulletEnergy(), boss->GetHp());
 
 		//------更新以外の処理--------//
 
@@ -247,6 +247,7 @@ void Boss1::ImguiDraw()
 void Boss1::CameraUpdate(Camera* camera)
 {
 	DirectInput* input = DirectInput::GetInstance();
+	XInputManager* xinput = XInputManager::GetInstance();
 
 	XMFLOAT3 target = {};
 	XMFLOAT3 eye = {};
@@ -294,8 +295,8 @@ void Boss1::CameraUpdate(Camera* camera)
 	}
 	else if (scene == SCENE::PLAY)
 	{
-		if (input->PushKey(DIK_LEFT)) { cameraAngle += 3.0f; }
-		if (input->PushKey(DIK_RIGHT)) { cameraAngle -= 3.0f; }
+		if (input->PushKey(DIK_LEFT) || xinput->RightStickX(true)) { cameraAngle += 3.0f; }
+		if (input->PushKey(DIK_RIGHT) || xinput->RightStickX(false)) { cameraAngle -= 3.0f; }
 
 		//プレイヤー座標
 		XMFLOAT3 playerPos = player->GetPosition();
