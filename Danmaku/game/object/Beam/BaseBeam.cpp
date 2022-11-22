@@ -28,10 +28,10 @@ void BaseBeam::StaticInitialize()
 void BaseBeam::Initialize()
 {
 	isAlive = true;
-	float inSize = mapSize / 1000.0f;
-	float outSize = mapSize / 700.0f;
-	inScale = { inSize,inSize,mapSize / 2.0f };
-	outScale = { outSize,outSize,mapSize / 2.0f };
+	float inSize = mapSizeX / 1000.0f;
+	float outSize = mapSizeX / 700.0f;
+	inScale = { inSize,inSize,mapSizeX / 2.0f };
+	outScale = { outSize,outSize,mapSizeX / 2.0f };
 }
 
 void BaseBeam::Update()

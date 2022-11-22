@@ -228,7 +228,7 @@ bool XInputManager::TriggerLeftStickX(bool _leftRight)
 		controllers.lastState.Gamepad.sThumbLX >= -INPUT_DEADZONE)
 	{
 		return true;
-	} if (_leftRight == false && controllers.state.Gamepad.sThumbLX > INPUT_DEADZONE &&
+	}else if (_leftRight == false && controllers.state.Gamepad.sThumbLX > INPUT_DEADZONE &&
 		controllers.lastState.Gamepad.sThumbLX <= INPUT_DEADZONE)
 	{
 		return true;
@@ -254,7 +254,7 @@ bool XInputManager::TriggerRightStickX(bool _leftRight)
 		controllers.lastState.Gamepad.sThumbRX >= -INPUT_DEADZONE)
 	{
 		return true;
-	}if (_leftRight == false && controllers.state.Gamepad.sThumbRX > INPUT_DEADZONE &&
+	}else if (_leftRight == false && controllers.state.Gamepad.sThumbRX > INPUT_DEADZONE &&
 		controllers.lastState.Gamepad.sThumbRX <= INPUT_DEADZONE)
 	{
 		return true;

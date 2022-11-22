@@ -50,23 +50,9 @@ void BaseBullet::Update()
 	if (!isAlive) { return; }
 
 	//最大値にいったら生存フラグを消す
-	if (pos.x < 0.0f || pos.x>mapSize || pos.y > 430 || pos.y < -1.0f || pos.z < 0.0f || pos.z>mapSize) {
+	if (pos.x < 0.0f || pos.x>mapSizeX || pos.y > 430 || pos.y < -1.0f || pos.z < 0.0f || pos.z>mapSizeZ) {
 		isAlive = false;
 	}
-
-	//Ray ray;
-	//ray.useEnd = true;
-	//ray.start = { pos.x- move.x, pos.y - move.y, pos.z - move.z, 0 };
-	//ray.end = { pos.x, pos.y, pos.z, 0 };
-	//Vector3 moveV = { move.x,move.y,move.z };
-	//Vector3 NmoveV = moveV.normalize();
-	//ray.dir = { NmoveV.x,NmoveV.y,NmoveV.z,1.0f };
-	//RAYCAST_HIT raycastHit;
-	//float distance = moveV.length();
-
-	//if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, distance)) {
-	//	isAlive = false;
-	//}
 
 	//カプセル
 	Capsule capsule;

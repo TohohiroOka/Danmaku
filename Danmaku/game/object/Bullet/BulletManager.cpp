@@ -145,7 +145,7 @@ bool BulletManager::CheckPlayerBulletToEnemyCollision(const XMFLOAT3& _pos, floa
 		//エネミーのcollider
 		Sphere sphere;
 		sphere.center = { enemyPos.x,enemyPos.y,enemyPos.z,0 };
-		sphere.radius = _scale * 3.0f;
+		sphere.radius = _scale * 5.0f;
 		if (Collision::CheckRay2Sphere(ray, sphere))
 		{
 			float x = powf(enemyPos.x - bulletPos.x, 2);

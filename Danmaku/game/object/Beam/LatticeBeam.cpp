@@ -63,21 +63,21 @@ void LatticeBeam::Move()
 
 	if (move.x != 0){
 		sign = move.x > 0;
-		if (!(!sign && pos.x < mapSize / 2.0f)&&!(sign && pos.x > mapSize / 2.0f)) {
+		if (!(!sign && pos.x < mapSizeX / 2.0f)&&!(sign && pos.x > mapSizeX / 2.0f)) {
 			return;
 		}
 		move.x = 0.0f;
 	}
 	else if (move.y != 0) {
 		sign = move.y > 0;
-		if (!(!sign && pos.y < mapSize / 2.0f) && !(sign && pos.y > mapSize / 2.0f)) {
+		if (!(!sign && pos.y < mapSizeX / 2.0f) && !(sign && pos.y > mapSizeX / 2.0f)) {
 			return;
 		}
 		move.y = 0.0f;
 	}
 	else if (move.z != 0) {
 		sign = move.z > 0;
-		if (!(!sign && pos.z < mapSize / 2.0f) && !(sign && pos.z > mapSize / 2.0f)) {
+		if (!(!sign && pos.z < mapSizeX / 2.0f) && !(sign && pos.z > mapSizeX / 2.0f)) {
 			return;
 		}
 		move.z = 0.0f;

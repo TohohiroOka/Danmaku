@@ -70,9 +70,7 @@ private:
 	//シーン
 	SCENE scene;
 	//カメラの回転
-	float cameraAngle;
-	//カメラの高さ
-	const float cameraY = 8.0f;
+	XMFLOAT2 cameraAngle;
 	//タイマー
 	int timer;
 	//カメラの一番奥

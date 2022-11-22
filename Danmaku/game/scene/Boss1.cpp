@@ -24,7 +24,7 @@ void Boss1::Initialize()
 	//シーン
 	scene = SCENE::SET;
 	//カメラの回転
-	cameraAngle = -90;
+	cameraAngle = { -90,50.0f };
 	//タイマー
 	timer = 0;
 	//カメラの一番奥
@@ -96,7 +96,7 @@ void Boss1::Update()
 	{
 		bool playerDamage = false;
 		//プレイヤー更新
-		player->Update(cameraAngle);
+		player->Update(cameraAngle.x);
 
 		//弾更新
 		bullet->Update(playerPos);
@@ -255,8 +255,8 @@ void Boss1::CameraUpdate(Camera* camera)
 	if (scene == SCENE::SET)
 	{
 		//初回のカメラ
-		const XMFLOAT3 initTarget = { mapSize / 2.0f,200.0f,mapSize / 2.0f };
-		const XMFLOAT3 initEye = { mapSize / 2.0f,900.0f,mapSize / 10.0f };
+		const XMFLOAT3 initTarget = { mapSizeX / 2.0f,200.0f,mapSizeZ / 2.0f };
+		const XMFLOAT3 initEye = { mapSizeX / 2.0f,900.0f,mapSizeZ / 10.0f };
 		camera->SetTarget(initTarget);
 		camera->SetEye(initEye);
 		camera->SetMatProjection(cameraBack);
@@ -266,8 +266,8 @@ void Boss1::CameraUpdate(Camera* camera)
 		const float maxTime = 100.0f;
 		float ratio = float(timer) / maxTime;
 
-		const XMFLOAT3 initTarget = { mapSize / 2.0f,200.0f,mapSize / 2.0f };
-		const XMFLOAT3 initEye = { mapSize / 2.0f,900.0f,mapSize / 10.0f };
+		const XMFLOAT3 initTarget = { mapSizeX / 2.0f,200.0f,mapSizeZ / 2.0f };
+		const XMFLOAT3 initEye = { mapSizeX / 2.0f,900.0f,mapSizeZ / 10.0f };
 		XMFLOAT3 playerPos = player->GetPosition();
 
 		target.x = Easing::OutCubic(initTarget.x, playerPos.x, ratio);
@@ -275,11 +275,14 @@ void Boss1::CameraUpdate(Camera* camera)
 		target.z = Easing::OutCubic(initTarget.z, playerPos.z, ratio);
 
 		const float range = 20.0f;
-		float cameraRadius = DirectX::XMConvertToRadians(cameraAngle);
+		XMFLOAT2 cameraRadius = {
+			DirectX::XMConvertToRadians(cameraAngle.x),
+			DirectX::XMConvertToRadians(cameraAngle.y)
+		};
 		XMFLOAT3 afterEye = {
-			cosf(cameraRadius) * range + playerPos.x,
-			playerPos.y + cameraY,
-			sinf(cameraRadius) * range + playerPos.z };
+			cosf(cameraRadius.x)* range + playerPos.x,
+			cosf(cameraRadius.y)* range + playerPos.y,
+			sinf(cameraRadius.x)* range + playerPos.z };
 
 		eye.x = Easing::OutCubic(initEye.x, afterEye.x, ratio);
 		eye.y = Easing::OutCubic(initEye.y, afterEye.y, ratio);
@@ -295,29 +298,47 @@ void Boss1::CameraUpdate(Camera* camera)
 	}
 	else if (scene == SCENE::PLAY)
 	{
-		if (input->PushKey(DIK_LEFT) || xinput->RightStickX(true)) { cameraAngle += 3.0f; }
-		if (input->PushKey(DIK_RIGHT) || xinput->RightStickX(false)) { cameraAngle -= 3.0f; }
+		if (input->PushKey(DIK_LEFT) || xinput->RightStickX(true)) { cameraAngle.x += 3.0f; }
+		if (input->PushKey(DIK_RIGHT) || xinput->RightStickX(false)) { cameraAngle.x -= 3.0f; }
+		if (input->PushKey(DIK_LEFT) || xinput->RightStickY(true)) {
+			cameraAngle.y -= 3.0f;
+			//上昇制限
+			if (cameraAngle.y < 50.0f) {
+				cameraAngle.y = 50.0f;
+			}
+		}
+		if (input->PushKey(DIK_RIGHT) || xinput->RightStickY(false)) {
+			cameraAngle.y += 3.0f;
+			//下降制限
+			if (cameraAngle.y > 110.0f) {
+				cameraAngle.y = 110.0f;
+			}
+		}
+
 
 		//プレイヤー座標
 		XMFLOAT3 playerPos = player->GetPosition();
 		const float range = 20.0f;
-		float cameraRadius = DirectX::XMConvertToRadians(cameraAngle);
+		XMFLOAT2 cameraRadius = {
+			DirectX::XMConvertToRadians(cameraAngle.x),
+			DirectX::XMConvertToRadians(cameraAngle.y)
+		};
 		target = playerPos;
 		eye = {
-			cosf(cameraRadius) * range + playerPos.x,
-			playerPos.y + cameraY,
-			sinf(cameraRadius) * range + playerPos.z };
+			cosf(cameraRadius.x) * range + playerPos.x,
+			cosf(cameraRadius.y) * range + playerPos.y,
+			sinf(cameraRadius.x) * range + playerPos.z };
 
-		cameraAngle = float(int(cameraAngle) % 360);
+		cameraAngle.x = float(int(cameraAngle.x) % 360);
 		camera->SetTarget(target);
 		camera->SetEye(eye);
 	}
 
 	DebugText* text = DebugText::GetInstance();
-	std::string strCameraA = std::to_string(cameraAngle);
+	std::string strCameraA = std::to_string(cameraAngle.y);
 	std::string eyeX = std::to_string(eye.x);
 	std::string eyeY = std::to_string(eye.y);
 	std::string eyeZ = std::to_string(eye.z);
-	text->Print("eye :: x : " + eyeX + "y : " + eyeY + "z : " + eyeZ, 100, 300);
+	text->Print("strCameraA : " + strCameraA, 100, 300);
 	text = nullptr;
 }

@@ -29,15 +29,15 @@ void Ground::Initialize()
 
 	//中
 	cubeObject[0] = Object3d::Create(cubeModel[0].get());
-	float cubeScaleAPos = mapSize / 2.0f;
-	cubeObject[0]->SetScale({ cubeScaleAPos,cubeScaleAPos / 3.0f,cubeScaleAPos });
-	cubeObject[0]->SetPosition({ cubeScaleAPos ,cubeScaleAPos / 3.0f - 1.0f ,cubeScaleAPos });
+	DirectX::XMFLOAT2 cubeScaleAPos = { mapSizeX / 2.0f,mapSizeZ / 2.0f };
+	cubeObject[0]->SetScale({ cubeScaleAPos.x,cubeScaleAPos.x / 3.0f,cubeScaleAPos.y });
+	cubeObject[0]->SetPosition({ cubeScaleAPos.x ,cubeScaleAPos.x / 3.0f - 1.0f ,cubeScaleAPos.y });
 	cubeObject[0]->SetLight(false);
 
 	//外
 	cubeObject[1] = Object3d::Create(cubeModel[1].get());
-	cubeObject[1]->SetScale({ mapSize,mapSize / 3.0f,mapSize });
-	cubeObject[1]->SetPosition({ cubeScaleAPos ,mapSize / 3.0f - 1.0f,cubeScaleAPos });
+	cubeObject[1]->SetScale({ mapSizeX,mapSizeX / 3.0f,mapSizeZ });
+	cubeObject[1]->SetPosition({ cubeScaleAPos.x ,mapSizeX / 3.0f - 1.0f,cubeScaleAPos.y });
 	cubeObject[1]->SetLight(false);
 
 	//マップ

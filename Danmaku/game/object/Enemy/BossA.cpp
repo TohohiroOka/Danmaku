@@ -291,9 +291,9 @@ void BossA::Attack()
 		} 
 		else if (attack[i].kind == int(BULLET_KIND::LATTICE_BAEM_SET_X))
 		{
-			const float inConstPos = -mapSize / 2.0f;
+			const float inConstPos = -mapSizeX / 2.0f;
 			XMFLOAT3 inMoveVec = { 1.0f,0.0f,0.0f };
-			const float range = mapSize / lattice_beam_side_num;
+			const float range = mapSizeX / lattice_beam_side_num;
 			const int onefor = lattice_beam_side_num / 3;
 			attack[i].beamSetNum++;
 			//ビームセット
@@ -316,9 +316,9 @@ void BossA::Attack()
 		} 
 		else if (attack[i].kind == int(BULLET_KIND::LATTICE_BAEM_SET_Y))
 		{
-			const float inConstPos = -mapSize / 2.0f;
+			const float inConstPos = -mapSizeX / 2.0f;
 			XMFLOAT3 inMoveVec = { 0.0f,1.0f,0.0f };
-			const float range = mapSize / lattice_beam_side_num;
+			const float range = mapSizeX / lattice_beam_side_num;
 			const int onefor = lattice_beam_side_num / 3;
 			attack[i].beamSetNum++;
 
@@ -342,9 +342,9 @@ void BossA::Attack()
 		} 
 		else if (attack[i].kind == int(BULLET_KIND::LATTICE_BAEM_SET_Z))
 		{
-			const float inConstPos = -mapSize / 2.0f;
+			const float inConstPos = -mapSizeX / 2.0f;
 			XMFLOAT3 inMoveVec = { 0.0f,0.0f,1.0f };
-			const float range = mapSize / lattice_beam_side_num;
+			const float range = mapSizeX / lattice_beam_side_num;
 			const int onefor = lattice_beam_side_num / 3;
 			attack[i].beamSetNum++;
 			//ビームセット

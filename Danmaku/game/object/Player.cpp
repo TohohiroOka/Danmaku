@@ -160,11 +160,11 @@ void Player::Move()
 	}
 	//上
 	float moveY = 0.0f;
-	if (input->PushKey(DIK_UP) || Xinput->RightStickY(true)) {
+	if (input->PushKey(DIK_UP) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RT)) {
 		moveY = 2.0f;
 	}
 	//下
-	if (input->PushKey(DIK_DOWN) || Xinput->RightStickY(false)) {
+	if (input->PushKey(DIK_DOWN) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_LT)) {
 		moveY = -2.0f;
 	}
 
@@ -179,8 +179,8 @@ void Player::Move()
 	//移動制限
 	if (position.x < 0.0f) {
 		position.x = 0.0f;
-	} else if (position.x > mapSize) {
-		position.x = mapSize;
+	} else if (position.x > mapSizeX) {
+		position.x = mapSizeX;
 	}
 	if (position.y < 5.0f) {
 		position.y = 5.0f;
@@ -189,8 +189,8 @@ void Player::Move()
 	}
 	if (position.z < 0.0f) {
 		position.z = 0.0f;
-	} else if (position.z > mapSize) {
-		position.z = mapSize;
+	} else if (position.z > mapSizeZ - 5.0f) {
+		position.z = mapSizeZ - 5.0f;
 	}
 
 	//角度の変更
@@ -261,7 +261,6 @@ void Player::Collider()
 	position.z += callback.move.m128_f32[2];
 
 	{
-
 		// 球の上端から球の下端までのレイキャスト
 		Ray ray;
 		ray.start = sphereCollider->center;
@@ -321,27 +320,6 @@ void Player::Collider()
 			}
 		}
 	}
-
-	////カプセル
-	//Capsule capsule;
-	//capsule.startPosition = { position.x - moveVec[2].x,position.y - moveVec[2].y,position.z - moveVec[2].z };
-	//capsule.endPosition = { position.x, position.y, position.z };
-	//capsule.radius = scale;
-
-	//XMVECTOR inter = {};
-	//if (CollisionManager::GetInstance()->QueryCapsule(capsule, COLLISION_ATTR_LANDSHAPE, &inter))
-	//{
-	//	XMFLOAT3 pushBack{
-	//		inter.m128_f32[0]- moveVec[2].x,
-	//		inter.m128_f32[1]- moveVec[2].y,
-	//		inter.m128_f32[2]- moveVec[2].z
-	//	};
-
-	//	position.x -= pushBack.x;
-	//	position.y -= pushBack.y;
-	//	position.z -= pushBack.z;
-	//}
-
 }
 
 void Player::SetBullet()
@@ -404,7 +382,7 @@ void Player::Update(float _cameraAngle)
 
 	object->SetPosition(position);
 
-	if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RT)) && bulletEnergy > 1)
+	if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
 	{
 		SetBullet();
 		bulletEnergy--;

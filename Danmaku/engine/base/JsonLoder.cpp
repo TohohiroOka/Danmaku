@@ -85,9 +85,9 @@ JsonObjectData* JsonLoder::LoadFile(const std::string& _fileName, std::vector<st
 			//トランスフォーム情報
 			json& transform = object["transform"];
 			// 平行移動
-			objectData.pos.x = float(transform["translation"][0]) * mapSize / 2.0f;
+			objectData.pos.x = float(transform["translation"][0]) * mapSizeX / 2.0f;
 			objectData.pos.y = float(transform["translation"][2]);
-			objectData.pos.z = float(transform["translation"][1]) * mapSize / 2.0f;
+			objectData.pos.z = float(transform["translation"][1]) * mapSizeZ / 2.0f;
 			// 回転角
 			objectData.rotation.x = -float(transform["rotation"][1]);
 			objectData.rotation.y = -float(transform["rotation"][2]);
@@ -144,9 +144,9 @@ JsonMoveData* JsonLoder::LoadMoveFile(const std::string& _fileName)
 		//トランスフォーム情報
 		json& transform = object["transform"];
 		// 平行移動
-		jsonData->movePoint[number].pos.x = float(object["point"][0]) * mapSize / 2.0f;
+		jsonData->movePoint[number].pos.x = float(object["point"][0]) * mapSizeX / 2.0f;
 		jsonData->movePoint[number].pos.y = 100.0f;
-		jsonData->movePoint[number].pos.z = float(object["point"][1]) * mapSize / 2.0f;
+		jsonData->movePoint[number].pos.z = float(object["point"][1]) * mapSizeZ / 2.0f;
 
 		const int move_num = object["list_num"];
 		for (int i = 0; i < move_num; i++) {
