@@ -82,6 +82,20 @@ public: // メンバ関数
 	void AddIndex(const unsigned long& _index);
 
 	/// <summary>
+	/// 頂点データの変更
+	/// </summary>
+	/// <param name="_vertex">頂点データ</param>
+	/// <param name="_arrayNum">変更する配列番号</param>
+	void ChangeVertex(const VERTEX& _vertex, const int _arrayNum) {
+		vertices[_arrayNum] = _vertex;
+	}
+
+	/// <summary>
+	/// 頂点バッファへのデータ転送
+	/// </summary>
+	void SendVertex();
+
+	/// <summary>
 	/// 頂点データの数を取得
 	/// </summary>
 	/// <returns>頂点データの数</returns>
@@ -137,7 +151,7 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* _cmdList, const int _shaderResourceView, const int _instanceDrawNum);
 
 	/// <summary>
-	/// 描画
+	/// 頂点とインデックスのみを使用する描画
 	/// </summary>
 	/// <param name="_cmdList">命令発行先コマンドリスト</param>
 	void VIDraw(ID3D12GraphicsCommandList* _cmdList);

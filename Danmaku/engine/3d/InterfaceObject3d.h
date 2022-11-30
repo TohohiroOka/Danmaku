@@ -106,6 +106,11 @@ public:
 	virtual void ColliderDraw();
 
 	/// <summary>
+	/// コライダーの削除
+	/// </summary>
+	void DeleteCollider();
+
+	/// <summary>
 	/// 行列の更新
 	/// </summary>
 	void UpdateWorldMatrix();

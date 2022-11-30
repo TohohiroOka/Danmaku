@@ -33,11 +33,7 @@ void InterfaceObject3d::StaticInitialize(ID3D12Device* _device)
 
 InterfaceObject3d::~InterfaceObject3d()
 {
-	//コライダー解放
-	if (collider) {
-		CollisionManager::GetInstance()->RemoveCollider(collider);
-		delete collider;
-	}
+	DeleteCollider();
 
 	constBuffB0.Reset();
 	constBuffB1.Reset();
@@ -106,6 +102,15 @@ void InterfaceObject3d::Draw()
 void InterfaceObject3d::ColliderDraw()
 {
 	collider->Draw();
+}
+
+void InterfaceObject3d::DeleteCollider()
+{
+	//コライダー解放
+	if (collider) {
+		CollisionManager::GetInstance()->RemoveCollider(collider);
+		delete collider;
+	}
 }
 
 void InterfaceObject3d::UpdateWorldMatrix()

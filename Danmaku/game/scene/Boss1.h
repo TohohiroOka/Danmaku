@@ -20,7 +20,16 @@ private:
 		SET,//準備
 		SET_FROM_PLAY,//準備からゲームプレイまでの移行
 		PLAY,//ゲームプレイ
+		PLAY_FROM_MAP_CHANGE,//プレイからマップの変更
+		MAP_CHANGE,//マップの変更
+		MAP_CHANGE_FROM_PLAY,//マップの変更からプレイ
 		HOME,//ホーム画面
+	};
+
+	struct EASING_POS {
+		XMFLOAT3 pos = {};
+		XMFLOAT3 s_pos = {};
+		XMFLOAT3 e_pos = {};
 	};
 
 public:
@@ -69,8 +78,16 @@ private:
 
 	//シーン
 	SCENE scene;
+	//カメラの座標
+	EASING_POS cameraPos;
+	//カメラのターゲット
+	EASING_POS cameraTarget;
 	//カメラの回転
 	XMFLOAT2 cameraAngle;
+	//初期位置
+	XMFLOAT3 initCameraPos;
+	XMFLOAT3 initCameraTarget;
+	XMFLOAT2 initCameraAngle;
 	//タイマー
 	int timer;
 	//カメラの一番奥
@@ -93,6 +110,7 @@ private:
 
 	//ボス
 	std::unique_ptr<BossA> boss;
+	int terrainChangeNum;
 
 	//UI
 	std::unique_ptr<UiManager> ui;

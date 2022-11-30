@@ -44,7 +44,7 @@ private:
 		std::array<int,2> lattice_beam_pos = { 0,0 };
 	};
 
-	static const int lattice_beam_side_num = 15;
+	static const int lattice_beam_side_num = 10;
 
 public:
 
@@ -105,6 +105,8 @@ private:
 	const int bulletNum = 36;
 	//一回分の攻撃情報
 	std::array<BULLET_INFO, kindNum> attack;
+	//地形変更時にmove,衝突判定を出来なくする
+	bool isMovie;
 
 public:
 
@@ -115,6 +117,14 @@ public:
 		add.pos = _pos;
 		add.destination = _destination;
 		moveList.emplace_back(add);
+	}
+	float GetHpRatio() { return float(hp) / (maxHp); }
+	void SetMovie() {
+		isMovie = true;
+	};
+
+	void EndMovie() {
+		isMovie = false;
 	}
 
 };

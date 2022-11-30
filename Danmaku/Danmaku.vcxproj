@@ -115,6 +115,7 @@
     <ClCompile Include="engine\3d\Model.cpp" />
     <ClCompile Include="engine\3d\Object3d.cpp" />
     <ClCompile Include="engine\3d\PrimitiveObject3D.cpp" />
+    <ClCompile Include="engine\3d\TerrainModel.cpp" />
     <ClCompile Include="engine\audio\Audio.cpp" />
     <ClCompile Include="engine\base\ComputeShaderManager.cpp" />
     <ClCompile Include="engine\base\Csv.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="engine\3d\Model.h" />
     <ClInclude Include="engine\3d\Object3d.h" />
     <ClInclude Include="engine\3d\PrimitiveObject3D.h" />
+    <ClInclude Include="engine\3d\TerrainModel.h" />
     <ClInclude Include="engine\audio\Audio.h" />
     <ClInclude Include="engine\base\ComputeShaderManager.h" />
     <ClInclude Include="engine\base\Csv.h" />

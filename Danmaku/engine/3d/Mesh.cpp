@@ -38,6 +38,16 @@ void Mesh::AddIndex(const unsigned long& _index)
 	indices.emplace_back(_index);
 }
 
+void Mesh::SendVertex()
+{
+	VERTEX* vertMap = nullptr;
+	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	if (SUCCEEDED(result)) {
+		std::copy(vertices.begin(), vertices.end(), vertMap);
+		vertBuff->Unmap(0, nullptr);
+	}
+}
+
 void Mesh::AddSmoothData(const unsigned long& _indexPosition, const unsigned long& _indexVertex)
 {
 	smoothData[_indexPosition].emplace_back(_indexVertex);
@@ -83,12 +93,7 @@ void Mesh::CreateBuffers()
 	if (FAILED(result)) { assert(0); }
 
 	// 頂点バッファへのデータ転送
-	VERTEX* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	if (SUCCEEDED(result)) {
-		std::copy(vertices.begin(), vertices.end(), vertMap);
-		vertBuff->Unmap(0, nullptr);
-	}
+	SendVertex();
 
 	// 頂点バッファビューの作成
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();

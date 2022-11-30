@@ -2,11 +2,18 @@
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 #include "GameHelper.h"
+#include "DebugText.h"
 
  const float Ground::scale = 5.0f;
 
-std::unique_ptr<Ground> Ground::Create(const std::string& heightmapFilename,
-	const std::string& filename1, const std::string& filename2)
+ Ground::~Ground()
+ {
+	 terrainModel[0].reset();
+	 terrainModel[1].reset();
+	 terrainModel[2].reset();
+ }
+
+ std::unique_ptr<Ground> Ground::Create()
 {
 	// オブジェクトのインスタンスを生成
 	Ground* instance = new Ground();
@@ -15,7 +22,6 @@ std::unique_ptr<Ground> Ground::Create(const std::string& heightmapFilename,
 	}
 
 	// 初期化
-	instance->object = HeightMap::Create(heightmapFilename, filename1, filename2);
 	instance->Initialize();
 
 	return std::unique_ptr<Ground>(instance);
@@ -40,7 +46,23 @@ void Ground::Initialize()
 	cubeObject[1]->SetPosition({ cubeScaleAPos.x ,mapSizeX / 3.0f - 1.0f,cubeScaleAPos.y });
 	cubeObject[1]->SetLight(false);
 
-	//マップ
+	//モデル読み込み
+	const std::string jimen = "jimen.png";
+	const std::string kabe = "kabe.png";
+	mapName[0] = "heightmap02.bmp";
+	mapName[1] = "heightmap01.bmp";
+	mapName[2] = "heightmap03.bmp";	
+	mapName[3] = "heightmap04.bmp";
+	useModel= TerrainModel::FlatlandModelCreate(jimen, kabe);
+	terrainModel[0] = TerrainModel::FlatlandModelCreate(jimen, kabe);
+	for (int i = 0; i < modelNum; i++) {
+		int tModel = i + 1;
+		terrainModel[tModel] = TerrainModel::Create(mapName[i], jimen, kabe);
+	}
+	//マップ生成
+	object = HeightMap::Create(useModel.get());
+
+	//マップ情報変更
 	object->SetScale({ scale,scale,scale });
 
 	// コライダーの追加
@@ -49,11 +71,60 @@ void Ground::Initialize()
 	//collider->ConstructTriangles(object->GetModel());
 	collider->ConstructTriangles(object->GetHitVertices(), object->GetHitIndices());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+
+	//マップ変更フラグ
+	//初回にマップを変更する
+	isChangeMap = true;
+	//衝突判定の変更
+	isHitChange = true;
+	//変化の割合
+	ratio = 0.0f;
+	//変更するマップ指定
+	ChangeMapKind = { 0,1 };
+}
+
+void Ground::Update()
+{
+	DebugText* text = DebugText::GetInstance();
+	std::string strMapNumber1 = std::to_string(ChangeMapKind[0]);
+	std::string strMapNumber2 = std::to_string(ChangeMapKind[1]);
+	std::string strIsHitChange = std::to_string(isHitChange);
+
+	text->Print("MapNumber :: 1:" + strMapNumber1 + " MapNumber :: 2:" + strMapNumber2, 800, 100);
+	text->Print("isHitChange : " + strIsHitChange, 800, 150);
+	text = nullptr;
+
+	if (!isChangeMap) { return; }
+
+	object->SetChangeModel(terrainModel[ChangeMapKind[0]].get(), terrainModel[ChangeMapKind[1]].get(), ratio);
+
+	isChangeMap = false;
+
+	//if (!isHitChange) { return; }
+	//現在のコライダー削除
+	object->DeleteCollider();
+
+	// コライダーの追加
+	MeshCollider* collider = new MeshCollider;
+	object->SetCollider(collider);
+	//collider->ConstructTriangles(object->GetModel());
+	collider->ConstructTriangles(terrainModel[ChangeMapKind[1]]->GetHitVertices(), terrainModel[ChangeMapKind[1]]->GetHitIndices());
+	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+
+	if (!isHitChange) { return; }
+	for (auto& i : ChangeMapKind) {
+		i++;
+		if (i >= terrainModel.size()) {
+			i = 1;
+		}
+	}
+
+	isHitChange = false;
 }
 
 void Ground::Draw()
 {
-	object->AddConstBufferUpdate(ratio);
+	object->AddConstBufferUpdate();
 	object->Draw();
 }
 

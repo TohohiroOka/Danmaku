@@ -63,6 +63,12 @@ public:
 	/// </summary>
 	void Reset();
 
+	/// <summary>
+	/// 地形変更時の移動処理
+	/// </summary>
+	/// <param name="_ratio"></param>
+	void SetMoviePos(const float _ratio);
+
 private:
 
 	std::unique_ptr<Model> model = nullptr;
@@ -72,6 +78,8 @@ private:
 	std::array<Vector3, 3> moveVec;
 	XMFLOAT3 speed;
 	float scale;
+	XMFLOAT3 easingPos;
+	XMFLOAT3 endEasingPos;
 
 	//描画するか否か
 	bool isDraw;
@@ -93,6 +101,9 @@ private:
 	//エネルギー
 	const float bulletEnergyMax = 50.0f;
 	float bulletEnergy;
+
+	//地形変更時にmove,衝突判定を出来なくする
+	bool isMovie;
 
 public:
 
@@ -139,4 +150,15 @@ public:
 	/// <returns>bulletEnergy</returns>
 	float GetBulletEnergy() { return  bulletEnergy; }
 
+	/// <summary>
+	/// 地形変更時の初期化
+	/// </summary>
+	void SetMovie() {
+		easingPos = position;
+		isMovie = true;
+	};
+
+	void EndMovie() {
+		isMovie = false;
+	}
 };

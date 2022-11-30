@@ -7,6 +7,7 @@
 #include "CollisionAttribute.h"
 #include "BulletManager.h"
 #include "GameHelper.h"
+#include "Easing.h"
 
 using namespace DirectX;
 
@@ -29,7 +30,9 @@ Player::Player(const XMFLOAT3& _pos)
 {
 	isDraw = true;
 	position = _pos;
-	position.y = 200.0f;
+	position.y = 400.0f;
+	easingPos = {};
+	endEasingPos = position;
 	moveVec[0] = { 0,0,0 };
 	moveVec[1] = { 0,0,0 };
 	speed = { 0,0,0 };
@@ -39,6 +42,7 @@ Player::Player(const XMFLOAT3& _pos)
 	isDamageStaging = false;
 	damageTimer = 0;
 	bulletEnergy = bulletEnergyMax;
+	isMovie = false;
 }
 
 std::unique_ptr<Player> Player::Create(const XMFLOAT3& _pos)
@@ -370,29 +374,31 @@ void Player::Update(float _cameraAngle)
 	DirectInput* input = DirectInput::GetInstance();
 	XInputManager* Xinput = XInputManager::GetInstance();
 
-	//ラジアン変換
-	cameraAngle = _cameraAngle;
+	if (!isMovie) {
+		//ラジアン変換
+		cameraAngle = _cameraAngle;
 
-	Move();
+		Move();
+
+		object->SetPosition(position);
+		object->SetRotation(moveObjAngle);
+		//当たり判定
+		Collider();
+
+		if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
+		{
+			SetBullet();
+			bulletEnergy--;
+		}
+		//撃っていない時にエネルギーを回復する
+		else if (bulletEnergy <= bulletEnergyMax) {
+			bulletEnergy += 0.1f;
+		}
+
+		input = nullptr;
+	}
 
 	object->SetPosition(position);
-	object->SetRotation(moveObjAngle);
-	//当たり判定
-	Collider();
-
-	object->SetPosition(position);
-
-	if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
-	{
-		SetBullet();
-		bulletEnergy--;
-	}
-	//撃っていない時にエネルギーを回復する
-	else if(bulletEnergy<= bulletEnergyMax) {
-		bulletEnergy += 0.1f;
-	}
-
-	input = nullptr;
 
 	DebugText* text = DebugText::GetInstance();
 	std::string strX = std::to_string(position.x);
@@ -437,4 +443,11 @@ void Player::Draw()
 void Player::Reset()
 {
 	object->SetPosition({ 50,100,50 });
+}
+
+void Player::SetMoviePos(const float _ratio)
+{
+	position.x = Easing::OutQuart(easingPos.x, endEasingPos.x, _ratio);
+	position.y = Easing::OutQuart(easingPos.y, endEasingPos.y, _ratio);
+	position.z = Easing::OutQuart(easingPos.z, endEasingPos.z, _ratio);
 }

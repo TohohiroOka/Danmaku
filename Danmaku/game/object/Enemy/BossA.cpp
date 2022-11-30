@@ -121,42 +121,43 @@ std::unique_ptr<BossA> BossA::Create(const XMFLOAT3& _pos, const int _destinatio
 
 void BossA::Update()
 {
-	timer++;
+	if (!isMovie) {
+		timer++;
 
-	//攻撃
-	Attack();
+		//攻撃
+		Attack();
 
-	//移動
-	//if (isMove)
-	//{
-	//	moveTimer++;
-	//	const float maxTimer = 150.0f;
-	//	const float ratio = float(moveTimer) / maxTimer;
-	//	pos.x = Easing::Lerp(moveList[destinationNumber].pos.x, moveList[nextDestinationNumber].pos.x, ratio);
-	//	pos.z = Easing::Lerp(moveList[destinationNumber].pos.z, moveList[nextDestinationNumber].pos.z, ratio);
+		//移動
+		//if (isMove)
+		//{
+		//	moveTimer++;
+		//	const float maxTimer = 150.0f;
+		//	const float ratio = float(moveTimer) / maxTimer;
+		//	pos.x = Easing::Lerp(moveList[destinationNumber].pos.x, moveList[nextDestinationNumber].pos.x, ratio);
+		//	pos.z = Easing::Lerp(moveList[destinationNumber].pos.z, moveList[nextDestinationNumber].pos.z, ratio);
 
-	//	if (ratio >= 1.0f) {
-	//		int rand = destinationNumber;
+		//	if (ratio >= 1.0f) {
+		//		int rand = destinationNumber;
 
-	//		while (rand == destinationNumber) {
-	//			rand = int(Randomfloat(int(moveList[nextDestinationNumber].destination.size()) - 1));
-	//			rand = moveList[nextDestinationNumber].destination[rand];
-	//		}
-	//		destinationNumber = nextDestinationNumber;
-	//		nextDestinationNumber = rand;
-	//		moveTimer = 0;
-	//	}
-	//}
+		//		while (rand == destinationNumber) {
+		//			rand = int(Randomfloat(int(moveList[nextDestinationNumber].destination.size()) - 1));
+		//			rand = moveList[nextDestinationNumber].destination[rand];
+		//		}
+		//		destinationNumber = nextDestinationNumber;
+		//		nextDestinationNumber = rand;
+		//		moveTimer = 0;
+		//	}
+		//}
 
-	//parts更新
-	for (int i = 0; i < partsNum; i++) {
-		XMFLOAT3 addPos = pos;
-		addPos.x += partsPos[i].x;
-		addPos.y += partsPos[i].y;
-		addPos.z += partsPos[i].z;
-		parts[i]->SetPosition(addPos);
+		//parts更新
+		for (int i = 0; i < partsNum; i++) {
+			XMFLOAT3 addPos = pos;
+			addPos.x += partsPos[i].x;
+			addPos.y += partsPos[i].y;
+			addPos.z += partsPos[i].z;
+			parts[i]->SetPosition(addPos);
+		}
 	}
-
 	BaseEnemy::Update();
 
 	DebugText* text = DebugText::GetInstance();

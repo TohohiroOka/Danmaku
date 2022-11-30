@@ -134,9 +134,6 @@
     <Filter Include="ゲームシステム\object\Bullet">
       <UniqueIdentifier>{6e14a1ca-e053-469a-9e2d-6dc1f9574b93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ゲームシステム\object\Enemy">
-      <UniqueIdentifier>{5254ab8a-bd70-46e2-b059-23696d304e03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="エンジンシステム\Base\Scene">
       <UniqueIdentifier>{f22beb32-3746-4c9a-99e6-f06cfe08ba98}</UniqueIdentifier>
     </Filter>
@@ -169,6 +166,9 @@
     </Filter>
     <Filter Include="エンジンシステム\Base\FileLoder\CSV">
       <UniqueIdentifier>{89695aff-10b9-4ffc-a805-fceb5d716a93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\object\Enemy">
+      <UniqueIdentifier>{5254ab8a-bd70-46e2-b059-23696d304e03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -405,6 +405,9 @@
     </ClCompile>
     <ClCompile Include="game\object\Beam\BaseBeam.cpp">
       <Filter>ゲームシステム\object\Beam</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\3d\TerrainModel.cpp">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -792,6 +795,9 @@
     </ClInclude>
     <ClInclude Include="game\object\Beam\LatticeBeam.h">
       <Filter>ゲームシステム\object\Beam</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\3d\TerrainModel.h">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
