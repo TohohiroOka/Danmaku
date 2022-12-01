@@ -15,7 +15,7 @@ std::array<int, BaseBullet::effect_max_num> BaseBullet::effectNum;
 void BaseBullet::StaticInitialize()
 {
 	//’e
-	model = Model::CreateFromOBJ("Square1");
+	model = Model::CreateFromOBJ("NormalCube");
 
 	for (auto& i : bullet)
 	{

@@ -36,6 +36,17 @@ static float GetAngle(const DirectX::XMFLOAT2& _startPoint, const DirectX::XMFLO
 }
 
 /// <summary>
+/// •„†‚ğ•Ô‚·
+/// </summary>
+/// <param name="A">”’l</param>
+/// <returns></returns>
+static int GetSign(float A) {
+	if (A > 0) return 1;
+	else if (A < 0) return -1;
+	else return 0;
+}
+
+/// <summary>
 /// —”¶¬
 /// 0‚©‚ç”ÍˆÍ‚Ü‚Å‚Ì—”‚ğo—Í
 /// </summary>

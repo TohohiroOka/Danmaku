@@ -12,7 +12,7 @@ std::array<BaseBeam::OBEJCT, BaseBeam::object_max_num> BaseBeam::object;
 void BaseBeam::StaticInitialize()
 {
 	//’e
-	model = Model::CreateFromOBJ("Square1");
+	model = Model::CreateFromOBJ("NormalCube");
 
 	for (auto& i : object)
 	{

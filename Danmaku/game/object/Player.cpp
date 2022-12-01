@@ -54,7 +54,7 @@ std::unique_ptr<Player> Player::Create(const XMFLOAT3& _pos)
 	}
 
 	//モデル読み込み
-	instance->model = Model::CreateFromOBJ("drone");
+	instance->model = Model::CreateFromOBJ("player");
 
 	// 初期化
 	instance->object = Object3d::Create(instance->model.get());
@@ -73,7 +73,7 @@ void Player::Move()
 	float radiusUD = XMConvertToRadians(cameraAngle);
 
 	//最大速度
-	const float maxSpeed = 4.0f;
+	const float maxSpeed = 2.0f;
 
 	//二つ以上のキーが押されたとき一定以上の速度にならないように調整するためのフラグ
 	std::array<bool, 4> isSpeed = { false,false, false, false };
@@ -164,11 +164,11 @@ void Player::Move()
 	}
 	//上
 	float moveY = 0.0f;
-	if (input->PushKey(DIK_UP) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RT)) {
+	if (input->PushKey(DIK_E) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RT)) {
 		moveY = 2.0f;
 	}
 	//下
-	if (input->PushKey(DIK_DOWN) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_LT)) {
+	if (input->PushKey(DIK_Z) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_LT)) {
 		moveY = -2.0f;
 	}
 

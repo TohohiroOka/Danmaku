@@ -30,8 +30,8 @@
 void Ground::Initialize()
 {
 	//キューブ
-	cubeModel[0] = Model::CreateFromOBJ("Cube");
-	cubeModel[1] = Model::CreateFromOBJ("Cube2");
+	cubeModel[0] = Model::CreateFromOBJ("BackgroundIn");
+	cubeModel[1] = Model::CreateFromOBJ("BackgroundOut");
 
 	//中
 	cubeObject[0] = Object3d::Create(cubeModel[0].get());
@@ -85,15 +85,6 @@ void Ground::Initialize()
 
 void Ground::Update()
 {
-	DebugText* text = DebugText::GetInstance();
-	std::string strMapNumber1 = std::to_string(ChangeMapKind[0]);
-	std::string strMapNumber2 = std::to_string(ChangeMapKind[1]);
-	std::string strIsHitChange = std::to_string(isHitChange);
-
-	text->Print("MapNumber :: 1:" + strMapNumber1 + " MapNumber :: 2:" + strMapNumber2, 800, 100);
-	text->Print("isHitChange : " + strIsHitChange, 800, 150);
-	text = nullptr;
-
 	if (!isChangeMap) { return; }
 
 	object->SetChangeModel(terrainModel[ChangeMapKind[0]].get(), terrainModel[ChangeMapKind[1]].get(), ratio);

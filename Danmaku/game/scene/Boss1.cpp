@@ -205,14 +205,14 @@ void Boss1::Update()
 		{
 			if (input->PushKey(DIK_LEFT) || xinput->RightStickX(true)) { cameraAngle.x += 3.0f; }
 			if (input->PushKey(DIK_RIGHT) || xinput->RightStickX(false)) { cameraAngle.x -= 3.0f; }
-			if (input->PushKey(DIK_LEFT) || xinput->RightStickY(false)) {
+			if (input->PushKey(DIK_DOWN) || xinput->RightStickY(false)) {
 				cameraAngle.y -= 3.0f;
 				//è„è∏êßå¿
 				if (cameraAngle.y < 50.0f) {
 					cameraAngle.y = 50.0f;
 				}
 			}
-			if (input->PushKey(DIK_RIGHT) || xinput->RightStickY(true)) {
+			if (input->PushKey(DIK_UP) || xinput->RightStickY(true)) {
 				cameraAngle.y += 3.0f;
 				//â∫ç~êßå¿
 				if (cameraAngle.y > 110.0f) {

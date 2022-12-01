@@ -11,8 +11,8 @@ XMFLOAT3 BaseEnemy::playerPos;
 
 void BaseEnemy::StaticInitialize()
 {
-	bossModel[0] = Model::CreateFromOBJ("core");//コアボス
-	bossModel[1] = Model::CreateFromOBJ("Square");//コアボス
+	bossModel[0] = Model::CreateFromOBJ("BossCore");//コアボス
+	bossModel[1] = Model::CreateFromOBJ("BossBody");//コアボス
 	enemyAModel = Model::CreateFromOBJ("enemyA");//敵A
 }
 
