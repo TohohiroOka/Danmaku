@@ -61,6 +61,4 @@ public:
 	//dds‚Ì‚Ý‚ÉŽg—p‚·‚é
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	Microsoft::WRL::ComPtr<ID3D12Resource> texConstBuffer = nullptr;
-
 };
-

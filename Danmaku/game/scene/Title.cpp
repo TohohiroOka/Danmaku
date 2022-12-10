@@ -37,7 +37,7 @@ void Title::Update()
 	text = nullptr;
 }
 
-void Title::DrawNotPostB()
+void Title::DrawPostEffect()
 {
 }
 
@@ -45,9 +45,9 @@ void Title::Draw()
 {
 }
 
-void Title::DrawNotPostA()
+void Title::DrawSprite()
 {
-	Sprite::PreDraw(cmdList);
+	Sprite::SetCmdList(cmdList);
 	sp->Draw();
 	DebugText::GetInstance()->DrawAll();
 	Sprite::PostDraw();

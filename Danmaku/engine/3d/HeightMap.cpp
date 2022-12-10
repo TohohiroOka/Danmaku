@@ -2,11 +2,10 @@
 #include "Camera.h"
 #include "SafeDelete.h"
 #include "Easing.h"
+#include "GraphicsPipelineManager.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
-
-GraphicsPipelineManager::GRAPHICS_PIPELINE HeightMap::pipeline;
 
 std::unique_ptr<HeightMap> HeightMap::Create(TerrainModel* _model)
 {
@@ -22,18 +21,6 @@ std::unique_ptr<HeightMap> HeightMap::Create(TerrainModel* _model)
 	instance->Initialize();
 
 	return std::unique_ptr<HeightMap>(instance);
-}
-
-void HeightMap::PreDraw()
-{
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-
-	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void HeightMap::Initialize()
@@ -67,6 +54,9 @@ void HeightMap::AddConstBufferUpdate(const float _ratio)
 
 void HeightMap::Draw()
 {
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, "HEIGHT_MAP", topologyType);
+
 	InterfaceObject3d::Draw();
 
 	cmdList->SetGraphicsRootConstantBufferView(3, constBufferOData->GetGPUVirtualAddress());

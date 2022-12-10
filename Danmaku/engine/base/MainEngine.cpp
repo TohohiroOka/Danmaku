@@ -1,12 +1,12 @@
 #include "MainEngine.h"
-//#include "DrawLine.h"
+#include "WindowApp.h"
+
 #include "InstanceObject.h"
 #include "DrawLine3D.h"
 #include "InterfaceObject3d.h"
 #include "Sprite.h"
 #include "DebugText.h"
 #include "Emitter.h"
-//#include "Fbx.h"
 #include "SafeDelete.h"
 #include "ComputeShaderManager.h"
 #include "GraphicsPipelineManager.h"
@@ -25,7 +25,7 @@ MainEngine::~MainEngine()
 	//Fbx::Finalize();
 	CubeMap::Finalize();
 	ParticleManager::Finalize();
-	postEffect->Finalize();
+	mainRenderTarget->Finalize();
 	ComputeShaderManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
@@ -46,25 +46,54 @@ void MainEngine::Initialize()
 	//Object系の初期化
 	InstanceObject::StaticInitialize(dXCommon->GetDevice());
 	Texture::StaticInitialize(dXCommon->GetDevice());
-	GraphicsPipelineManager::SetDevice(dXCommon->GetDevice());
+	GraphicsPipelineManager::StaticInitialize(dXCommon->GetDevice());
 	InterfaceObject3d::StaticInitialize(dXCommon->GetDevice());
 	Sprite::StaticInitialize(dXCommon->GetDevice());
 	DrawLine3D::StaticInitialize(dXCommon->GetDevice());
 	ParticleManager::SetDevice(dXCommon->GetDevice());
 	LightGroup::StaticInitialize(dXCommon->GetDevice());
 	//Fbx::StaticInitialize(dXCommon->GetDevice());
-	PostEffect::StaticInitialize();
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	CubeMap::StaticInitialize(dXCommon->GetDevice());
 
 	scene = SceneManager::Create();
 
-	postEffect = PostEffect::Create();
+	//Windowsサイズ
+	const XMFLOAT2 windowSize = { float(WindowApp::GetWindowWidth()),float(WindowApp::GetWindowHeight()) };
+
+	//レンダーターゲット
+	mainRenderTarget = MainRenderTarget::Create();
+
+	//ブルーム
+	bloom.renderName = "Bloom";
+	bloom.renderTarget = SubRenderTarget::Create(windowSize, bloom.renderName);
+
+	//ブルーム描画
+	bloomDraw = std::make_unique<BasePostEffect>();
+
+	//縮小バッファ用レンダー
+	float size = 256;
+	for (int i = 0; i < 5; i++) {
+		//縮小バッファ用テクスチャ
+		D_shrinkBuffer[i] = std::make_unique<ShrinkBuffer>();
+		D_shrinkBuffer[i]->SetPipeline("SHRINK_BUFFER");
+
+		R_shrinkBuffer[i].renderName = "ShrinkBuffer" + std::to_string(size);
+		R_shrinkBuffer[i].renderTarget = SubRenderTarget::Create({ size,size }, R_shrinkBuffer[i].renderName);
+
+		D_shrinkBuffer[i]->SetWindowSize(size);
+		size /= 4.0f;
+	}
+	D_shrinkBuffer[0]->SetLuminance(true);
+
+
+	//ポストエフェクトを合わせる用
+	mainDraw = MainPostEffect::Create();
+	mainDraw->SetPipeline("POST_EFFECT");
+	mainDraw->SetToneMap(true);
 
 	fps = FrameRateKeep::Create();
-
-	postEffect->SetFog(true);
 
 	//cubemap = CubeMap::Create(dXCommon->GetCmdList());
 }
@@ -87,28 +116,63 @@ bool MainEngine::Update()
 
 void MainEngine::Draw()
 {
+	GraphicsPipelineManager::ResetTopology();
+
 	//描画
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 
-	postEffect->PreDrawScene(dXCommon->GetCmdList());
 	//CubeMap::PreDraw(dXCommon->GetCmdList());
 	//cubemap->Draw();
 	//CubeMap::PostDraw();
 
+	Sprite::SetCmdList(dXCommon->GetCmdList());
+	mainRenderTarget->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
-	postEffect->PostDrawScene(dXCommon->GetCmdList());
-	scene->DrawNotPostB(dXCommon->GetCmdList());
+	mainRenderTarget->PostDrawScene();
+
+	//ブルーム
+	bloom.renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	bloomDraw->SetPipeline("BLOOM");
+	bloomDraw->Draw({ "NORMAL","BLOOM" });
+	bloom.renderTarget->PostDrawScene(dXCommon->GetCmdList());
+
+	//縮小バッファ
+	R_shrinkBuffer[0].renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	D_shrinkBuffer[0]->Update();
+	D_shrinkBuffer[0]->Draw({bloom.renderName});
+	R_shrinkBuffer[0].renderTarget->PostDrawScene(dXCommon->GetCmdList());
+	//縮小バッファ
+	R_shrinkBuffer[1].renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	D_shrinkBuffer[1]->Update();
+	D_shrinkBuffer[1]->Draw({ R_shrinkBuffer[0].renderName });
+	R_shrinkBuffer[1].renderTarget->PostDrawScene(dXCommon->GetCmdList());
+	//縮小バッファ
+	R_shrinkBuffer[2].renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	D_shrinkBuffer[2]->Update();
+	D_shrinkBuffer[2]->Draw({R_shrinkBuffer[1].renderName});
+	R_shrinkBuffer[2].renderTarget->PostDrawScene(dXCommon->GetCmdList());
+	//縮小バッファ
+	R_shrinkBuffer[3].renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	D_shrinkBuffer[3]->Update();
+	D_shrinkBuffer[3]->Draw({R_shrinkBuffer[2].renderName});
+	R_shrinkBuffer[3].renderTarget->PostDrawScene(dXCommon->GetCmdList());
+	//縮小バッファ
+	R_shrinkBuffer[4].renderTarget->PreDrawScene(dXCommon->GetCmdList());
+	D_shrinkBuffer[4]->Update();
+	D_shrinkBuffer[4]->Draw({R_shrinkBuffer[3].renderName});
+	R_shrinkBuffer[4].renderTarget->PostDrawScene(dXCommon->GetCmdList());
 
 	//描画前設定
 	dXCommon->PreDraw();
 
+	mainDraw->Update();
+	mainDraw->Draw({ bloom.renderName,"OUTLINE","DEPTH", R_shrinkBuffer[4].renderName });
+
 	//imgui表示
 	scene->ImguiDraw();
 
-	//ポストエフェクト描画
-	postEffect->Draw(dXCommon->GetCmdList());
-
-	scene->DrawNotPostA(dXCommon->GetCmdList());
+	//スプライト描画
+	scene->DrawSprite(dXCommon->GetCmdList());
 
 	//コマンド実行
 	dXCommon->PostDraw();

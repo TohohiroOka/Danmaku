@@ -1,20 +1,15 @@
 #include "PostEffect.hlsli"
 
 Texture2D<float4> tex:register(t0);//0番スロットに設定されたテクスチャ
-Texture2D<float4> bloom:register(t1);//1番スロットに設定されたテクスチャ
-Texture2D<float4> outline:register(t2);//2番スロットに設定されたテクスチャ
-Texture2D<float> depthTex:register(t3);//1番スロットに設定されたテクスチャ
+Texture2D<float4> outline:register(t1);//2番スロットに設定されたテクスチャ
+Texture2D<float> depthTex:register(t2);//1番スロットに設定されたテクスチャ
+Texture2D<float4> toneMap:register(t3);//1番スロットに設定された
 SamplerState smp:register(s0);//0番スロットに設定されたサンプラー
-
-/// <summary>
-/// ガウス処理
-/// </summary>
-float Gaussian(float2 drawUV, float2 pickUV, float sigma);
 
 /// <summary>
 /// ブルーム処理
 /// </summary>
-float4 SetBloom(float2 uv);
+float4 SetTone(float4 color);
 
 /// <summary>
 /// アウトライン処理
@@ -31,8 +26,36 @@ float4 main(VSOutput input) : SV_TARGET
 	//メインカラー
 	float4 mainColor = tex.Sample(smp, input.uv);
 
-	//bloom処理
-	float4 bloom = SetBloom(input.uv);
+	//トーンマップ
+	if (isToneMap) {
+		const float3 RGB2Y = float3(+0.29900, +0.58700, +0.11400);
+		const float3 RGB2Cb = float3(-0.16874, -0.33126, +0.50000);
+		const float3 RGB2Cr = float3(+0.50000, -0.41869, -0.08131);
+		const float3 YCbCr2R = float3(+1.00000, +0.00000, +1.40200);
+		const float3 YCbCr2G = float3(+1.00000, -0.34414, -0.71414);
+		const float3 YCbCr2B = float3(+1.00000, +1.77200, +0.00000);
+
+		float4 info = toneMap.Sample(smp, float2(0.5, 0.5));
+		float3 texel = mainColor.rgb;
+
+		float coeff = 0.18 * exp(-info.g);
+		float l_max = coeff * info.r;
+
+		// YCbCr系に変換
+		float3 YCbCr = float3(0, 0, 0);
+		YCbCr.y = dot(RGB2Cb, texel);
+		YCbCr.z = dot(RGB2Cr, texel);
+
+		// 色の強さは補正
+		float lum = coeff * dot(RGB2Y, texel);
+		YCbCr.x = lum * (1.0f + lum / (l_max * l_max)) / (1.0f + lum);
+
+		// RGB系にして出力
+		float4 output;
+		mainColor.r = dot(YCbCr2R, YCbCr);
+		mainColor.g = dot(YCbCr2G, YCbCr);
+		mainColor.b = dot(YCbCr2B, YCbCr);
+	}
 
 	//アウトライン処理
 	float4 outline = SetOutline(input.uv, outlineWidth, outlineColor);
@@ -40,45 +63,18 @@ float4 main(VSOutput input) : SV_TARGET
 	//フォグ処理
 
 	float4 fog = float4(0, 0, 0, 0);
-	if (isFog)
+	//if (isFog)
 	{
 		fog = SetFog(input.uv);
 	}
 
 	//ポストエフェクトの合成
-	return mainColor + bloom + outline + fog;
+	return mainColor + outline + fog;
+	//return mainColor;
 }
 
-float Gaussian(float2 drawUV, float2 pickUV, float sigma)
+float4 SetTone(float4 color)
 {
-	float d = distance(drawUV, pickUV);
-	return exp(-d * d) / (2 * sigma * sigma);
-}
-
-float4 SetBloom(float2 uv)
-{
-	float totalWeight = 0;
-	float sigma = 0.01;
-	float stepWidth = 0.001;
-	float4 color = { 0, 0, 0, 0 };
-
-	for (float py = -sigma * 2; py <= sigma * 2; py += stepWidth)
-	{
-		for (float px = -sigma * 2; px <= sigma * 2; px += stepWidth)
-		{
-			float2 pickUV = uv + float2(px, py);
-			float add1 = (pickUV.x <= 1) * (pickUV.x >= 0);
-			float add2 = (pickUV.y <= 1) * (pickUV.y >= 0);
-			float weight = Gaussian(uv, pickUV, sigma);
-			color += bloom.Sample(smp, pickUV) * weight * add1 * add2;
-			totalWeight += weight;
-		}
-	}
-
-	color.rgb = color.rgb / totalWeight;
-
-	//0.3以下切り捨て
-	//color = color * step(0.8,color.r + color.g);
 	return color;
 }
 

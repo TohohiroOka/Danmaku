@@ -53,9 +53,6 @@
     <Filter Include="エンジンシステム\Object\3d\OBJ">
       <UniqueIdentifier>{0789e0f6-e5b2-4934-8399-12f9516c08e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="エンジンシステム\Object\2d\PostEffect">
-      <UniqueIdentifier>{0395157f-cfe5-4ae8-b61c-ca939ad99a27}</UniqueIdentifier>
-    </Filter>
     <Filter Include="エンジンシステム\Object\3d\DrawLine3D">
       <UniqueIdentifier>{23dfebfc-16ed-4a5a-ab22-b48d8195c6e9}</UniqueIdentifier>
     </Filter>
@@ -170,6 +167,12 @@
     <Filter Include="ゲームシステム\object\Enemy">
       <UniqueIdentifier>{5254ab8a-bd70-46e2-b059-23696d304e03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\ShrinkBuffer">
+      <UniqueIdentifier>{3eccd9ac-c6d5-4d34-8bec-be376110892a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="エンジンシステム\PostEffect">
+      <UniqueIdentifier>{0395157f-cfe5-4ae8-b61c-ca939ad99a27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -228,9 +231,6 @@
     </ClCompile>
     <ClCompile Include="engine\2d\DebugText.cpp">
       <Filter>エンジンシステム\Object\2d\DebugText</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\2d\PostEffect.cpp">
-      <Filter>エンジンシステム\Object\2d\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="engine\light\LightGroup.cpp">
       <Filter>エンジンシステム\Light</Filter>
@@ -409,6 +409,21 @@
     <ClCompile Include="engine\3d\TerrainModel.cpp">
       <Filter>エンジンシステム\Object\3d</Filter>
     </ClCompile>
+    <ClCompile Include="engine\postEffect\ShrinkBuffer.cpp">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\postEffect\SubRenderTarget.cpp">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\postEffect\BasePostEffect.cpp">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\postEffect\MainRenderTarget.cpp">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\postEffect\MainPostEffect.cpp">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -483,6 +498,18 @@
     <FxCompile Include="Resources\Shaders\InstanceObjectVS.hlsl">
       <Filter>シェーダーファイル\InstanceObject</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShrinkBufferPS.hlsl">
+      <Filter>シェーダーファイル\ShrinkBuffer</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShrinkBufferVS.hlsl">
+      <Filter>シェーダーファイル\ShrinkBuffer</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomPS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -517,6 +544,12 @@
     </None>
     <None Include="Resources\Shaders\InstanceObject.hlsli">
       <Filter>シェーダーファイル\InstanceObject</Filter>
+    </None>
+    <None Include="Resources\Shaders\ShrinkBuffer.hlsli">
+      <Filter>シェーダーファイル\ShrinkBuffer</Filter>
+    </None>
+    <None Include="Resources\Shaders\Bloom.hlsli">
+      <Filter>シェーダーファイル</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -591,9 +624,6 @@
     </ClInclude>
     <ClInclude Include="engine\2d\DebugText.h">
       <Filter>エンジンシステム\Object\2d\DebugText</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\2d\PostEffect.h">
-      <Filter>エンジンシステム\Object\2d\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="engine\light\LightGroup.h">
       <Filter>エンジンシステム\Light</Filter>
@@ -798,6 +828,21 @@
     </ClInclude>
     <ClInclude Include="engine\3d\TerrainModel.h">
       <Filter>エンジンシステム\Object\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\postEffect\MainRenderTarget.h">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\postEffect\ShrinkBuffer.h">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\postEffect\SubRenderTarget.h">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\postEffect\BasePostEffect.h">
+      <Filter>エンジンシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\postEffect\MainPostEffect.h">
+      <Filter>エンジンシステム\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

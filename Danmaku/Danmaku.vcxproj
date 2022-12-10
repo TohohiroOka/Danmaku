@@ -60,7 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)engine\2d;$(ProjectDir)engine\3d;$(ProjectDir)engine\3d\collider;$(ProjectDir)engine\audio;$(ProjectDir)engine\base;$(ProjectDir)engine\camera;$(ProjectDir)engine\easing;$(ProjectDir)engine\external;$(ProjectDir)engine\scene;$(ProjectDir)engine\base\input;$(ProjectDir)game\;$(ProjectDir)game\object;$(ProjectDir)game\object\Bullet;$(ProjectDir)game\object\Beam;$(ProjectDir)game\object\Enemy;$(ProjectDir)game\scene;$(ProjectDir)game\ui;$(ProjectDir)engine\scene;$(ProjectDir)engine\light;$(ProjectDir)object;$(ProjectDir)engine\particle;$(ProjectDir)scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)engine\2d;$(ProjectDir)engine\3d;$(ProjectDir)engine\3d\collider;$(ProjectDir)engine\audio;$(ProjectDir)engine\base;$(ProjectDir)engine\camera;$(ProjectDir)engine\easing;$(ProjectDir)engine\external;$(ProjectDir)engine\scene;$(ProjectDir)engine\postEffect;$(ProjectDir)engine\base\input;$(ProjectDir)game\;$(ProjectDir)game\object;$(ProjectDir)game\object\Bullet;$(ProjectDir)game\object\Beam;$(ProjectDir)game\object\Enemy;$(ProjectDir)game\scene;$(ProjectDir)game\ui;$(ProjectDir)engine\scene;$(ProjectDir)engine\light;$(ProjectDir)object;$(ProjectDir)engine\particle;$(ProjectDir)scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)engine\2d;$(ProjectDir)engine\3d;$(ProjectDir)engine\3d\collider;$(ProjectDir)engine\audio;$(ProjectDir)engine\base;$(ProjectDir)engine\camera;$(ProjectDir)engine\easing;$(ProjectDir)engine\external;$(ProjectDir)engine\scene;$(ProjectDir)engine\base\input;$(ProjectDir)game\;$(ProjectDir)game\object;$(ProjectDir)game\object\Bullet;$(ProjectDir)game\object\Beam;$(ProjectDir)game\object\Enemy;$(ProjectDir)game\scene;$(ProjectDir)game\ui;$(ProjectDir)engine\light;$(ProjectDir)object;$(ProjectDir)engine\particle;$(ProjectDir)scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)engine\2d;$(ProjectDir)engine\3d;$(ProjectDir)engine\3d\collider;$(ProjectDir)engine\audio;$(ProjectDir)engine\base;$(ProjectDir)engine\camera;$(ProjectDir)engine\easing;$(ProjectDir)engine\external;$(ProjectDir)engine\scene;$(ProjectDir)engine\postEffect;$(ProjectDir)engine\base\input;$(ProjectDir)game\;$(ProjectDir)game\object;$(ProjectDir)game\object\Bullet;$(ProjectDir)game\object\Beam;$(ProjectDir)game\object\Enemy;$(ProjectDir)game\scene;$(ProjectDir)game\ui;$(ProjectDir)engine\light;$(ProjectDir)object;$(ProjectDir)engine\particle;$(ProjectDir)scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -98,7 +98,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="engine\2d\DebugText.cpp" />
-    <ClCompile Include="engine\2d\PostEffect.cpp" />
     <ClCompile Include="engine\2d\Sprite.cpp" />
     <ClCompile Include="engine\3d\collider\Collision.cpp" />
     <ClCompile Include="engine\3d\collider\CollisionManager.cpp" />
@@ -147,6 +146,11 @@
     <ClCompile Include="engine\light\LightGroup.cpp" />
     <ClCompile Include="engine\particle\Emitter.cpp" />
     <ClCompile Include="engine\particle\ParticleManager.cpp" />
+    <ClCompile Include="engine\postEffect\BasePostEffect.cpp" />
+    <ClCompile Include="engine\postEffect\MainPostEffect.cpp" />
+    <ClCompile Include="engine\postEffect\MainRenderTarget.cpp" />
+    <ClCompile Include="engine\postEffect\ShrinkBuffer.cpp" />
+    <ClCompile Include="engine\postEffect\SubRenderTarget.cpp" />
     <ClCompile Include="engine\scene\SceneManager.cpp" />
     <ClCompile Include="game\GameCollision.cpp" />
     <ClCompile Include="game\object\Beam\BaseBeam.cpp" />
@@ -181,10 +185,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shaders\BloomVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\Shaders\BasicCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\CubeBoxPS.hlsl">
@@ -313,6 +329,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShrinkBufferPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShrinkBufferVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\Shaders\SpritePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -327,6 +355,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shaders\Bloom.hlsli" />
     <None Include="Resources\Shaders\CubeBox.hlsli" />
     <None Include="Resources\Shaders\HeightMap.hlsli" />
     <None Include="Resources\Shaders\InstanceObject.hlsli" />
@@ -337,11 +366,11 @@
     <None Include="Resources\Shaders\Obj.hlsli" />
     <None Include="Resources\Shaders\Particle.hlsli" />
     <None Include="Resources\Shaders\PostEffect.hlsli" />
+    <None Include="Resources\Shaders\ShrinkBuffer.hlsli" />
     <None Include="Resources\Shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\2d\DebugText.h" />
-    <ClInclude Include="engine\2d\PostEffect.h" />
     <ClInclude Include="engine\2d\Sprite.h" />
     <ClInclude Include="engine\3d\collider\BaseCollider.h" />
     <ClInclude Include="engine\3d\collider\Collision.h" />
@@ -403,6 +432,11 @@
     <ClInclude Include="engine\light\SpotLight.h" />
     <ClInclude Include="engine\particle\Emitter.h" />
     <ClInclude Include="engine\particle\ParticleManager.h" />
+    <ClInclude Include="engine\postEffect\BasePostEffect.h" />
+    <ClInclude Include="engine\postEffect\MainPostEffect.h" />
+    <ClInclude Include="engine\postEffect\MainRenderTarget.h" />
+    <ClInclude Include="engine\postEffect\ShrinkBuffer.h" />
+    <ClInclude Include="engine\postEffect\SubRenderTarget.h" />
     <ClInclude Include="engine\scene\InterfaceScene.h" />
     <ClInclude Include="engine\scene\SceneManager.h" />
     <ClInclude Include="game\GameCollision.h" />

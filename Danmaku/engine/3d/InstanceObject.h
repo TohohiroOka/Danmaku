@@ -3,7 +3,6 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
-#include "GraphicsPipelineManager.h"
 #include "Texture.h"
 #include "Model.h"
 
@@ -76,15 +75,15 @@ public://メンバ関数
 	static void SetLightGroup(LightGroup* _light) { InstanceObject::light = _light; }
 
 	/// <summary>
-	/// 描画前処理
+	/// コマンドリストのセット
 	/// </summary>
-	/// <param name="_cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* _cmdList);
+	/// <param name="_cmdList">コマンドリスト</param>
+	static void SetCmdList(ID3D12GraphicsCommandList* _cmdList) { cmdList = _cmdList; }
 
 	/// <summary>
-	/// 描画後処理
+	/// コマンドリストのセット
 	/// </summary>
-	static void PostDraw();
+	static void PostDraw() { cmdList = nullptr; }
 
 private://メンバ関数
 
@@ -96,7 +95,7 @@ private://メンバ関数
 
 public:
 
-	InstanceObject() {};
+	InstanceObject();
 	~InstanceObject();
 
 	/// <summary>
@@ -122,8 +121,8 @@ public:
 	/// <summary>
 	/// パイプラインのセット
 	/// </summary>
-	/// <param name="_pipeline">パイプライン</param>
-	static void SetPipeline(const GraphicsPipelineManager::GRAPHICS_PIPELINE& _pipeline) { pipeline = _pipeline; }
+	/// <param name="_name">パイプライン名</param>
+	void SetPipeline(const std::string& _name) { pipelineName = _name; }
 
 	/// <summary>
 	/// インスタンシング描画最大描画数になっていないかのチェック
@@ -143,8 +142,6 @@ private:
 	static ID3D12Device* device;
 	//コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	//パイプライン
-	static GraphicsPipelineManager::GRAPHICS_PIPELINE pipeline;
 	//カメラ
 	static Camera* camera;
 	//ライト
@@ -156,6 +153,10 @@ private:
 
 private:
 
+	//パイプライン名
+	std::string pipelineName;
+	//トポロジータイプ
+	D3D_PRIMITIVE_TOPOLOGY topologyType;
 	//モデル
 	Model* model;
 	//ベースカラー

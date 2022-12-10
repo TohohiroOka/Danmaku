@@ -97,7 +97,7 @@ void ShaderManager::LoadShader()
 	//DrawLine2d
 	shaderObjectVS["DRAW_LINE_2D"] = CompileShader(L"DrawLine2DVS.hlsl", vsModel);
 	shaderObjectPS["DRAW_LINE_2D"] = CompileShader(L"DrawLine2DPS.hlsl", psModel);
-	//PostEffect
+	//MainRenderTarget
 	shaderObjectVS["POST_EFFECT"] = CompileShader(L"PostEffectVS.hlsl", vsModel);
 	shaderObjectPS["POST_EFFECT"] = CompileShader(L"PostEffectPS.hlsl", psModel);
 	//Particle
@@ -110,6 +110,12 @@ void ShaderManager::LoadShader()
 	//HeightMap
 	shaderObjectVS["HEIGHT_MAP"] = CompileShader(L"HeightMapVS.hlsl", vsModel);
 	shaderObjectPS["HEIGHT_MAP"] = CompileShader(L"HeightMapPS.hlsl", psModel);
+	//ShrinkBuffer
+	shaderObjectVS["SHRINK_BUFFER"] = CompileShader(L"ShrinkBufferVS.hlsl", vsModel);
+	shaderObjectPS["SHRINK_BUFFER"] = CompileShader(L"ShrinkBufferPS.hlsl", psModel);
+	//Bloom
+	shaderObjectVS["BLOOM"] = CompileShader(L"BloomVS.hlsl", vsModel);
+	shaderObjectPS["BLOOM"] = CompileShader(L"BloomPS.hlsl", psModel);
 }
 
 void ShaderManager::Finalize()

@@ -41,6 +41,9 @@ InterfaceObject3d::~InterfaceObject3d()
 
 void InterfaceObject3d::Initialize()
 {
+	//トポロジータイプ設定
+	topologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
 	HRESULT result = S_FALSE;
 
 	//定数バッファの生成

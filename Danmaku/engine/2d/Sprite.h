@@ -3,8 +3,8 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
+#include <unordered_map>
 
-#include "GraphicsPipelineManager.h"
 #include "Texture.h"
 
 class Sprite
@@ -62,15 +62,11 @@ public: // 静的メンバ関数
 	static void LoadTexture(const std::string& _keepName, const std::string& _filename, bool _isDelete = true);
 
 	/// <summary>
-	/// 描画前処理
+	/// テクスチャ読み込み
 	/// </summary>
-	/// <param name="_cmdList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList* _cmdList);
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
-	static void PostDraw();
+	/// <param name="_keepName">保存名</param>
+	/// <param name="_texture">テクスチャクラス情報</param>
+	static void SetTexture(const std::string& _keepName, Texture* _texture);
 
 	/// <summary>
 	/// スプライト生成
@@ -90,10 +86,21 @@ public: // 静的メンバ関数
 	static void Finalize();
 
 	/// <summary>
+	/// コマンドリストのセット
+	/// </summary>
+	/// <param name="_cmdList">コマンドリスト</param>
+	static void SetCmdList(ID3D12GraphicsCommandList* _cmdList) { cmdList = _cmdList; }
+
+	/// <summary>
+	/// コマンドリストのセット
+	/// </summary>
+	static void PostDraw() { cmdList = nullptr; }
+
+	/// <summary>
 	/// パイプラインのセット
 	/// </summary>
-	/// <param name="_pipeline">パイプライン</param>
-	static void SetPipeline(const GraphicsPipelineManager::GRAPHICS_PIPELINE& _pipeline) { pipeline = _pipeline; }
+	/// <param name="_name">パイプライン名</param>
+	void SetPipeline(const std::string& _name) { pipelineName = _name; }
 
 protected: // 静的メンバ変数
 
@@ -103,10 +110,8 @@ protected: // 静的メンバ変数
 	static ID3D12Device* device;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	//パイプライン
-	static GraphicsPipelineManager::GRAPHICS_PIPELINE pipeline;
 	//テクスチャ情報
-	static std::map<std::string, INFORMATION> texture;
+	static std::unordered_map<std::string, INFORMATION> texture;
 	// 射影行列
 	static XMMATRIX matProjection;
 
@@ -115,7 +120,7 @@ public: // メンバ関数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Sprite() {};
+	Sprite();
 
 	/// <summary>
 	/// デストラクタ
@@ -142,6 +147,10 @@ protected: // メンバ変数
 
 	//テクスチャ名
 	std::string name;
+	//パイプライン名
+	std::string pipelineName;
+	//トポロジータイプ
+	D3D_PRIMITIVE_TOPOLOGY topologyType;
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
 	// 定数バッファ

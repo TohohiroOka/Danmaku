@@ -98,31 +98,31 @@ private://メンバ関数
 	/// </summary>
 	/// <param name="_mode">ブレンドの種類</param>
 	/// <returns>ブレンド設定</returns>
-	D3D12_RENDER_TARGET_BLEND_DESC CreateBlendDesc(const BLEND_MODE& _mode);
+	static D3D12_RENDER_TARGET_BLEND_DESC CreateBlendDesc(const BLEND_MODE& _mode);
 
 	/// <summary>
 	/// パイプラインデスクの生成
 	/// </summary>
 	/// <param name="_pepelineDescSet">パイプライン設定</param>
 	/// <returns>パイプラインデスク</returns>
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC CreatepelineDesc(const PEPELINE_DESC& _pepelineDescSet);
+	static D3D12_GRAPHICS_PIPELINE_STATE_DESC CreatepelineDesc(const PEPELINE_DESC& _pepelineDescSet);
 
 	/// <summary>
 	/// ルートシグネチャの生成
 	/// </summary>
 	/// <param name="_signatureDescSet">ルートシグネチャ設定</param>
-	void CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet);
+	static ID3D12RootSignature* CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet);
 
 public://メンバ関数
 
-	GraphicsPipelineManager();
+	GraphicsPipelineManager() {};
 	~GraphicsPipelineManager();
 
 	/// <summary>
 	/// デバイスのセット
 	/// </summary>
 	/// <param name="_device">デバイス</param>
-	static void SetDevice(ID3D12Device* _device) { GraphicsPipelineManager::device = _device; }
+	static void StaticInitialize(ID3D12Device* _device);
 
 	/// <summary>
 	/// パイプラインの生成
@@ -131,23 +131,34 @@ public://メンバ関数
 	/// <param name="_name">パイプライン名</param>
 	/// <param name="_pepelineDescSet">パイプラインの設定</param>
 	/// <param name="_signatureDescSet">ルートシグネチャ設定</param>
-	void CreatePipeline(const std::string& _name, const PEPELINE_DESC& _pepelineDescSet, const SIGNATURE_DESC& _signatureDescSet);
+	static void CreatePipeline(const std::string& _name, const PEPELINE_DESC& _pepelineDescSet, const SIGNATURE_DESC& _signatureDescSet);
+
+	/// <summary>
+	/// 描画用パイプラインのセット
+	/// </summary>
+	/// <param name="_cmdList">コマンドリスト</param>
+	/// <param name="_name">パイプライン名</param>
+	/// <param name="_topologyType">トポロジータイプ</param>
+	static void SetPipeline(ID3D12GraphicsCommandList* _cmdList, const std::string& _name, const D3D_PRIMITIVE_TOPOLOGY _topologyType);
+
+	/// <summary>
+	/// トポロジーのリセットのセット
+	/// </summary>
+	static void ResetTopology() {
+		oldTopologyType = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	};
 
 private://静的メンバ変数
 
 	// デバイス
 	static ID3D12Device* device;
-
-private://メンバ変数
-
 	//シェーダー
-	std::unique_ptr<ShaderManager> shaderManager;
-
-public://メンバ変数
-
-	//名前の保持
-	std::string name;
+	static std::unique_ptr<ShaderManager> shaderManager;
 	//パイプライン保存配列
-	std::unordered_map<std::string, GRAPHICS_PIPELINE> graphicsPipeline;
+	static std::unordered_map<std::string, GRAPHICS_PIPELINE> graphicsPipeline;
+	//前回のパイプライン名
+	static std::string oldPipelineName;
+	//前回のトポロジータイプ
+	static D3D_PRIMITIVE_TOPOLOGY oldTopologyType;
 
 };

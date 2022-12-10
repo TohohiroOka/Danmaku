@@ -19,6 +19,7 @@ void DescriptorHeapManager::StaticInitialize(ID3D12Device* _device)
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descHeapDesc.NumDescriptors = DescriptorsSize;
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));
+	if (FAILED(result)) { assert(0); }
 }
 
 void DescriptorHeapManager::PreDraw(ID3D12GraphicsCommandList* _cmdList)

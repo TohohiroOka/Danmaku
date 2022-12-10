@@ -3,9 +3,14 @@
 #include "SceneManager.h"
 #include "DirectInput.h"
 #include "XInputManager.h"
-#include "PostEffect.h"
 #include "FrameRateKeep.h"
 #include "CubeMap.h"
+
+//ポストエフェクト系
+#include "MainRenderTarget.h"
+#include "SubRenderTarget.h"
+#include "MainPostEffect.h"
+#include "ShrinkBuffer.h"
 
 #include <sstream>
 #include <iomanip>
@@ -17,6 +22,15 @@ class WindowApp;
 
 class MainEngine
 {
+private:
+
+	struct RENDER_INFO {
+		//書き込むレンダーターゲットの名前
+		std::string renderName;
+		//書き込むレンダーターゲット
+		std::unique_ptr<SubRenderTarget> renderTarget;
+	};
+
 public:
 
 	MainEngine() = default;
@@ -53,12 +67,25 @@ private:
 	XInputManager* xinput = nullptr;
 	//GameSceneのインスタンス
 	std::unique_ptr<SceneManager> scene = nullptr;
-	//ポストエフェクトのインスタンス
-	std::unique_ptr<PostEffect> postEffect = nullptr;
 	//Fps固定用クラスのインスタンス
 	std::unique_ptr<FrameRateKeep> fps = nullptr;
 	//キューブマップ
 	//std::unique_ptr<CubeMap> cubemap;
 	//数字表示デバッグ用
 	wchar_t str[256] = {};
+
+	///ポストエフェクト系
+	//レンダーターゲットを取得する用
+	std::unique_ptr<MainRenderTarget> mainRenderTarget;
+	//ブルーム
+	RENDER_INFO bloom;
+	//ブルーム描画
+	std::unique_ptr<BasePostEffect> bloomDraw;
+	//縮小バッファ
+	std::array<RENDER_INFO, 5> R_shrinkBuffer;
+	//ポストエフェクト用テクスチャ描画
+	std::array<std::unique_ptr<ShrinkBuffer>, 5> D_shrinkBuffer;
+	//ポストエフェクトを合わせる用
+	std::unique_ptr<MainPostEffect> mainDraw;
+
 };

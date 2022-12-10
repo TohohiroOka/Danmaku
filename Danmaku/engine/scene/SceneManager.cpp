@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 #include "Boss1.h"
 #include "Title.h"
-#include "PostEffect.h"
+#include "ShrinkBuffer.h"
 
 std::unique_ptr<InterfaceScene> SceneManager::scene = nullptr;
 InterfaceScene* SceneManager::nextScene = nullptr;
@@ -119,8 +119,6 @@ void SceneManager::Initialize()
 
 void SceneManager::CreatePipeline()
 {
-	graphicsPipeline = std::make_unique<GraphicsPipelineManager>();
-
 	GraphicsPipelineManager::PEPELINE_DESC inPepeline{};
 	GraphicsPipelineManager::SIGNATURE_DESC inSignature{};
 
@@ -142,8 +140,7 @@ void SceneManager::CreatePipeline()
 		inPepeline.stateNum = 3;
 		inPepeline.rtvNum = 3;
 
-		graphicsPipeline->CreatePipeline("OBJ", inPepeline, inSignature);
-		Object3d::SetPipeline(graphicsPipeline->graphicsPipeline["OBJ"]);
+		GraphicsPipelineManager::CreatePipeline("OBJ", inPepeline, inSignature);
 	}
 	//InstanceObject
 	{
@@ -166,8 +163,7 @@ void SceneManager::CreatePipeline()
 
 		inSignature.instanceDraw = true;
 
-		graphicsPipeline->CreatePipeline("InstanceObject", inPepeline, inSignature);
-		InstanceObject::SetPipeline(graphicsPipeline->graphicsPipeline["InstanceObject"]);
+		GraphicsPipelineManager::CreatePipeline("InstanceObject", inPepeline, inSignature);
 	}
 	//CUBE_BOX
 	{
@@ -185,11 +181,11 @@ void SceneManager::CreatePipeline()
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
 		inPepeline.rtvNum = 1;
+		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
 
 		inSignature.instanceDraw = false;
 
-		graphicsPipeline->CreatePipeline("CUBE_BOX", inPepeline, inSignature);
-		CubeMap::SetPipeline(graphicsPipeline->graphicsPipeline["CUBE_BOX"]);
+		GraphicsPipelineManager::CreatePipeline("CUBE_BOX", inPepeline, inSignature);
 	}
 	//HEIGHT_MAP
 	{
@@ -207,15 +203,13 @@ void SceneManager::CreatePipeline()
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
 		inPepeline.rtvNum = 3;
-		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
 
 		inSignature.object2d = false;
 		inSignature.textureNum = 3;
 		inSignature.light = true;
 		inSignature.instanceDraw = true;//定数バッファとしてインスタンス描画用の物を用いる
 
-		graphicsPipeline->CreatePipeline("HEIGHT_MAP", inPepeline, inSignature);
-		HeightMap::SetPipeline(graphicsPipeline->graphicsPipeline["HEIGHT_MAP"]);
+		GraphicsPipelineManager::CreatePipeline("HEIGHT_MAP", inPepeline, inSignature);
 	}
 	//DRAW_LINE_3D
 	{
@@ -240,8 +234,7 @@ void SceneManager::CreatePipeline()
 		inSignature.light = false;
 		inSignature.instanceDraw = false;
 
-		graphicsPipeline->CreatePipeline("DRAW_LINE_3D", inPepeline, inSignature);
-		DrawLine3D::SetPipeline(graphicsPipeline->graphicsPipeline["DRAW_LINE_3D"]);
+		GraphicsPipelineManager::CreatePipeline("DRAW_LINE_3D", inPepeline, inSignature);
 	}
 	//PrimitiveObject3D
 	{
@@ -265,8 +258,7 @@ void SceneManager::CreatePipeline()
 		inSignature.textureNum = 0;
 		inSignature.light = false;
 
-		graphicsPipeline->CreatePipeline("PrimitiveObject3D", inPepeline, inSignature);
-		PrimitiveObject3D::SetPipeline(graphicsPipeline->graphicsPipeline["PrimitiveObject3D"]);
+		GraphicsPipelineManager::CreatePipeline("PrimitiveObject3D", inPepeline, inSignature);
 	}
 	//SPRITE
 	{
@@ -289,8 +281,7 @@ void SceneManager::CreatePipeline()
 		inSignature.textureNum = 1;
 		inSignature.light = false;
 
-		graphicsPipeline->CreatePipeline("SPRITE", inPepeline, inSignature);
-		Sprite::SetPipeline(graphicsPipeline->graphicsPipeline["SPRITE"]);
+		GraphicsPipelineManager::CreatePipeline("SPRITE", inPepeline, inSignature);
 	}
 	//PARTICLE
 	{
@@ -316,8 +307,7 @@ void SceneManager::CreatePipeline()
 		inSignature.textureNum = 1;
 		inSignature.light = false;
 
-		graphicsPipeline->CreatePipeline("PARTICLE", inPepeline, inSignature);
-		ParticleManager::SetPipeline(graphicsPipeline->graphicsPipeline["PARTICLE"]);
+		GraphicsPipelineManager::CreatePipeline("PARTICLE", inPepeline, inSignature);
 	}
 	//POST_EFFECT
 	{
@@ -343,8 +333,59 @@ void SceneManager::CreatePipeline()
 		inSignature.textureNum = 4;
 		inSignature.light = false;
 
-		graphicsPipeline->CreatePipeline("POST_EFFECT", inPepeline, inSignature);
-		PostEffect::SetPipeline(graphicsPipeline->graphicsPipeline["POST_EFFECT"]);
+		GraphicsPipelineManager::CreatePipeline("POST_EFFECT", inPepeline, inSignature);
+	}
+	//SHRINK_BUFFER
+	{
+		inPepeline.object2d = true;
+		inPepeline.vertShader = "SHRINK_BUFFER";
+		inPepeline.pixelShader = "SHRINK_BUFFER";
+		inPepeline.geometryShader = "null";
+		GraphicsPipelineManager::INPUT_LAYOUT_NUMBER inputLayoutType[] = {
+			GraphicsPipelineManager::POSITION ,GraphicsPipelineManager::TEXCOORD_2D };
+		//配列サイズ
+		const int arrayNum = sizeof(inputLayoutType) / sizeof(inputLayoutType[0]);
+
+		inPepeline.layoutNum = arrayNum;
+		D3D12_INPUT_ELEMENT_DESC inputLayout[arrayNum];
+		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
+		inPepeline.inputLayout = inputLayout;
+		inPepeline.stateNum = 1;
+		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
+		inPepeline.particl = false;
+
+		inSignature.object2d = true;
+		inSignature.textureNum = 1;
+		inSignature.light = false;
+
+		GraphicsPipelineManager::CreatePipeline("SHRINK_BUFFER", inPepeline, inSignature);
+	}
+	//BLOOM
+	{
+		inPepeline.object2d = true;
+		inPepeline.vertShader = "BLOOM";
+		inPepeline.pixelShader = "BLOOM";
+		inPepeline.geometryShader = "null";
+		GraphicsPipelineManager::INPUT_LAYOUT_NUMBER inputLayoutType[] = {
+			GraphicsPipelineManager::POSITION ,GraphicsPipelineManager::TEXCOORD_2D };
+		//配列サイズ
+		const int arrayNum = sizeof(inputLayoutType) / sizeof(inputLayoutType[0]);
+
+		inPepeline.layoutNum = arrayNum;
+		D3D12_INPUT_ELEMENT_DESC inputLayout[arrayNum];
+		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
+		inPepeline.inputLayout = inputLayout;
+		inPepeline.stateNum = 1;
+		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
+		inPepeline.particl = false;
+
+		inSignature.object2d = true;
+		inSignature.textureNum = 2;
+		inSignature.light = false;
+
+		GraphicsPipelineManager::CreatePipeline("BLOOM", inPepeline, inSignature);
 	}
 
 }
@@ -397,10 +438,10 @@ void SceneManager::Update()
 	HeightMap::SetLightGroup(light.get());
 }
 
-void SceneManager::DrawNotPostB(ID3D12GraphicsCommandList* cmdList)
+void SceneManager::DrawPostEffect(ID3D12GraphicsCommandList* cmdList)
 {
 	scene->SetCmdList(cmdList);
-	scene->DrawNotPostB();
+	scene->DrawPostEffect();
 }
 
 void SceneManager::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -409,10 +450,10 @@ void SceneManager::Draw(ID3D12GraphicsCommandList* cmdList)
 	scene->Draw();
 }
 
-void SceneManager::DrawNotPostA(ID3D12GraphicsCommandList* cmdList)
+void SceneManager::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 {
 	scene->SetCmdList(cmdList);
-	scene->DrawNotPostA();
+	scene->DrawSprite();
 }
 
 void SceneManager::ImguiDraw()

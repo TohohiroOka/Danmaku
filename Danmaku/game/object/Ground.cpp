@@ -49,10 +49,9 @@ void Ground::Initialize()
 	//モデル読み込み
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
-	mapName[0] = "heightmap02.bmp";
-	mapName[1] = "heightmap01.bmp";
-	mapName[2] = "heightmap03.bmp";	
-	mapName[3] = "heightmap04.bmp";
+	mapName[0] = "heightmap01.bmp";
+	mapName[1] = "heightmap03.bmp";	
+	mapName[2] = "heightmap04.bmp";
 	useModel= TerrainModel::FlatlandModelCreate(jimen, kabe);
 	terrainModel[0] = TerrainModel::FlatlandModelCreate(jimen, kabe);
 	for (int i = 0; i < modelNum; i++) {

@@ -1,15 +1,15 @@
 #pragma once
 #include "InterfaceScene.h"
-#include "Player.h"
-#include "Ground.h"
-#include "TouchableObject.h"
+
 #include <array>
 
+//ƒQ[ƒ€ƒIƒuƒWƒFƒNƒgŒn
+#include "Player.h"
+#include "Ground.h"
 #include "BulletManager.h"
 #include "EnemyManager.h"
 #include "BeamManager.h"
 #include "BossA.h"
-
 #include "UiManager.h"
 
 class Boss1 : public InterfaceScene
@@ -52,7 +52,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void DrawNotPostB() override;
+	void DrawPostEffect() override;
 
 	/// <summary>
 	///	•`‰æ
@@ -62,7 +62,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void DrawNotPostA() override;
+	void DrawSprite() override;
 
 	/// <summary>
 	///	‰ğ•ú
@@ -114,4 +114,5 @@ private:
 
 	//UI
 	std::unique_ptr<UiManager> ui;
+
 };

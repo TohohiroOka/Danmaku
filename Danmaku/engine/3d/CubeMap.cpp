@@ -3,13 +3,13 @@
 #include <DirectXTex.h>
 #include <string>
 #include "SafeDelete.h"
+#include "GraphicsPipelineManager.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
 ID3D12Device* CubeMap::device = nullptr;
 ID3D12GraphicsCommandList* CubeMap::cmdList = nullptr;
-GraphicsPipelineManager::GRAPHICS_PIPELINE CubeMap::pipeline;
 Camera* CubeMap::camera = nullptr;
 
 void CubeMap::StaticInitialize(ID3D12Device* _device)
@@ -36,29 +36,6 @@ std::unique_ptr<CubeMap> CubeMap::Create(ID3D12GraphicsCommandList* _cmdList)
 	return std::unique_ptr<CubeMap>(instance);
 }
 
-void CubeMap::PreDraw(ID3D12GraphicsCommandList* _cmdList)
-{
-	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(CubeMap::cmdList == nullptr);
-
-	CubeMap::cmdList = _cmdList;
-
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-
-	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void CubeMap::PostDraw()
-{
-	// コマンドリストを解除
-	CubeMap::cmdList = nullptr;
-}
-
 void CubeMap::Finalize()
 {
 	//pipeline.reset();
@@ -67,6 +44,10 @@ void CubeMap::Finalize()
 void CubeMap::Initialize()
 {
 	HRESULT result = S_FALSE;
+
+	//トポロジータイプ
+	topologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
 	//頂点の長さ
 	float edge = 1.0f;
 	const int vertNum = 24;
@@ -206,6 +187,9 @@ void CubeMap::Update()
 
 void CubeMap::Draw()
 {
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, "CUBE_MAP", topologyType);
+
 	//定数バッファをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 

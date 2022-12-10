@@ -10,11 +10,6 @@ class Object3d : public InterfaceObject3d
 public: // 静的メンバ関数
 
 	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	static void PreDraw();
-
-	/// <summary>
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <param name="_model">モデル</param>
@@ -22,15 +17,10 @@ public: // 静的メンバ関数
 	static std::unique_ptr<Object3d> Create(Model* _model = nullptr);
 
 	/// <summary>
-	/// パイプラインの設定
+	/// パイプラインのセット
 	/// </summary>
-	/// <param name="_pipeline">パイプライン</param>
-	static void SetPipeline(const GraphicsPipelineManager::GRAPHICS_PIPELINE& _pipeline) { Object3d::pipeline = _pipeline; }
-
-private: // 静的メンバ変数
-
-	//パイプライン
-	static GraphicsPipelineManager::GRAPHICS_PIPELINE pipeline;
+	/// <param name="_name">パイプライン名</param>
+	void SetPipeline(const std::string& _name) { pipelineName = _name; }
 
 public: // メンバ関数
 
@@ -50,6 +40,8 @@ protected: // メンバ変数
 	const char* name = nullptr;
 	// モデル
 	Model* model = nullptr;
+	//パイプライン名
+	std::string pipelineName;
 
 public:
 

@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-std::map<BaseUi::SPRITE, BaseUi::SPRITE_INFO> BaseUi::spriteName;
+std::unordered_map<BaseUi::SPRITE, BaseUi::SPRITE_INFO> BaseUi::spriteName;
 
 void BaseUi::KeepName(const std::string& _name, const SPRITE _sprite,const XMFLOAT2& _texSize)
 {

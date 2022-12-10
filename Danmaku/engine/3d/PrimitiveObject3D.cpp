@@ -1,12 +1,11 @@
 #include "PrimitiveObject3D.h"
 #include "Camera.h"
 #include "SafeDelete.h"
+#include "GraphicsPipelineManager.h"
 
 #include <vector>
 
 using namespace DirectX;
-
-GraphicsPipelineManager::GRAPHICS_PIPELINE PrimitiveObject3D::pipeline;
 
 PrimitiveObject3D::~PrimitiveObject3D()
 {
@@ -18,6 +17,8 @@ PrimitiveObject3D::~PrimitiveObject3D()
 void PrimitiveObject3D::Initialize()
 {
 	HRESULT result = S_FALSE;
+
+	topologyType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	//頂点配列の大きさ
 	size_t vertSize = vertices.size();
@@ -114,21 +115,12 @@ void PrimitiveObject3D::Update()
 	}
 }
 
-void PrimitiveObject3D::PreDraw()
-{
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-
-	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-}
-
 void PrimitiveObject3D::Draw()
 {
 	Update();
+
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, "PrimitiveObject3D", topologyType);
 
 	//インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView);

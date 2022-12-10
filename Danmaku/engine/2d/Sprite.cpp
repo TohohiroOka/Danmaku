@@ -1,15 +1,22 @@
 #include "Sprite.h"
 #include "WindowApp.h"
 #include <cassert>
+#include "GraphicsPipelineManager.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
 ID3D12Device* Sprite::device = nullptr;
 ID3D12GraphicsCommandList* Sprite::cmdList = nullptr;
-GraphicsPipelineManager::GRAPHICS_PIPELINE Sprite::pipeline;
-std::map<std::string, Sprite::INFORMATION> Sprite::texture;
+std::unordered_map<std::string, Sprite::INFORMATION> Sprite::texture;
 XMMATRIX Sprite::matProjection;
+
+Sprite::Sprite()
+{
+	//トポロジータイプの設定
+	topologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	pipelineName = "SPRITE";
+}
 
 Sprite::~Sprite()
 {
@@ -51,25 +58,17 @@ void Sprite::LoadTexture(const std::string& _keepName, const std::string& _filen
 	texture[_keepName].isDelete = _isDelete;
 }
 
-void Sprite::PreDraw(ID3D12GraphicsCommandList* _cmdList)
+void Sprite::SetTexture(const std::string& _keepName, Texture* _texture)
 {
-	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Sprite::cmdList == nullptr);
+	// nullptrチェック
+	assert(device);
 
-	Sprite::cmdList = _cmdList;
+	//同じキーがあればエラーを出力
+	assert(!texture.count(_keepName));
 
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-}
-
-void Sprite::PostDraw()
-{
-	// コマンドリストを解除
-	Sprite::cmdList = nullptr;
+	//テクスチャ読み込み
+	texture[_keepName].instance = std::unique_ptr<Texture>(_texture);
+	texture[_keepName].isDelete = false;
 }
 
 std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
@@ -156,6 +155,8 @@ void Sprite::Update()
 
 void Sprite::Draw()
 {
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, pipelineName, topologyType);
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &this->vbView);
 	// 定数バッファビューをセット

@@ -34,7 +34,7 @@ public://メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void DrawNotPostB(ID3D12GraphicsCommandList* cmdList);
+	void DrawPostEffect(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// 描画
@@ -46,7 +46,7 @@ public://メンバ関数
 	/// 描画
 	/// </summary>
 	/// <param name="cmdList">コマンドリスト</param>
-	void DrawNotPostA(ID3D12GraphicsCommandList* cmdList);
+	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
 	/// imguiの表示

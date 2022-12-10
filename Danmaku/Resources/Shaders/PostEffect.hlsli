@@ -3,6 +3,7 @@ cbuffer cbuff0:register(b0)
 	float4 outlineColor;//アウトラインの色
 	float outlineWidth;//アウトラインの太さ
 	unsigned int isFog;//フォグの有無
+	unsigned int isToneMap;//トーンマップの有無
 };
 
 struct VSOutput

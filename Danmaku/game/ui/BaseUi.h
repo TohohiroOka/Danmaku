@@ -45,7 +45,7 @@ public:
 protected:
 
 	//テクスチャ保存名
-	static std::map<SPRITE, SPRITE_INFO> spriteName;
+	static std::unordered_map<SPRITE, SPRITE_INFO> spriteName;
 
 protected:
 

@@ -24,7 +24,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void DrawNotPostB() override;
+	void DrawPostEffect() override;
 
 	/// <summary>
 	///	•`‰æ
@@ -34,7 +34,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void DrawNotPostA() override;
+	void DrawSprite() override;
 
 	/// <summary>
 	///	‰ð•ú

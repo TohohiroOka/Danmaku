@@ -24,11 +24,6 @@ public://メンバ関数
 	/// <returns>インスタンス</returns>
 	static std::unique_ptr<HeightMap> Create(TerrainModel* _model);
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	static void PreDraw();
-
 private://メンバ関数
 
 	/// <summary>
@@ -60,23 +55,12 @@ public:
 	void Draw() override;
 
 	/// <summary>
-	/// パイプラインのセット
-	/// </summary>
-	/// <param name="_pipeline">パイプライン</param>
-	static void SetPipeline(const GraphicsPipelineManager::GRAPHICS_PIPELINE& _pipeline) { HeightMap::pipeline = _pipeline; }
-	
-	/// <summary>
 	/// モデルの変換
 	/// </summary>
 	/// <param name="_beforeModel">変更前</param>
 	/// <param name="afterModel">変更後</param>
 	/// <param name="_ratio">変換割合</param>
 	void SetChangeModel(TerrainModel* _beforeModel, TerrainModel* afterModel, const float _ratio = 1.0f);
-
-private:
-
-	//パイプライン
-	static GraphicsPipelineManager::GRAPHICS_PIPELINE pipeline;
 
 private:
 

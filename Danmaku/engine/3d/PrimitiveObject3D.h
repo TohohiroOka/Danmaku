@@ -16,24 +16,6 @@ public://構造体宣言
 		XMMATRIX viewproj;//3D変換行列
 	};
 
-public://静的メンバ関数
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~PrimitiveObject3D();
-
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	static void PreDraw();
-
-	/// <summary>
-	/// パイプラインのセット
-	/// </summary>
-	/// <param name="_pipeline">パイプライン</param>
-	static void SetPipeline(const GraphicsPipelineManager::GRAPHICS_PIPELINE& _pipeline) { PrimitiveObject3D::pipeline = _pipeline; }
-
 private:
 
 	/// <summary>
@@ -42,6 +24,11 @@ private:
 	void Update();
 
 public://メンバ関数
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~PrimitiveObject3D();
 
 	/// <summary>
 	/// 初期化
@@ -53,13 +40,10 @@ public://メンバ関数
 	/// </summary>
 	void Draw() override;
 
-private://静的メンバ変数
-
-	//パイプライン
-	static GraphicsPipelineManager::GRAPHICS_PIPELINE pipeline;
-
 protected://メンバ変数
 
+	//パイプライン名
+	std::string pipelineName;
 	// 頂点配列
 	std::vector<XMFLOAT3> vertices;
 	//インデックス配列

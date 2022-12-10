@@ -6,12 +6,16 @@
 using namespace Microsoft::WRL;
 
 ID3D12Device* GraphicsPipelineManager::device = nullptr;
+std::unique_ptr<ShaderManager> GraphicsPipelineManager::shaderManager;
+std::unordered_map<std::string, GraphicsPipelineManager::GRAPHICS_PIPELINE> GraphicsPipelineManager::graphicsPipeline;
+std::string GraphicsPipelineManager::oldPipelineName = "null";
+D3D_PRIMITIVE_TOPOLOGY GraphicsPipelineManager::oldTopologyType = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
 //名前を結合する
 LPCWSTR GetName(std::string _className, std::string _setName)
 {
 	//名前の結合
-	std::string name = _className + _setName;
+	std::string name = _className + "_" + _setName;
 	//大きさ取得
 	size_t size = name.size();
 	//名前のサイズ+1の配列に作り直す
@@ -106,7 +110,7 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC GraphicsPipelineManager::CreatepelineDesc(con
 	gpipeline.NumRenderTargets = _pepelineDescSet.rtvNum;    // 描画対象は1つ
 	for (int i = 0; i < _pepelineDescSet.rtvNum; i++)
 	{
-		gpipeline.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+		gpipeline.RTVFormats[i] = DXGI_FORMAT_R16G16B16A16_FLOAT; // 0～255指定のRGBA
 	}
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
@@ -138,7 +142,7 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC GraphicsPipelineManager::CreatepelineDesc(con
 	return gpipeline;
 }
 
-void GraphicsPipelineManager::CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet)
+ID3D12RootSignature* GraphicsPipelineManager::CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet)
 {
 	HRESULT result = S_FALSE;
 
@@ -220,20 +224,18 @@ void GraphicsPipelineManager::CreateRootSignature(const SIGNATURE_DESC& _signatu
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_0((UINT)rootparams.size(), rootparams.data(), 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	ComPtr<ID3DBlob> rootSigBlob;
 	// バージョン自動判定のシリアライズ
+	ComPtr<ID3DBlob> rootSigBlob;
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, nullptr);
 	if (FAILED(result)) { assert(0); }
 
 	// ルートシグネチャの生成
-	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&graphicsPipeline[name].rootSignature));
+	ID3D12RootSignature* rootSignature;
+	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
+		rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	if (FAILED(result)) { assert(0); }
-}
 
-GraphicsPipelineManager::GraphicsPipelineManager()
-{
-	//シェーダーのコンパイル
-	shaderManager = ShaderManager::Create();
+	return rootSignature;
 }
 
 GraphicsPipelineManager::~GraphicsPipelineManager()
@@ -246,31 +248,65 @@ GraphicsPipelineManager::~GraphicsPipelineManager()
 	shaderManager.reset();
 }
 
+void GraphicsPipelineManager::StaticInitialize(ID3D12Device* _device)
+{
+	shaderManager = ShaderManager::Create();
+	device = _device;
+}
+
 void GraphicsPipelineManager::CreatePipeline(const std::string& _name, const PEPELINE_DESC& _pepelineDescSet,
 	const SIGNATURE_DESC& _signatureDescSet)
 {
 	HRESULT result = S_FALSE;
 
-	this->name = _name;
-
 	//同じキーがあればエラーを出力
-	assert(!graphicsPipeline.count(name));
+	assert(!graphicsPipeline.count(_name));
 	size_t L_size = graphicsPipeline.size() + 1;
-	graphicsPipeline.reserve(L_size);
+
+	GRAPHICS_PIPELINE addPepeline;
 
 	//グラフィックスパイプラインの設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC L_gpipeline = CreatepelineDesc(_pepelineDescSet);
 
 	//ルートシグネチャの生成
-	CreateRootSignature(_signatureDescSet);
+	ID3D12RootSignature* rootSignature = CreateRootSignature(_signatureDescSet);
+	addPepeline.rootSignature = ComPtr<ID3D12RootSignature>(rootSignature);
 
 	//パイプラインデスクにルートシグネチャを登録
-	L_gpipeline.pRootSignature = graphicsPipeline[name].rootSignature.Get();
+	L_gpipeline.pRootSignature = addPepeline.rootSignature.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&L_gpipeline, IID_PPV_ARGS(&graphicsPipeline[name].pipelineState));
+	result = device->CreateGraphicsPipelineState(&L_gpipeline, IID_PPV_ARGS(&addPepeline.pipelineState));
 	if (FAILED(result)) { assert(0); }
 
-	graphicsPipeline[name].pipelineState->SetName(GetName(name, "PipelineState"));
-	graphicsPipeline[name].rootSignature->SetName(GetName(name, "RootSignature"));
+	addPepeline.pipelineState->SetName(GetName(_name, "PipelineState"));
+	addPepeline.rootSignature->SetName(GetName(_name, "RootSignature"));
+
+	//パイプラインを追加
+	graphicsPipeline[_name] = addPepeline;
+}
+
+void GraphicsPipelineManager::SetPipeline(ID3D12GraphicsCommandList* _cmdList,
+	const std::string& _name, const D3D_PRIMITIVE_TOPOLOGY _topologyType)
+{
+	assert(graphicsPipeline[_name].pipelineState);
+	assert(graphicsPipeline[_name].rootSignature);
+
+	// 前回と異なるプリミティブ形状だった場合再設定
+	if (oldTopologyType != _topologyType) {
+		_cmdList->IASetPrimitiveTopology(_topologyType);
+
+		oldTopologyType = _topologyType;
+	}
+
+	//前回と同じパイプラインだった場合何もしない
+	if (oldPipelineName == _name) { return; }
+
+	// パイプラインステートの設定
+	_cmdList->SetPipelineState(graphicsPipeline[_name].pipelineState.Get());
+
+	// ルートシグネチャの設定
+	_cmdList->SetGraphicsRootSignature(graphicsPipeline[_name].rootSignature.Get());
+
+	oldPipelineName = _name;
 }

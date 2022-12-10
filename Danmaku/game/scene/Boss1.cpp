@@ -77,7 +77,6 @@ void Boss1::Initialize()
 
 	player->SetMovie();
 	boss->SetMovie();
-
 }
 
 void Boss1::Update()
@@ -339,24 +338,16 @@ void Boss1::Update()
 	xinput = nullptr;
 }
 
-void Boss1::DrawNotPostB()
+void Boss1::DrawPostEffect()
 {
-	InstanceObject::PreDraw(cmdList);
-	bullet->Draw();
-	beam->Draw();
-	InstanceObject::PostDraw();
 }
 
 void Boss1::Draw()
 {
-	assert(cmdList);
-
 	InterfaceObject3d::SetCmdList(cmdList);
 
-	HeightMap::PreDraw();
 	ground->Draw();
 
-	Object3d::PreDraw();
 	ground->CubeDraw();
 	player->Draw();
 	enemy->Draw();
@@ -368,18 +359,23 @@ void Boss1::Draw()
 	//	ground->CDraw();
 	//}
 
-	InterfaceObject3d::ReleaseCmdList();
+	InterfaceObject3d::PostDraw();
 
-	ParticleManager::PreDraw(cmdList);
+	ParticleManager::SetCmdList(cmdList);
 	bullet->EffectDraw();
 	ParticleManager::PostDraw();
+
+	InstanceObject::SetCmdList(cmdList);
+	bullet->Draw();
+	beam->Draw();
+	InstanceObject::PostDraw();
 }
 
-void Boss1::DrawNotPostA()
+void Boss1::DrawSprite()
 {
-	Sprite::PreDraw(cmdList);
+	Sprite::SetCmdList(cmdList);
 	ui->Draw();
-	DebugText::GetInstance()->DrawAll();
+	//DebugText::GetInstance()->DrawAll();
 	Sprite::PostDraw();
 }
 

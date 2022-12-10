@@ -3,13 +3,13 @@
 #include "Camera.h"
 #include <string>
 #include "SafeDelete.h"
+#include "GraphicsPipelineManager.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
 ID3D12Device* InstanceObject::device = nullptr;
 ID3D12GraphicsCommandList* InstanceObject::cmdList = nullptr;
-GraphicsPipelineManager::GRAPHICS_PIPELINE InstanceObject::pipeline;
 Camera* InstanceObject::camera = nullptr;
 LightGroup* InstanceObject::light = nullptr;
 DirectX::XMFLOAT4 InstanceObject::outlineColor;
@@ -35,29 +35,6 @@ std::unique_ptr<InstanceObject> InstanceObject::Create(Model* _model)
 	instance->Initialize(_model);
 
 	return std::unique_ptr<InstanceObject>(instance);
-}
-
-void InstanceObject::PreDraw(ID3D12GraphicsCommandList* _cmdList)
-{
-	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(InstanceObject::cmdList == nullptr);
-
-	InstanceObject::cmdList = _cmdList;
-
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-
-	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void InstanceObject::PostDraw()
-{
-	// コマンドリストを解除
-	InstanceObject::cmdList = nullptr;
 }
 
 void InstanceObject::Initialize(Model* _model)
@@ -93,6 +70,11 @@ void InstanceObject::Initialize(Model* _model)
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
 	if (FAILED(result)) { assert(0); }
+}
+
+InstanceObject::InstanceObject()
+{
+	topologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
 
 InstanceObject::~InstanceObject()
@@ -171,6 +153,9 @@ void InstanceObject::Draw()
 	if (model == nullptr) {
 		return;
 	}
+
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, "InstanceObject", topologyType);
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());

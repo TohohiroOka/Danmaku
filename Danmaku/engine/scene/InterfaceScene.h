@@ -52,9 +52,9 @@ public:
 	virtual void CameraUpdate(Camera* camera) {};
 
 	/// <summary>
-	/// 描画
+	/// ポストエフェクト処理
 	/// </summary>
-	virtual void DrawNotPostB() {};
+	virtual void DrawPostEffect() {};
 
 	/// <summary>
 	/// 描画
@@ -62,9 +62,9 @@ public:
 	virtual void Draw() {};
 
 	/// <summary>
-	/// 描画
+	/// スプライト描画
 	/// </summary>
-	virtual void DrawNotPostA() {};
+	virtual void DrawSprite() {};
 
 	/// <summary>
 	/// 解放

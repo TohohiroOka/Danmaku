@@ -4,7 +4,6 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 
-#include "GraphicsPipelineManager.h"
 #include "Model.h"
 #include "Texture.h"
 #include "CollisionInfo.h"
@@ -53,12 +52,12 @@ public:
 	/// コマンドリストのセット
 	/// </summary>
 	/// <param name="_cmdList">コマンドリスト</param>
-	static void SetCmdList(ID3D12GraphicsCommandList* _cmdList) { InterfaceObject3d::cmdList = _cmdList; }
+	static void SetCmdList(ID3D12GraphicsCommandList* _cmdList) { cmdList = _cmdList; }
 
 	/// <summary>
 	/// コマンドリストのセット
 	/// </summary>
-	static void ReleaseCmdList() { InterfaceObject3d::cmdList = nullptr; }
+	static void PostDraw() { cmdList = nullptr; }
 
 	/// <summary>
 	/// カメラのセット
@@ -93,7 +92,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize() = 0;
+	virtual void Initialize();
 
 	/// <summary>
 	/// 描画
@@ -121,6 +120,12 @@ public:
 	/// <param name="_info">衝突情報</param>
 	virtual void OnCollision(const CollisionInfo& _info) {}
 
+	/// <summary>
+	/// パイプラインのセット
+	/// </summary>
+	/// <param name="_name">パイプライン名</param>
+	void SetPipeline(const std::string& _name) { pipelineName = _name; }
+
 protected:
 
 	// デバイス
@@ -140,6 +145,10 @@ protected:
 
 protected:
 
+	//パイプライン名
+	std::string pipelineName;
+	//トポロジータイプ
+	D3D_PRIMITIVE_TOPOLOGY topologyType;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0;
 	//定数バッファ

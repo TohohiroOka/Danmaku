@@ -6,6 +6,7 @@
 #include "LightGroup.h"
 #include "Model.h"
 #include "Texture.h"
+#include "GraphicsPipelineManager.h"
 
 #include <fstream>
 #include <sstream>
@@ -14,8 +15,6 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
-GraphicsPipelineManager::GRAPHICS_PIPELINE Object3d::pipeline;
 
 std::unique_ptr<Object3d> Object3d::Create(Model* _model)
 {
@@ -45,23 +44,14 @@ void Object3d::Initialize()
 	InterfaceObject3d::Initialize();
 }
 
-void Object3d::PreDraw()
-{
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline.pipelineState.Get());
-
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline.rootSignature.Get());
-
-	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
 void Object3d::Draw()
 {
 	// nullptrチェック
 	assert(device);
 	assert(Object3d::cmdList);
+
+	// パイプラインの設定
+	GraphicsPipelineManager::SetPipeline(cmdList, "OBJ",topologyType);
 
 	// モデルの割り当てがなければ描画しない
 	if (model == nullptr) {

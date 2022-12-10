@@ -97,7 +97,7 @@ BossA::BossA(const XMFLOAT3& _pos, const int _destination)
 	nextDestinationNumber = rand;
 
 	//UŒ‚‰Šú‰»
-	attack[0].kind = int(BULLET_KIND::CIRCLE);
+	attack[0].kind = int(BULLET_KIND::SNAKE);
 	//attack[1].kind = int(BULLET_KIND::LATTICE_BAEM_SET_X);
 	for (auto& i : attack)
 	{
