@@ -1,7 +1,6 @@
 #include "MainRenderTarget.h"
 #include "WindowApp.h"
 #include "InterfaceObject3d.h"
-#include "GraphicsPipelineManager.h"
 
 using namespace DirectX;
 
@@ -18,8 +17,9 @@ MainRenderTarget::MainRenderTarget()
 {
 }
 
-void MainRenderTarget::Finalize()
+MainRenderTarget::~MainRenderTarget()
 {
+	Sprite::~Sprite();
 	descHeapRTV.Reset();
 	descHeapDSV.Reset();
 }
@@ -77,6 +77,8 @@ void MainRenderTarget::Initialize()
 	//RTV用デスクリプタヒープを生成
 	result = device->CreateDescriptorHeap(&rtvDescHescDesc, IID_PPV_ARGS(&descHeapRTV));
 	if (FAILED(result)) { assert(0); }
+
+	descHeapRTV->SetName(L"MainRTV");
 
 	//デスクリプタヒープにRTV生成
 	for (int i = 0; i < break_num; i++)

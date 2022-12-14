@@ -37,7 +37,15 @@ void HeightMap::Initialize()
 		IID_PPV_ARGS(&constBufferOData));
 	if (FAILED(result)) { assert(0); }
 
+	constBufferOData->SetName(L"H_MAP_CONSTBYFF");
+
 	InterfaceObject3d::Initialize();
+}
+
+HeightMap::~HeightMap()
+{
+	constBufferOData.Reset();
+	InterfaceObject3d::~InterfaceObject3d();
 }
 
 void HeightMap::AddConstBufferUpdate(const float _ratio)
@@ -50,12 +58,16 @@ void HeightMap::AddConstBufferUpdate(const float _ratio)
 		constMap->ratio = _ratio;
 		constBufferOData->Unmap(0, nullptr);
 	}
+
+	constBufferOData->SetName(L"HeightMap_CONST_0");
 }
 
 void HeightMap::Draw()
 {
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "HEIGHT_MAP", topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, "HEIGHT_MAP", topologyType);
+	graPipManeger = nullptr;
 
 	InterfaceObject3d::Draw();
 

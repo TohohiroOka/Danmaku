@@ -28,7 +28,7 @@ private:
 public:
 
 	TerrainModel() {};
-	~TerrainModel() {};
+	~TerrainModel();
 
 	/// <summary>
 	/// •½–Ê‚Ì¶¬

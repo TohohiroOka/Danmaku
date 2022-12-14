@@ -86,7 +86,7 @@ private:
 
 public:
 
-	InterfaceObject3d() = default;
+	InterfaceObject3d() {};
 	virtual ~InterfaceObject3d();
 
 	/// <summary>

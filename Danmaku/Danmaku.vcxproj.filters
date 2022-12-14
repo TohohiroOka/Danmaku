@@ -53,9 +53,6 @@
     <Filter Include="エンジンシステム\Object\3d\OBJ">
       <UniqueIdentifier>{0789e0f6-e5b2-4934-8399-12f9516c08e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="エンジンシステム\Object\3d\DrawLine3D">
-      <UniqueIdentifier>{23dfebfc-16ed-4a5a-ab22-b48d8195c6e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="シェーダーファイル\DrawLine3D">
       <UniqueIdentifier>{39c8b700-fc76-4b07-b2e0-aafb12ec0439}</UniqueIdentifier>
     </Filter>
@@ -205,9 +202,6 @@
     <ClCompile Include="engine\3d\Material.cpp">
       <Filter>エンジンシステム\Object\3d\OBJ</Filter>
     </ClCompile>
-    <ClCompile Include="engine\3d\DrawLine3D.cpp">
-      <Filter>エンジンシステム\Object\3d\DrawLine3D</Filter>
-    </ClCompile>
     <ClCompile Include="engine\3d\HeightMap.cpp">
       <Filter>エンジンシステム\Object\3d</Filter>
     </ClCompile>
@@ -258,9 +252,6 @@
     </ClCompile>
     <ClCompile Include="engine\base\ShaderManager.cpp">
       <Filter>エンジンシステム\Base\ShaderManager</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\base\Singleton.cpp">
-      <Filter>エンジンシステム\Base\Helpar\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="engine\base\Texture.cpp">
       <Filter>エンジンシステム\Base\Texture</Filter>
@@ -597,9 +588,6 @@
     </ClInclude>
     <ClInclude Include="engine\3d\Material.h">
       <Filter>エンジンシステム\Object\3d\OBJ</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\3d\DrawLine3D.h">
-      <Filter>エンジンシステム\Object\3d\DrawLine3D</Filter>
     </ClInclude>
     <ClInclude Include="engine\3d\HeightMap.h">
       <Filter>エンジンシステム\Object\3d</Filter>

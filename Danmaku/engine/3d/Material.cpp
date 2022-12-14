@@ -52,6 +52,8 @@ void Material::CreateConstantBuffer()
 		nullptr,
 		IID_PPV_ARGS(&constBuff));
 	if (FAILED(result)) { assert(0); }
+
+	constBuff->SetName(L"MAT_CONST");
 }
 
 void Material::LoadTexture(const std::string& _directoryPath)

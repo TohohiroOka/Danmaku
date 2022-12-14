@@ -20,6 +20,8 @@ void DescriptorHeapManager::StaticInitialize(ID3D12Device* _device)
 	descHeapDesc.NumDescriptors = DescriptorsSize;
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));
 	if (FAILED(result)) { assert(0); }
+
+	descHeap->SetName(L"TexdescHeap");
 }
 
 void DescriptorHeapManager::PreDraw(ID3D12GraphicsCommandList* _cmdList)

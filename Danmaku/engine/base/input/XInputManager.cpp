@@ -5,23 +5,23 @@
 //スティックの上限
 const int STICK_MAX = 32767;
 
-XInputManager::~XInputManager()
-{
-#pragma warning(disable:4995)
-	XInputEnable(FALSE);
-}
-
-XInputManager* XInputManager::GetInstance()
-{
-	static XInputManager instance;
-
-	return &instance;
-}
-
-void XInputManager::Initialize()
+XInputManager::XInputManager()
 {
 #pragma warning(disable:4995)
 	XInputEnable(TRUE);
+
+	controllers.lastState = XINPUT_STATE();
+	controllers.state = XINPUT_STATE();
+	controllers.dwResult = 0;
+	controllers.bLockVibration = false;
+	controllers.vibration = XINPUT_VIBRATION();
+};
+
+XInputManager::~XInputManager()
+{
+	EndVibration();
+#pragma warning(disable:4995)
+	XInputEnable(FALSE);
 }
 
 void XInputManager::Update()

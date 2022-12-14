@@ -1,5 +1,4 @@
 #include "SubRenderTarget.h"
-#include "GraphicsPipelineManager.h"
 
 using namespace DirectX;
 
@@ -27,8 +26,9 @@ SubRenderTarget::SubRenderTarget()
 	window = { 256.0f,256.0f };
 }
 
-void SubRenderTarget::Finalize()
+SubRenderTarget::~SubRenderTarget()
 {
+	Sprite::~Sprite();
 	descHeapRTV.Reset();
 	descHeapDSV.Reset();
 }
@@ -81,6 +81,8 @@ void SubRenderTarget::Initialize(const DirectX::XMFLOAT2& _window, const std::st
 	//RTV用デスクリプタヒープを生成
 	result = device->CreateDescriptorHeap(&rtvDescHescDesc, IID_PPV_ARGS(&descHeapRTV));
 	if (FAILED(result)) { assert(0); }
+
+	descHeapRTV->SetName(L"SubRTV");
 
 	//デスクリプタヒープにRTV生成
 	device->CreateRenderTargetView(addTexture->texBuffer.Get(), nullptr,

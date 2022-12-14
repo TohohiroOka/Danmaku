@@ -128,6 +128,10 @@ void Mesh::CreateBuffers()
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R32_UINT;
 	ibView.SizeInBytes = sizeIB;
+
+	vertBuff->SetName(L"Mesh_vertBuff_CONST");
+	indexBuff->SetName(L"Mesh_indexBuff_CONST");
+
 }
 
 void Mesh::Draw(ID3D12GraphicsCommandList* _cmdList,const int _shaderResourceView, const int _instanceDrawNum)

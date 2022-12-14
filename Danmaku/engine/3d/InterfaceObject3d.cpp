@@ -55,6 +55,9 @@ void InterfaceObject3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	if (FAILED(result)) { assert(0); }
+
+	constBuffB0->SetName(L"InterfaceObject3d_COMST_0");
+
 }
 
 void InterfaceObject3d::Update()
@@ -113,6 +116,7 @@ void InterfaceObject3d::DeleteCollider()
 	if (collider) {
 		CollisionManager::GetInstance()->RemoveCollider(collider);
 		delete collider;
+		collider = nullptr;
 	}
 }
 

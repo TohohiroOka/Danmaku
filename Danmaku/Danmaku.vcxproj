@@ -105,7 +105,6 @@
     <ClCompile Include="engine\3d\collider\MeshCollider.cpp" />
     <ClCompile Include="engine\3d\collider\SphereCollider.cpp" />
     <ClCompile Include="engine\3d\CubeMap.cpp" />
-    <ClCompile Include="engine\3d\DrawLine3D.cpp" />
     <ClCompile Include="engine\3d\HeightMap.cpp" />
     <ClCompile Include="engine\3d\InstanceObject.cpp" />
     <ClCompile Include="engine\3d\InterfaceObject3d.cpp" />
@@ -129,7 +128,6 @@
     <ClCompile Include="engine\base\Matrix4.cpp" />
     <ClCompile Include="engine\base\Quaternion.cpp" />
     <ClCompile Include="engine\base\ShaderManager.cpp" />
-    <ClCompile Include="engine\base\Singleton.cpp" />
     <ClCompile Include="engine\base\Texture.cpp" />
     <ClCompile Include="engine\base\Vector2.cpp" />
     <ClCompile Include="engine\base\Vector3.cpp" />
@@ -384,7 +382,6 @@
     <ClInclude Include="engine\3d\collider\RaycastHit.h" />
     <ClInclude Include="engine\3d\collider\SphereCollider.h" />
     <ClInclude Include="engine\3d\CubeMap.h" />
-    <ClInclude Include="engine\3d\DrawLine3D.h" />
     <ClInclude Include="engine\3d\HeightMap.h" />
     <ClInclude Include="engine\3d\InstanceObject.h" />
     <ClInclude Include="engine\3d\InterfaceObject3d.h" />

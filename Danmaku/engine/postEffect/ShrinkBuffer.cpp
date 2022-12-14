@@ -9,6 +9,11 @@ ShrinkBuffer::ShrinkBuffer()
 	this->Initialize();
 }
 
+ShrinkBuffer::~ShrinkBuffer()
+{
+	BasePostEffect::~BasePostEffect();
+}
+
 void ShrinkBuffer::Initialize()
 {
 	BasePostEffect::Initialize();

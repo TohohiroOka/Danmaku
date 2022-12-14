@@ -2,6 +2,7 @@
 #include "Boss1.h"
 #include "Title.h"
 #include "ShrinkBuffer.h"
+#include "SafeDelete.h"
 
 std::unique_ptr<InterfaceScene> SceneManager::scene = nullptr;
 InterfaceScene* SceneManager::nextScene = nullptr;
@@ -95,6 +96,7 @@ std::unique_ptr<SceneManager> SceneManager::Create()
 SceneManager::~SceneManager()
 {
 	scene.reset();
+	safe_delete(nextScene);
 }
 
 void SceneManager::Initialize()
@@ -119,6 +121,8 @@ void SceneManager::Initialize()
 
 void SceneManager::CreatePipeline()
 {
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+
 	GraphicsPipelineManager::PEPELINE_DESC inPepeline{};
 	GraphicsPipelineManager::SIGNATURE_DESC inSignature{};
 
@@ -138,9 +142,9 @@ void SceneManager::CreatePipeline()
 		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 3;
-		inPepeline.rtvNum = 3;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT };
 
-		GraphicsPipelineManager::CreatePipeline("OBJ", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("OBJ", inPepeline, inSignature);
 	}
 	//InstanceObject
 	{
@@ -158,12 +162,12 @@ void SceneManager::CreatePipeline()
 		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 3;
-		inPepeline.rtvNum = 3;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT };
 		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ADD;
 
 		inSignature.instanceDraw = true;
 
-		GraphicsPipelineManager::CreatePipeline("InstanceObject", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("InstanceObject", inPepeline, inSignature);
 	}
 	//CUBE_BOX
 	{
@@ -180,12 +184,12 @@ void SceneManager::CreatePipeline()
 		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
-		inPepeline.rtvNum = 1;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
 
 		inSignature.instanceDraw = false;
 
-		GraphicsPipelineManager::CreatePipeline("CUBE_BOX", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("CUBE_BOX", inPepeline, inSignature);
 	}
 	//HEIGHT_MAP
 	{
@@ -202,39 +206,14 @@ void SceneManager::CreatePipeline()
 		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
-		inPepeline.rtvNum = 3;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT ,DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = false;
 		inSignature.textureNum = 3;
 		inSignature.light = true;
 		inSignature.instanceDraw = true;//定数バッファとしてインスタンス描画用の物を用いる
 
-		GraphicsPipelineManager::CreatePipeline("HEIGHT_MAP", inPepeline, inSignature);
-	}
-	//DRAW_LINE_3D
-	{
-		inPepeline.object2d = false;
-		inPepeline.vertShader = "DRAW_LINE_3D";
-		inPepeline.pixelShader = "DRAW_LINE_3D";
-		GraphicsPipelineManager::INPUT_LAYOUT_NUMBER inputLayoutType[] = {
-			GraphicsPipelineManager::POSITION };
-		//配列サイズ
-		const int arrayNum = sizeof(inputLayoutType) / sizeof(inputLayoutType[0]);
-
-		inPepeline.layoutNum = arrayNum;
-		D3D12_INPUT_ELEMENT_DESC inputLayout[arrayNum];
-		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
-		inPepeline.inputLayout = inputLayout;
-		inPepeline.stateNum = 1;
-		inPepeline.rtvNum = 1;
-
-		inSignature.object2d = false;
-		inSignature.materialData = false;
-		inSignature.textureNum = 0;
-		inSignature.light = false;
-		inSignature.instanceDraw = false;
-
-		GraphicsPipelineManager::CreatePipeline("DRAW_LINE_3D", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("HEIGHT_MAP", inPepeline, inSignature);
 	}
 	//PrimitiveObject3D
 	{
@@ -252,13 +231,14 @@ void SceneManager::CreatePipeline()
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = false;
 		inSignature.materialData = false;
 		inSignature.textureNum = 0;
 		inSignature.light = false;
 
-		GraphicsPipelineManager::CreatePipeline("PrimitiveObject3D", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("PrimitiveObject3D", inPepeline, inSignature);
 	}
 	//SPRITE
 	{
@@ -276,12 +256,13 @@ void SceneManager::CreatePipeline()
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = true;
 		inSignature.textureNum = 1;
 		inSignature.light = false;
 
-		GraphicsPipelineManager::CreatePipeline("SPRITE", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("SPRITE", inPepeline, inSignature);
 	}
 	//PARTICLE
 	{
@@ -302,12 +283,13 @@ void SceneManager::CreatePipeline()
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ADD;
 		inPepeline.particl = true;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = true;
 		inSignature.textureNum = 1;
 		inSignature.light = false;
 
-		GraphicsPipelineManager::CreatePipeline("PARTICLE", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("PARTICLE", inPepeline, inSignature);
 	}
 	//POST_EFFECT
 	{
@@ -328,38 +310,13 @@ void SceneManager::CreatePipeline()
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
 		inPepeline.particl = false;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = true;
-		inSignature.textureNum = 4;
+		inSignature.textureNum = 3;
 		inSignature.light = false;
 
-		GraphicsPipelineManager::CreatePipeline("POST_EFFECT", inPepeline, inSignature);
-	}
-	//SHRINK_BUFFER
-	{
-		inPepeline.object2d = true;
-		inPepeline.vertShader = "SHRINK_BUFFER";
-		inPepeline.pixelShader = "SHRINK_BUFFER";
-		inPepeline.geometryShader = "null";
-		GraphicsPipelineManager::INPUT_LAYOUT_NUMBER inputLayoutType[] = {
-			GraphicsPipelineManager::POSITION ,GraphicsPipelineManager::TEXCOORD_2D };
-		//配列サイズ
-		const int arrayNum = sizeof(inputLayoutType) / sizeof(inputLayoutType[0]);
-
-		inPepeline.layoutNum = arrayNum;
-		D3D12_INPUT_ELEMENT_DESC inputLayout[arrayNum];
-		SetLayout(inputLayout, inputLayoutType, arrayNum, false);
-		inPepeline.inputLayout = inputLayout;
-		inPepeline.stateNum = 1;
-		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
-		inPepeline.particl = false;
-
-		inSignature.object2d = true;
-		inSignature.textureNum = 1;
-		inSignature.light = false;
-
-		GraphicsPipelineManager::CreatePipeline("SHRINK_BUFFER", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("POST_EFFECT", inPepeline, inSignature);
 	}
 	//BLOOM
 	{
@@ -380,14 +337,16 @@ void SceneManager::CreatePipeline()
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
 		inPepeline.particl = false;
+		inPepeline.format = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 		inSignature.object2d = true;
 		inSignature.textureNum = 2;
 		inSignature.light = false;
 
-		GraphicsPipelineManager::CreatePipeline("BLOOM", inPepeline, inSignature);
+		graPipManeger->CreatePipeline("BLOOM", inPepeline, inSignature);
 	}
 
+	graPipManeger = nullptr;
 }
 
 void SceneManager::Update()
@@ -422,7 +381,6 @@ void SceneManager::Update()
 	InterfaceObject3d::SetCamera(camera.get());
 	InstanceObject::SetCamera(camera.get());
 	//Fbx::SetCamera(camera.get());
-	DrawLine3D::SetCamera(camera.get());
 	ParticleManager::SetCamera(camera.get());
 	CubeMap::SetCamera(camera.get());
 	HeightMap::SetCamera(camera.get());

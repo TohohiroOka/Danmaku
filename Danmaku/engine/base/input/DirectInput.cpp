@@ -5,11 +5,11 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-DirectInput* DirectInput::GetInstance()
+DirectInput::~DirectInput()
 {
-	static DirectInput instance;
-
-	return &instance;
+	dinput.Reset();
+	devkeyboard.Reset();
+	devMouse.Reset();
 }
 
 void DirectInput::Initialize()

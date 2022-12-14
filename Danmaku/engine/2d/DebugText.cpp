@@ -3,10 +3,12 @@
 
 std::unique_ptr<Sprite> DebugText::spriteDatas[maxCharCount] = {};
 
-DebugText* DebugText::GetInstance()
+DebugText::~DebugText()
 {
-	static DebugText instance;
-	return &instance;
+	for (int i = 0; i < maxCharCount; i++)
+	{
+		spriteDatas[i].reset();
+	}
 }
 
 void DebugText::Initialize()
@@ -75,12 +77,4 @@ void DebugText::DrawAll()
 	}
 
 	spriteIndex = 0;
-}
-
-void DebugText::Finalize()
-{
-	for (int i = 0; i < maxCharCount; i++)
-	{
-		spriteDatas[i].reset();
-	}
 }

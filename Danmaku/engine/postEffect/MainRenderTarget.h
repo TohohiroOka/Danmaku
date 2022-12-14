@@ -21,11 +21,6 @@ public://メンバ関数
 	/// </summary>
 	static std::unique_ptr<MainRenderTarget> Create();
 
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
-
 public://メンバ関数
 
 	/// <summary>
@@ -36,7 +31,7 @@ public://メンバ関数
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~MainRenderTarget() {};
+	~MainRenderTarget();
 
 	/// <summary>
 	/// 初期化

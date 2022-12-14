@@ -107,4 +107,10 @@ void BaseBullet::EffectDraw()
 void BaseBullet::Finalize()
 {
 	model.reset();
+	for (auto& i : bullet) {
+		i.reset();
+	}
+	for (auto& i : effect) {
+		i.reset();
+	}
 }

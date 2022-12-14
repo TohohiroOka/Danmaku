@@ -21,7 +21,7 @@ public://メンバ関数
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SubRenderTarget() {};
+	~SubRenderTarget();
 
 	/// <summary>
 	/// 初期化
@@ -44,11 +44,6 @@ public://メンバ関数
 	/// 描画後処理
 	/// </summary>
 	void PostDrawScene(ID3D12GraphicsCommandList* _cmdList);
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
 
 protected://静的メンバ変数
 

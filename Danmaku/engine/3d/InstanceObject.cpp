@@ -70,11 +70,15 @@ void InstanceObject::Initialize(Model* _model)
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
 	if (FAILED(result)) { assert(0); }
+
+	constBuffB0->SetName(L"InstanceObject_COMST_0");
+	constBuffB1->SetName(L"InstanceObject_COMST_1");
 }
 
 InstanceObject::InstanceObject()
 {
 	topologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	model = nullptr;
 }
 
 InstanceObject::~InstanceObject()
@@ -155,7 +159,7 @@ void InstanceObject::Draw()
 	}
 
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "InstanceObject", topologyType);
+	GraphicsPipelineManager::GetInstance()->SetPipeline(cmdList, "InstanceObject", topologyType);
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());

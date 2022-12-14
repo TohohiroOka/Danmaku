@@ -75,7 +75,7 @@ void Ground::Initialize()
 	//初回にマップを変更する
 	isChangeMap = true;
 	//衝突判定の変更
-	isHitChange = true;
+	isHitChange = false;
 	//変化の割合
 	ratio = 0.0f;
 	//変更するマップ指定
@@ -90,7 +90,8 @@ void Ground::Update()
 
 	isChangeMap = false;
 
-	//if (!isHitChange) { return; }
+	if (!isHitChange) { return; }
+
 	//現在のコライダー削除
 	object->DeleteCollider();
 
@@ -101,7 +102,6 @@ void Ground::Update()
 	collider->ConstructTriangles(terrainModel[ChangeMapKind[1]]->GetHitVertices(), terrainModel[ChangeMapKind[1]]->GetHitIndices());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
-	if (!isHitChange) { return; }
 	for (auto& i : ChangeMapKind) {
 		i++;
 		if (i >= terrainModel.size()) {

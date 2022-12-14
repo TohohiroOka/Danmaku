@@ -34,6 +34,11 @@ std::unique_ptr<Object3d> Object3d::Create(Model* _model)
 	return std::unique_ptr<Object3d>(instance);
 }
 
+Object3d::~Object3d()
+{
+	InterfaceObject3d::~InterfaceObject3d();
+}
+
 void Object3d::Initialize()
 {
 	// nullptrチェック
@@ -51,7 +56,9 @@ void Object3d::Draw()
 	assert(Object3d::cmdList);
 
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "OBJ",topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, "OBJ", topologyType);
+	graPipManeger = nullptr;
 
 	// モデルの割り当てがなければ描画しない
 	if (model == nullptr) {

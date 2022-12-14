@@ -61,4 +61,9 @@ void BaseBeam::Draw()
 void BaseBeam::Finalize()
 {
 	model.reset();
+	for (auto& i : object)
+	{
+		i.in.reset();
+		i.out.reset();
+	}
 }

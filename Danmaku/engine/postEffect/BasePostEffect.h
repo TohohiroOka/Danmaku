@@ -13,7 +13,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~BasePostEffect() {};
+	~BasePostEffect();
 
 	/// <summary>
 	/// 初期化

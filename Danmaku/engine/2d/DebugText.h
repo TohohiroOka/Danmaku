@@ -1,11 +1,20 @@
 #pragma once
 #include "Sprite.h"
+#include "Singleton.h"
 
 /// <summary>
 /// デバッグ用文字表示
 /// </summary>
-class DebugText
+class DebugText : public Singleton <DebugText>
 {
+public:
+	friend class Singleton<DebugText>; // Singleton でのインスタンス作成は許可
+
+protected:
+
+	DebugText() {};
+	virtual ~DebugText();
+
 public:
 	// デバッグテキスト用のテクスチャ番号を指定
 	static const int maxCharCount = 256;	// 最大文字数
@@ -18,15 +27,6 @@ private://静的メンバ変数
 
 	// スプライトデータの配列
 	static std::unique_ptr<Sprite> spriteDatas[maxCharCount];
-
-
-public:// 静的メンバ関数
-
-	/// <summary>
-	/// インスタンスの生成
-	/// </summary>
-	/// <returns>インスタンス</returns>
-	static DebugText* GetInstance();
 
 public:// メンバ関数
 
@@ -80,17 +80,6 @@ public:// メンバ関数
 	/// 全ての描画
 	/// </summary>
 	void DrawAll();
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	static void Finalize();
-
-private:
-	DebugText() {};
-	DebugText(const DebugText&) = delete;
-	~DebugText() {};
-	DebugText& operator=(const DebugText&) = delete;
 
 private:
 	// スプライトデータ配列の添え字番号

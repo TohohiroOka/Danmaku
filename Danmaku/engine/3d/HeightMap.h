@@ -42,7 +42,7 @@ private://メンバ関数
 public:
 
 	HeightMap() {};
-	~HeightMap() {};
+	~HeightMap();
 
 	/// <summary>
 	/// 追加の定数バッファの更新

@@ -262,7 +262,9 @@ void ParticleManager::Update()
 void ParticleManager::Draw()
 {
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "PARTICLE", topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, "PARTICLE", topologyType);
+	graPipManeger = nullptr;
 
 	//頂点バッファをセット
 	cmdList->IASetVertexBuffers(0, 1, &vbView);

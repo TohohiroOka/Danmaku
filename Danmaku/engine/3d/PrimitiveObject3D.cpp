@@ -9,9 +9,11 @@ using namespace DirectX;
 
 PrimitiveObject3D::~PrimitiveObject3D()
 {
+	InterfaceObject3d::~InterfaceObject3d();
 	//バッファを解放
 	vertBuff.Reset();
 	indexBuff.Reset();
+	constBuff.Reset();
 }
 
 void PrimitiveObject3D::Initialize()
@@ -91,6 +93,10 @@ void PrimitiveObject3D::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuff));
 	if (FAILED(result)) { assert(0); }
+
+	vertBuff->SetName(L"PrimitiveObject3D_CONST_vertBuff");
+	indexBuff->SetName(L"PrimitiveObject3D_CONST_indexBuff");
+	constBuff->SetName(L"PrimitiveObject3D_constBuff");
 }
 
 void PrimitiveObject3D::Update()
@@ -120,7 +126,9 @@ void PrimitiveObject3D::Draw()
 	Update();
 
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "PrimitiveObject3D", topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, "PrimitiveObject3D", topologyType);
+	graPipManeger = nullptr;
 
 	//インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView);

@@ -15,20 +15,17 @@
 #endif
 
 #include <DirectXMath.h>
+#include "Singleton.h"
 
-class XInputManager final
+class XInputManager : public Singleton <XInputManager>
 {
-private: //シングルトン化
-	//コンストラクタを隠蔽
-	XInputManager() = default;
-	//デストラクタを隠蔽
-	~XInputManager();
-
 public:
-	//コピーコンストラクタを無効化
-	XInputManager(const XInputManager& input) = delete;
-	//代入演算子を無効化
-	void operator = (const XInputManager& input) = delete;
+	friend class Singleton<XInputManager>; // Singleton でのインスタンス作成は許可
+
+protected:
+
+	XInputManager();
+	virtual ~XInputManager();
 
 private://メンバ構造体
 
@@ -71,17 +68,6 @@ public://メンバEnum
 	};
 
 public://メンバ関数
-
-	/// <summary>
-	/// インスタンス取得
-	/// </summary>
-	/// <returns>入力</returns>
-	static XInputManager* GetInstance();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
 
 	/// <summary>
 	/// 更新

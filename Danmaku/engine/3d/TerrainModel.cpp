@@ -1,9 +1,15 @@
 #include "TerrainModel.h"
-#include <DirectXTex.h>
+#include "SafeDelete.h"
+
 
 using namespace DirectX;
 
 const std::string TerrainModel::baseDirectory = "Resources/HeightMap/";
+
+TerrainModel::~TerrainModel()
+{
+	safe_delete(model);
+}
 
 std::unique_ptr<TerrainModel> TerrainModel::FlatlandModelCreate(
 	const std::string& _filename1, const std::string& _filename2)

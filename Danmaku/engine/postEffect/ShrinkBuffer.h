@@ -21,7 +21,7 @@ public://メンバ関数
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~ShrinkBuffer() {};
+	~ShrinkBuffer();
 
 	/// <summary>
 	/// 初期化

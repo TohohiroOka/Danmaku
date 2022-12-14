@@ -4,14 +4,23 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include "ShaderManager.h"
+#include "Singleton.h"
 
 #include <unordered_map>
 
-class GraphicsPipelineManager
+class GraphicsPipelineManager : public Singleton <GraphicsPipelineManager>
 {
+public:
+	friend class Singleton<GraphicsPipelineManager>; // Singleton でのインスタンス作成は許可
+
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+protected:
+
+	GraphicsPipelineManager() {};
+	virtual ~GraphicsPipelineManager();
 
 public://メンバenum
 
@@ -70,8 +79,8 @@ public://メンバenum
 		BLEND_MODE blendMode = BLEND_MODE::ALPHA;
 		//描画方法
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		//レンダーターゲット数
-		int rtvNum = 1;
+		//フォーマット設定
+		std::vector<DXGI_FORMAT> format;
 	};
 
 	//ルートシグネチャ設定
@@ -98,31 +107,28 @@ private://メンバ関数
 	/// </summary>
 	/// <param name="_mode">ブレンドの種類</param>
 	/// <returns>ブレンド設定</returns>
-	static D3D12_RENDER_TARGET_BLEND_DESC CreateBlendDesc(const BLEND_MODE& _mode);
+	D3D12_RENDER_TARGET_BLEND_DESC CreateBlendDesc(const BLEND_MODE& _mode);
 
 	/// <summary>
 	/// パイプラインデスクの生成
 	/// </summary>
 	/// <param name="_pepelineDescSet">パイプライン設定</param>
 	/// <returns>パイプラインデスク</returns>
-	static D3D12_GRAPHICS_PIPELINE_STATE_DESC CreatepelineDesc(const PEPELINE_DESC& _pepelineDescSet);
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC CreatepelineDesc(const PEPELINE_DESC& _pepelineDescSet);
 
 	/// <summary>
 	/// ルートシグネチャの生成
 	/// </summary>
 	/// <param name="_signatureDescSet">ルートシグネチャ設定</param>
-	static ID3D12RootSignature* CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet);
+	ID3D12RootSignature* CreateRootSignature(const SIGNATURE_DESC& _signatureDescSet);
 
 public://メンバ関数
-
-	GraphicsPipelineManager() {};
-	~GraphicsPipelineManager();
 
 	/// <summary>
 	/// デバイスのセット
 	/// </summary>
 	/// <param name="_device">デバイス</param>
-	static void StaticInitialize(ID3D12Device* _device);
+	void StaticInitialize(ID3D12Device* _device);
 
 	/// <summary>
 	/// パイプラインの生成
@@ -131,7 +137,7 @@ public://メンバ関数
 	/// <param name="_name">パイプライン名</param>
 	/// <param name="_pepelineDescSet">パイプラインの設定</param>
 	/// <param name="_signatureDescSet">ルートシグネチャ設定</param>
-	static void CreatePipeline(const std::string& _name, const PEPELINE_DESC& _pepelineDescSet, const SIGNATURE_DESC& _signatureDescSet);
+	void CreatePipeline(const std::string& _name, const PEPELINE_DESC& _pepelineDescSet, const SIGNATURE_DESC& _signatureDescSet);
 
 	/// <summary>
 	/// 描画用パイプラインのセット
@@ -139,12 +145,12 @@ public://メンバ関数
 	/// <param name="_cmdList">コマンドリスト</param>
 	/// <param name="_name">パイプライン名</param>
 	/// <param name="_topologyType">トポロジータイプ</param>
-	static void SetPipeline(ID3D12GraphicsCommandList* _cmdList, const std::string& _name, const D3D_PRIMITIVE_TOPOLOGY _topologyType);
+	void SetPipeline(ID3D12GraphicsCommandList* _cmdList, const std::string& _name, const D3D_PRIMITIVE_TOPOLOGY _topologyType);
 
 	/// <summary>
 	/// トポロジーのリセットのセット
 	/// </summary>
-	static void ResetTopology() {
+	void ResetTopology() {
 		oldTopologyType = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	};
 
@@ -155,7 +161,7 @@ private://静的メンバ変数
 	//シェーダー
 	static std::unique_ptr<ShaderManager> shaderManager;
 	//パイプライン保存配列
-	static std::unordered_map<std::string, GRAPHICS_PIPELINE> graphicsPipeline;
+	static std::unordered_map<std::string, std::unique_ptr<GRAPHICS_PIPELINE>> graphicsPipeline;
 	//前回のパイプライン名
 	static std::string oldPipelineName;
 	//前回のトポロジータイプ

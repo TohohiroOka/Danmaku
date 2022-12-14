@@ -3,12 +3,21 @@
 #define DIRECTINPUT_VERSION 0x0800	//DirectInputのバージョン指定
 #include <dinput.h>
 #include <DirectXMath.h>
+#include "Singleton.h"
 
-class DirectInput final
+class DirectInput : public Singleton <DirectInput>
 {
+public:
+	friend class Singleton<DirectInput>; // Singleton でのインスタンス作成は許可
+
 public: //エイリアス
 	//namespace省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+protected:
+
+	DirectInput() {};
+	virtual ~DirectInput();
 
 public: //列挙
 	//マウスボタン
@@ -19,25 +28,7 @@ public: //列挙
 		MOUSE_WHEEL
 	};
 
-private: //シングルトン化
-	//コンストラクタを隠蔽
-	DirectInput() = default;
-	//デストラクタを隠蔽
-	~DirectInput() = default;
-
-public:
-	//コピーコンストラクタを無効化
-	DirectInput(const DirectInput& input) = delete;
-	//代入演算子を無効化
-	void operator = (const DirectInput& input) = delete;
-
 public: //メンバ関数
-
-	/// <summary>
-	/// インスタンス取得
-	/// </summary>
-	/// <returns>入力</returns>
-	static DirectInput* GetInstance();
 
 	/// <summary>
 	/// 初期化

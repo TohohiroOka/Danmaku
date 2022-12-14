@@ -24,6 +24,9 @@ public: // 静的メンバ関数
 
 public: // メンバ関数
 
+	Object3d() {};
+	~Object3d();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

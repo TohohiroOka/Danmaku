@@ -49,6 +49,33 @@ ID3DBlob* CompileShader(const LPCWSTR _fileName, LPCSTR _target)
 	return blob;
 }
 
+ShaderManager::~ShaderManager()
+{
+	for (auto& shader : shaderObjectVS)
+	{
+		shader.second.Reset();
+	}
+	shaderObjectVS.clear();
+
+	for (auto& shader : shaderObjectPS)
+	{
+		shader.second.Reset();
+	}
+	shaderObjectPS.clear();
+
+	for (auto& shader : shaderObjectGS)
+	{
+		shader.second.Reset();
+	}
+	shaderObjectGS.clear();
+
+	for (auto& shader : shaderObjectCS)
+	{
+		shader.second.Reset();
+	}
+	shaderObjectCS.clear();
+}
+
 std::unique_ptr<ShaderManager> ShaderManager::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
@@ -110,37 +137,7 @@ void ShaderManager::LoadShader()
 	//HeightMap
 	shaderObjectVS["HEIGHT_MAP"] = CompileShader(L"HeightMapVS.hlsl", vsModel);
 	shaderObjectPS["HEIGHT_MAP"] = CompileShader(L"HeightMapPS.hlsl", psModel);
-	//ShrinkBuffer
-	shaderObjectVS["SHRINK_BUFFER"] = CompileShader(L"ShrinkBufferVS.hlsl", vsModel);
-	shaderObjectPS["SHRINK_BUFFER"] = CompileShader(L"ShrinkBufferPS.hlsl", psModel);
 	//Bloom
 	shaderObjectVS["BLOOM"] = CompileShader(L"BloomVS.hlsl", vsModel);
 	shaderObjectPS["BLOOM"] = CompileShader(L"BloomPS.hlsl", psModel);
-}
-
-void ShaderManager::Finalize()
-{
-	for (auto shader : shaderObjectVS)
-	{
-		shader.second.Reset();
-	}
-	shaderObjectVS.clear();
-
-	for (auto shader : shaderObjectPS)
-	{
-		shader.second.Reset();
-	}
-	shaderObjectPS.clear();
-
-	for (auto shader : shaderObjectGS)
-	{
-		shader.second.Reset();
-	}
-	shaderObjectGS.clear();
-
-	for (auto shader : shaderObjectCS)
-	{
-		shader.second.Reset();
-	}
-	shaderObjectCS.clear();
 }

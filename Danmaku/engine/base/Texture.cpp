@@ -98,6 +98,8 @@ void Texture::LoadTexture(const std::string& _fileName)
 
 	descriptor = std::make_unique<DescriptorHeapManager>();
 	descriptor->CreateSRV(texBuffer, srvDesc);
+
+	texBuffer->SetName(L"texBuffer");
 }
 
 void Texture::LoadTextureFromDDSFile(const std::string& _fileName, ID3D12GraphicsCommandList* _cmdList)
@@ -153,4 +155,7 @@ void Texture::LoadTextureFromDDSFile(const std::string& _fileName, ID3D12Graphic
 
 	descriptor = std::make_unique<DescriptorHeapManager>();
 	descriptor->CreateSRV(texBuffer, srvDesc);
+
+	texBuffer->SetName(L"texBuffer");
+
 }

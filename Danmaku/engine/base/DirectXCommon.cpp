@@ -39,14 +39,14 @@ DirectXCommon::~DirectXCommon()
 	ID3D12DebugDevice* debugInterface;
 	if (SUCCEEDED(device.Get()->QueryInterface(&debugInterface)))
 	{
-		debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
+		debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_SUMMARY | D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
 		debugInterface->Release();
 	}
 
 	device.Reset();
 }
 
-std::unique_ptr<DirectXCommon> DirectXCommon::Create()
+DirectXCommon* DirectXCommon::Create()
 {
 	//インスタンスを生成
 	DirectXCommon* instance = new DirectXCommon();
@@ -64,20 +64,20 @@ std::unique_ptr<DirectXCommon> DirectXCommon::Create()
 	instance->InitImgui();
 
 	//ユニークポインタを返す
-	return std::unique_ptr<DirectXCommon>(instance);
+	return instance;
 }
 
 void DirectXCommon::Initialize()
 {
 	HRESULT result;
 
-	////デバッグレイヤーをオンに
-	//ComPtr<ID3D12Debug1> debugController;
-	//if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-	//{
-	//	debugController->EnableDebugLayer();
-	//	debugController->SetEnableGPUBasedValidation(TRUE);
-	//}
+	//デバッグレイヤーをオンに
+	ComPtr<ID3D12Debug1> debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(TRUE);
+	}
 
 	//DXGIファクトリーの生成
 	result = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
@@ -154,7 +154,7 @@ void DirectXCommon::Initialize()
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc{};
 	swapchainDesc.Width = 1280;
 	swapchainDesc.Height = 720;
-	swapchainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// 色情報の書式
+	swapchainDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;// 色情報の書式
 	swapchainDesc.SampleDesc.Count = 1; // マルチサンプルしない
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;// バックバッファ用
 	swapchainDesc.BufferCount = 2;  // バッファ数を２つに設定

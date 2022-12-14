@@ -69,6 +69,8 @@ void Sprite::SetTexture(const std::string& _keepName, Texture* _texture)
 	//テクスチャ読み込み
 	texture[_keepName].instance = std::unique_ptr<Texture>(_texture);
 	texture[_keepName].isDelete = false;
+
+	texture[_keepName].instance->texBuffer->SetName(L"SET_TEX_BUFF");
 }
 
 std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
@@ -131,6 +133,9 @@ void Sprite::Initialize(const std::string& _name)
 		constMap->mat = matProjection;
 		constBuff->Unmap(0, nullptr);
 	}
+
+	vertBuff->SetName(L"SPRITE_VERT_BUFF");
+	constBuff->SetName(L"SPRITE_CONST_BUFF");
 }
 
 void Sprite::Update()
@@ -156,7 +161,9 @@ void Sprite::Update()
 void Sprite::Draw()
 {
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, pipelineName, topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, pipelineName, topologyType);
+	graPipManeger = nullptr;
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &this->vbView);
 	// 定数バッファビューをセット

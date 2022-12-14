@@ -3,8 +3,15 @@
 
 MainPostEffect::MainPostEffect()
 {
+	toeColor = {};
+	linearColor = {};
 	isFog = false;
 	isToneMap = false;
+}
+
+MainPostEffect::~MainPostEffect()
+{
+	BasePostEffect::~BasePostEffect();
 }
 
 std::unique_ptr<MainPostEffect> MainPostEffect::Create()
@@ -34,6 +41,8 @@ void MainPostEffect::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuff));
 	if (FAILED(result)) { assert(0); }
+
+	constBuff->SetName(L"MAINPOST_CONST");
 }
 
 void MainPostEffect::Update()
@@ -41,6 +50,8 @@ void MainPostEffect::Update()
 	// 定数バッファへデータ転送
 	CONST_BUFFER_DATA* constMap = nullptr;
 	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->toeColor = toeColor;
+	constMap->linearColor = linearColor;
 	constMap->outlineColor = InterfaceObject3d::GetOutlineColor();
 	constMap->outlineWidth = InterfaceObject3d::GetOutlineWidth();
 	constMap->isFog = isFog;

@@ -13,7 +13,7 @@ private: // エイリアス
 public:
 
 	ShaderManager() {};
-	~ShaderManager() {};
+	~ShaderManager();
 
 	/// <summary>
 	/// インスタンスの生成
@@ -25,11 +25,6 @@ public:
 	/// シェーダーの読み込み
 	/// </summary>
 	void LoadShader();
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
 
 public:
 

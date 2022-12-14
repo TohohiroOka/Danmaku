@@ -31,7 +31,7 @@ public://静的メンバ関数
 	/// directXCommon生成
 	/// </summary>
 	/// <returns>インスタンス</returns>
-	static std::unique_ptr<DirectXCommon> Create();
+	static DirectXCommon* Create();
 
 public://メンバ関数
 

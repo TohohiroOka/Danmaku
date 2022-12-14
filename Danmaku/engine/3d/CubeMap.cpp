@@ -38,7 +38,7 @@ std::unique_ptr<CubeMap> CubeMap::Create(ID3D12GraphicsCommandList* _cmdList)
 
 void CubeMap::Finalize()
 {
-	//pipeline.reset();
+	CubeMap::device = nullptr;
 }
 
 void CubeMap::Initialize()
@@ -188,7 +188,9 @@ void CubeMap::Update()
 void CubeMap::Draw()
 {
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, "CUBE_MAP", topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, "CUBE_MAP", topologyType);
+	graPipManeger = nullptr;
 
 	//定数バッファをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());

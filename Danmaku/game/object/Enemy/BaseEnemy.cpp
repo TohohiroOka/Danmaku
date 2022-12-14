@@ -76,7 +76,9 @@ void BaseEnemy::Draw()
 
 void BaseEnemy::Finalize()
 {
-	bossModel[0].reset();
+	for (auto& i : bossModel) {
+		i.reset();
+	}
 	enemyAModel.reset();
 }
 

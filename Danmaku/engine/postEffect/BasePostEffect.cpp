@@ -6,6 +6,11 @@ BasePostEffect::BasePostEffect()
 	this->Initialize();
 }
 
+BasePostEffect::~BasePostEffect()
+{
+	Sprite::~Sprite();
+}
+
 void BasePostEffect::Initialize()
 {
 	HRESULT result;
@@ -53,12 +58,17 @@ void BasePostEffect::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuff));
 	if (FAILED(result)) { assert(0); }
+
+	vertBuff->SetName(L"BasePostEffect_vertBuff");
+	constBuff->SetName(L"BasePostEffect_constBuff");
 }
 
 void BasePostEffect::Draw(const std::vector<std::string> _name)
 {
 	// パイプラインの設定
-	GraphicsPipelineManager::SetPipeline(cmdList, pipelineName, topologyType);
+	GraphicsPipelineManager* graPipManeger = GraphicsPipelineManager::GetInstance();
+	graPipManeger->SetPipeline(cmdList, pipelineName, topologyType);
+	graPipManeger = nullptr;
 
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);

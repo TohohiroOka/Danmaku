@@ -76,6 +76,4 @@ private://メンバ変数
 	std::unique_ptr<Audio> audio = nullptr;
 	//ライト
 	std::unique_ptr<LightGroup> light = nullptr;
-	//パイプライン
-	std::unique_ptr<GraphicsPipelineManager> graphicsPipeline = nullptr;
 };

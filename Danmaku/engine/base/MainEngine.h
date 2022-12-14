@@ -1,8 +1,5 @@
 #pragma once
-#include "DirectXCommon.h"
 #include "SceneManager.h"
-#include "DirectInput.h"
-#include "XInputManager.h"
 #include "FrameRateKeep.h"
 #include "CubeMap.h"
 
@@ -10,7 +7,6 @@
 #include "MainRenderTarget.h"
 #include "SubRenderTarget.h"
 #include "MainPostEffect.h"
-#include "ShrinkBuffer.h"
 
 #include <sstream>
 #include <iomanip>
@@ -39,7 +35,7 @@ public:
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	void Initialize();
+	void Initialize(ID3D12Device* _device);
 
 	/// <summary>
 	/// 更新処理
@@ -50,7 +46,12 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void PostEffectDraw(ID3D12GraphicsCommandList* _cmdList);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw(ID3D12GraphicsCommandList* _cmdList);
 
 	/// <summary>
 	/// フレームレートキープ
@@ -59,12 +60,6 @@ public:
 
 private:
 
-	//DirectXCommonのインスタンス
-	std::unique_ptr<DirectXCommon> dXCommon = nullptr;
-	//Inputのインスタンス
-	DirectInput* input = nullptr;
-	//XInputManager
-	XInputManager* xinput = nullptr;
 	//GameSceneのインスタンス
 	std::unique_ptr<SceneManager> scene = nullptr;
 	//Fps固定用クラスのインスタンス
@@ -81,10 +76,6 @@ private:
 	RENDER_INFO bloom;
 	//ブルーム描画
 	std::unique_ptr<BasePostEffect> bloomDraw;
-	//縮小バッファ
-	std::array<RENDER_INFO, 5> R_shrinkBuffer;
-	//ポストエフェクト用テクスチャ描画
-	std::array<std::unique_ptr<ShrinkBuffer>, 5> D_shrinkBuffer;
 	//ポストエフェクトを合わせる用
 	std::unique_ptr<MainPostEffect> mainDraw;
 
