@@ -51,7 +51,7 @@ public:
 	/// 毎フレーム処理
 	/// </summary>
 	/// <param name="cameraAngle">カメラ角度</param>
-	void Update(float _cameraAngle);
+	void Update(const DirectX::XMFLOAT2& _cameraAngle);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -88,7 +88,7 @@ private:
 	XMFLOAT3 moveObjAngle;
 
 	//カメラ角度
-	float cameraAngle;
+	DirectX::XMFLOAT2 cameraAngle;
 
 	//HP
 	const int maxHp = 100;

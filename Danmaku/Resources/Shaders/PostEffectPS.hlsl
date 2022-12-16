@@ -26,6 +26,11 @@ float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor);
 /// </summary>
 float4 SetFog(float2 uv);
 
+/// <summary>
+/// トーンマップ処理
+/// </summary>
+float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor);
+
 float4 main(VSOutput input) : SV_TARGET
 {
 	//メインカラー
@@ -38,15 +43,17 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 outline = SetOutline(input.uv, outlineWidth, outlineColor);
 
 	//フォグ処理
-
 	float4 fog = float4(0, 0, 0, 0);
 	if (isFog)
 	{
 		fog = SetFog(input.uv);
 	}
 
+	//トーンマップ処理
+	float3 toneMapColor = ToneMap(float3(mainColor.rgb + bloom.rgb), toeColor, linearColor);
+
 	//ポストエフェクトの合成
-	return mainColor + bloom + outline + fog;
+	return float4(toneMapColor, 1.0) + outline + fog;
 }
 
 float Gaussian(float2 drawUV, float2 pickUV, float sigma)
@@ -128,4 +135,42 @@ float4 SetFog(float2 uv)
 	float4 depthColor = float4(0, depth/2, depth, 1.0);
 
 	return depthColor;
+}
+
+float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor)
+{
+	const float3 RGB2Y = float3(+0.29900f, +0.58700f, +0.11400f);
+	const float3 RGB2Cb = float3(-0.16874f, -0.33126f, +0.50000f);
+	const float3 RGB2Cr = float3(+0.50000f, -0.41869f, -0.08131f);
+	const float3 YCbCr2R = float3(+1.00000f, +0.00000f, +1.40200f);
+	const float3 YCbCr2G = float3(+1.00000f, -0.34414f, -0.71414f);
+	const float3 YCbCr2B = float3(+1.00000f, +1.77200f, +0.00000f);
+	
+	float4 info = float4(toeColor, linearColor.x, linearColor.y);
+	float3 texel = mainColor.rgb;
+	
+	float coeff = 0.18 * exp(-info.g);
+	float l_max = coeff * info.r;
+	
+	// YCbCr系に変換
+	float3 YCbCr;
+	YCbCr.y = dot(RGB2Cb, texel);
+	YCbCr.z = dot(RGB2Cr, texel);
+	
+	// 色の強さは補正
+	float lum = coeff * dot(RGB2Y, texel);
+	YCbCr.x = lum * (1.0f + lum / (l_max * l_max)) / (1.0f + lum);
+	
+	// RGB系にして出力
+	float3 color;
+	color.r = dot(YCbCr2R, YCbCr);
+	color.g = dot(YCbCr2G, YCbCr);
+	color.b = dot(YCbCr2B, YCbCr);
+
+	//return color;
+
+	float LuminousIntensity = dot(mainColor.rgb, float3(0.2125, 0.7154, 0.0712));
+	float3 returnColor = mainColor * (1 - smoothstep(0.0, 1.0, LuminousIntensity)) + color * smoothstep(0.0, 1.0, LuminousIntensity);
+
+	return returnColor;
 }

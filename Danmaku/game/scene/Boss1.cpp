@@ -48,7 +48,6 @@ void Boss1::Initialize()
 	};
 
 	JsonObjectData* jData = JsonLoder::LoadFile("map2.json", objectName);
-	JsonMoveData* jBossMoveData = JsonLoder::LoadMoveFile("map2_boss_move.json");
 
 	//地形
 	ground = Ground::Create();
@@ -66,10 +65,7 @@ void Boss1::Initialize()
 	enemy = EnemyManager::Create();
 
 	//ボス
-	for (auto& i : jBossMoveData->movePoint) {
-		boss->SetMoveList(i.pos, i.moveList);
-	}
-	boss = BossA::Create(jBossMoveData->movePoint[0].pos, 0);
+	boss = BossA::Create();
 	terrainChangeNum = 0;
 
 	//UI
@@ -77,7 +73,6 @@ void Boss1::Initialize()
 
 	player->SetMovie();
 	boss->SetMovie();
-
 }
 
 void Boss1::Update()
@@ -87,7 +82,7 @@ void Boss1::Update()
 
 	//------オブジェクトの更新--------//
 
-	player->Update(cameraAngle.x);
+	player->Update(cameraAngle);
 	XMFLOAT3 playerPos = player->GetPosition();
 
 	enemy->Update(playerPos);
@@ -169,7 +164,7 @@ void Boss1::Update()
 		enemy->CheckCollision();
 
 		//ボスとプレイヤー弾の判定
-		if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPosition(), boss->GetScale())) {
+		if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPosition(), boss->GetScale() * 2.0f)) {
 			boss->Damage();
 		}
 

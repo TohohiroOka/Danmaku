@@ -1,5 +1,7 @@
 cbuffer cbuff0:register(b0)
 {
+	float2 toeColor;
+	float2 linearColor;
 	float4 outlineColor;//アウトラインの色
 	float outlineWidth;//アウトラインの太さ
 	unsigned int isFog;//フォグの有無

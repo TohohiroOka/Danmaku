@@ -49,8 +49,8 @@ void Ground::Initialize()
 	//モデル読み込み
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
-	mapName[0] = "heightmap02.bmp";
-	mapName[1] = "heightmap01.bmp";
+	mapName[0] = "heightmap01.bmp";
+	mapName[1] = "heightmap02.bmp";
 	mapName[2] = "heightmap03.bmp";	
 	mapName[3] = "heightmap04.bmp";
 	useModel= TerrainModel::FlatlandModelCreate(jimen, kabe);
@@ -91,7 +91,7 @@ void Ground::Update()
 
 	isChangeMap = false;
 
-	//if (!isHitChange) { return; }
+	if (!isHitChange) { return; }
 	//現在のコライダー削除
 	object->DeleteCollider();
 
@@ -102,7 +102,6 @@ void Ground::Update()
 	collider->ConstructTriangles(terrainModel[ChangeMapKind[1]]->GetHitVertices(), terrainModel[ChangeMapKind[1]]->GetHitIndices());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
-	if (!isHitChange) { return; }
 	for (auto& i : ChangeMapKind) {
 		i++;
 		if (i >= terrainModel.size()) {

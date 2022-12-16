@@ -336,7 +336,7 @@ void SceneManager::CreatePipeline()
 		inPepeline.inputLayout = inputLayout;
 		inPepeline.stateNum = 1;
 		inPepeline.topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ALPHA;
+		inPepeline.blendMode = GraphicsPipelineManager::BLEND_MODE::ADD;
 		inPepeline.particl = false;
 
 		inSignature.object2d = true;

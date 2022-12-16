@@ -6,24 +6,38 @@ class BossA : public BaseEnemy
 {
 private:
 
-	enum class BULLET_KIND
+	//中央時の攻撃
+	enum class BULLET_KIND_CENTER
 	{
+		NONE,//何もなし
 		CIRCLE,//円状に出る
 		LATTICE_BAEM_SET_X,//格子状ビームセットyz平面
 		LATTICE_BAEM_SET_Y,//格子状ビームセットxz平面
 		LATTICE_BAEM_SET_Z,//格子状ビームセットxy平面
 		FIREWORKE,//花火的なもの
 		HOMING,//ホーミング
-		CIRCLE_ROTATE,//円状に出る回転あり
-		BOMB_HOMING,//爆破してから追従
 		SNAKE,//うねうね動く
-		HOMING_LINE1,//追従線(円形に出る)
-		HOMING_LINE2,//追従線(追従する)
 		SHOCK_WAVE,//衝撃波
+		CIRCLE_ROTATE,//円状に出る
+		BOMB_HOMING,//爆破してから
 		SIZE,//合計
 	};
 
-	static const int homing_line_num = 6;
+	enum class BULLET_KIND_SPLIT
+	{
+		NONE,//何もなし
+		HOMING_LINE,//追従線(円形に出る)
+		SIZE,//合計
+	};
+
+	//位置
+	enum class POS_STATE
+	{
+		CENTER,//中央
+		SPLIT,//分割
+		//ROTATION,//回転
+		SIZE,//合計
+	};
 
 	//一回分の攻撃情報
 	struct BULLET_INFO
@@ -32,10 +46,6 @@ private:
 		int kind;
 		//1前フレームの弾の種類
 		int oldKind;
-		//HOMING_LINE用の座標
-		XMFLOAT3 HOMING_LINEpos[homing_line_num];
-		//角度ホーミング線用角度
-		XMFLOAT2 radiun[homing_line_num];
 		//回転軸
 		XMFLOAT3 rota = { 0,0,0 };
 		//ビームのセット回数
@@ -44,20 +54,27 @@ private:
 		std::array<int,2> lattice_beam_pos = { 0,0 };
 	};
 
+	//partsごとの情報
+	struct PARTS_INFO {
+		std::unique_ptr<Object3d> instance;
+		//角度ホーミング線用角度
+		XMFLOAT2 radiun;
+		//HOMING_LINE用の座標
+		XMFLOAT3 HOMING_LINEpos;
+	};
+
 	static const int lattice_beam_side_num = 10;
 
 public:
 
-	BossA(const XMFLOAT3& _pos, const int _destination);
+	BossA();
 	~BossA() {};
 
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="_pos">座標</param>
-	/// <param name="_destination">次の移動先番号</param>
 	/// <returns></returns>
-	static std::unique_ptr<BossA> Create(const XMFLOAT3& _pos, const int _destination);
+	static std::unique_ptr<BossA> Create();
 
 	/// <summary>
 	/// 更新
@@ -74,6 +91,11 @@ public:
 	/// </summary>
 	void Attack();
 
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+
 private:
 
 	//一回にできる攻撃の種類
@@ -86,38 +108,32 @@ private:
 	static const int partsNum = 8;
 	//中心からの距離
 	static const std::array<XMFLOAT3, partsNum> partsPos;
+	//中心からの距離
+	static const std::array<XMFLOAT3, partsNum> partsSplitPos;
 
 private:
 
 	//周りのオブジェクト
-	std::array<std::unique_ptr<Object3d>, partsNum> parts;
+	std::array<PARTS_INFO, partsNum> parts;
 	//タイマー
 	int timer;
-	//移動フラグ
-	bool isMove;
-	//移動タイマー
-	int moveTimer;
-	//現在の移動先番号
-	int destinationNumber;
-	//次の移動先番号
-	int nextDestinationNumber;
 	//一回に出す弾の量
 	const int bulletNum = 36;
 	//一回分の攻撃情報
 	std::array<BULLET_INFO, kindNum> attack;
 	//地形変更時にmove,衝突判定を出来なくする
 	bool isMovie;
+	//ボスの位置
+	POS_STATE posState;
+	//ボスの前回の位置
+	POS_STATE oldPosState;
+	//移動タイマー
+	int moveTimer;
 
 public:
 
 	int GetMaxHp() { return maxHp; }
 	int GetHp() { return hp; }
-	static void SetMoveList(const XMFLOAT3& _pos, const std::vector<int> _destination) {
-		MOVE_LIST add;
-		add.pos = _pos;
-		add.destination = _destination;
-		moveList.emplace_back(add);
-	}
 	float GetHpRatio() { return float(hp) / (maxHp); }
 	void SetMovie() {
 		isMovie = true;

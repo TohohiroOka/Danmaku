@@ -8,6 +8,8 @@ public: // サブクラス
 	// 定数バッファ用データ構造体B0
 	struct CONST_BUFFER_DATA
 	{
+		XMFLOAT2 toe;
+		XMFLOAT2 linear;
 		XMFLOAT4 outlineColor;//アウトラインの色
 		float outlineWidth;//アウトラインの太さ
 		unsigned int isFog;//フォグの有無
@@ -102,10 +104,29 @@ private://メンバ変数
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 	//フォグ
 	bool isFog;
+	//トーンマップ用
+	XMFLOAT2 toe;
+	XMFLOAT2 linear;
 
 public:
 
 	void SetFog(bool _isFog) {
 		isFog = _isFog;
+	}
+
+	void SetToe(const XMFLOAT2& _toe) {
+		toe = _toe;
+	}
+
+	XMFLOAT2 GetToe() {
+		return toe;
+	}
+
+	void SetLinear(const XMFLOAT2& _linear) {
+		linear = _linear;
+	}
+
+	XMFLOAT2 GetLinear() {
+		return linear;
 	}
 };

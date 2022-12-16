@@ -38,7 +38,7 @@ Player::Player(const XMFLOAT3& _pos)
 	speed = { 0,0,0 };
 	hp = maxHp;
 	moveObjAngle = { 0,0,0 };
-	cameraAngle = 0.0f;
+	cameraAngle = { 0.0f,0.0f };
 	isDamageStaging = false;
 	damageTimer = 0;
 	bulletEnergy = bulletEnergyMax;
@@ -69,8 +69,8 @@ void Player::Move()
 	DirectInput* input = DirectInput::GetInstance();
 	XInputManager* Xinput = XInputManager::GetInstance();
 
-	float radiusLR = XMConvertToRadians(cameraAngle + 90.0f);
-	float radiusUD = XMConvertToRadians(cameraAngle);
+	float radiusLR = XMConvertToRadians(cameraAngle.x + 90.0f);
+	float radiusUD = XMConvertToRadians(cameraAngle.x);
 
 	//最大速度
 	const float maxSpeed = 2.0f;
@@ -218,8 +218,10 @@ void Player::Move()
 	}
 
 	//y軸の回転・オブジェクトの向き
-	moveObjAngle.y = -cameraAngle + 90.0f;
+	moveObjAngle.y = -cameraAngle.x + 90.0f;
 
+	//y軸の回転・オブジェクトの向き
+	moveObjAngle.x = cameraAngle.y + 90.0f;
 }
 
 void Player::Collider()
@@ -328,10 +330,10 @@ void Player::Collider()
 
 void Player::SetBullet()
 {
-	float radiusUD = XMConvertToRadians(cameraAngle);
+	float radiusUD = XMConvertToRadians(cameraAngle.x);
 	XMFLOAT3 vecPt = {};
 	vecPt.x = -cosf(radiusUD);
-	vecPt.y = 0.0f;
+	vecPt.y = -cosf(XMConvertToRadians(cameraAngle.y));
 	vecPt.z = -sinf(radiusUD);
 
 	//正規化
@@ -369,7 +371,7 @@ void Player::Initialize()
 	object->SetScale({ scale,scale,scale });
 }
 
-void Player::Update(float _cameraAngle)
+void Player::Update(const DirectX::XMFLOAT2& _cameraAngle)
 {
 	DirectInput* input = DirectInput::GetInstance();
 	XInputManager* Xinput = XInputManager::GetInstance();

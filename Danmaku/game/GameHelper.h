@@ -7,6 +7,8 @@
 #include <memory>
 #include <random>
 #include <cstdlib>
+#include <iostream>
+#include <sstream>
 
 #include "Ground.h"
 #include "Player.h"
@@ -47,18 +49,79 @@ static int GetSign(float A) {
 }
 
 /// <summary>
+/// 小数部分の桁数出力
+/// </summary>
+/// <param name="value">値</param>
+/// <returns>小数部分の桁数</returns>
+static int GetDigit(float value)
+{
+	std::ostringstream stream;
+	stream << value;
+	std::string str = stream.str();// 文字列に変換
+	const int str_line_max= int(str.size());
+
+	int integer = 0;// 整数部の桁数
+	
+	for (int i = 0; i < str_line_max; i++)
+	{
+		// 小数のとき
+		if (str[i] == '.')
+		{
+			// 小数点の位置を保存
+			integer = i;
+			break;
+		}
+	}
+
+	//文字列の合計-整数部分で少数部分の桁数を出す
+	int count=0;
+	if (integer != 0)
+	{
+		count = str_line_max - integer - 1;
+	}
+
+	return count;
+}
+
+/// <summary>
 /// 乱数生成
 /// 0から範囲までの乱数を出力
 /// </summary>
 /// <param name="range">範囲</param>
 /// <returns>乱数</returns>
-static float Randomfloat(int _range)
+static float Randomfloat(float _range)
+{
+	const int str_count= GetDigit(_range);
+
+	//整数に戻すための倍率
+	int magnification=1;
+	for (int i = 0; i < str_count; i++) {
+		magnification*=10;
+	}
+
+	//整数での値
+	const int int_range= int(_range * magnification);
+
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand100(0, int_range);
+
+	return float(rand100(mt))/ float(magnification);
+}
+
+/// <summary>
+/// 乱数生成
+/// 0から範囲までの乱数を出力
+/// </summary>
+/// <param name="range">範囲</param>
+/// <returns>乱数</returns>
+static int Randomint(int _range)
 {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, _range);
 
-	return float(rand100(mt));
+	return rand100(mt);
 }
 
 /// <summary>

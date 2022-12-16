@@ -15,6 +15,8 @@ GraphicsPipelineManager::GRAPHICS_PIPELINE PostEffect::pipeline;
 PostEffect::PostEffect()
 	:Sprite()
 {
+	toe = {1.125f,1.5f};
+	linear = { 1.5f,0.0f };
 }
 
 PostEffect::~PostEffect()
@@ -230,6 +232,8 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* _cmdList)
 	constMap->outlineColor = InterfaceObject3d::GetOutlineColor();
 	constMap->outlineWidth = InterfaceObject3d::GetOutlineWidth();
 	constMap->isFog = isFog;
+	constMap->toe = toe;
+	constMap->linear = linear;
 	constBuff->Unmap(0, nullptr);
 
 	// パイプラインステートの設定

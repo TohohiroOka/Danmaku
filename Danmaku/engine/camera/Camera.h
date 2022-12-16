@@ -44,7 +44,7 @@ public: // メンバ関数
 	/// カメラのシェイク開始
 	/// </summary>
 	/// <param name="_strength">シェイクの強さ</param>
-	void StartCameraShake(int _strength);
+	void StartCameraShake(float _strength);
 
 	/// <summary>
 	/// カメラのシェイク終了
