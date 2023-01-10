@@ -59,9 +59,9 @@ protected:
 	//モデル
 	static std::unique_ptr<Model> model;
 	//オブジェクトの最大値
-	static const int object_max_num = 20;
+	static const int object_max_num = 25;
 	//オブジェクトの最大値
-	static const int effect_max_num = 20 * 10;
+	static const int effect_max_num = object_max_num * 10;
 	//オブジェクト
 	static std::array<std::unique_ptr<InstanceObject>, object_max_num> bullet;
 	//現在の使用個数

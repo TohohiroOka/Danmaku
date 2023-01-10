@@ -39,7 +39,7 @@ PlayerUi::PlayerUi(const int _maxHp, const float _bulletEnergyMax)
 		hpGauge.panelTex = Sprite::Create(spriteName[SPRITE::PLAYER_HP_PANEL].name);
 		hpGauge.panelTex->SetPosition({ hpGauge.pos.x - 60.0f, hpGauge.pos.y - 10.0f });
 		hpGauge.panelTex->SetTexSize(spriteName[SPRITE::PLAYER_HP_PANEL].texSize);
-		hpGauge.panelTex->SetSize({ 50.0f,50.0f });
+		hpGauge.panelTex->SetSize({ 40.0f,40.0f });
 		hpGauge.panelTex->Update();
 	}
 	//energyƒQ[ƒW
@@ -71,7 +71,7 @@ PlayerUi::PlayerUi(const int _maxHp, const float _bulletEnergyMax)
 		energyGauge.panelTex = Sprite::Create(spriteName[SPRITE::PLAYER_BULLET_ENERGY].name);
 		energyGauge.panelTex->SetPosition({ energyGauge.pos.x - 60.0f, energyGauge.pos.y - 10.0f });
 		energyGauge.panelTex->SetTexSize(spriteName[SPRITE::PLAYER_BULLET_ENERGY].texSize);
-		energyGauge.panelTex->SetSize({ 50.0f,50.0f });
+		energyGauge.panelTex->SetSize({ 40.0f,40.0f });
 		energyGauge.panelTex->Update();
 	}
 

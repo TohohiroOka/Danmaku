@@ -10,8 +10,8 @@ ID3D12Device* InterfaceObject3d::device = nullptr;
 ID3D12GraphicsCommandList* InterfaceObject3d::cmdList = nullptr;
 Camera* InterfaceObject3d::camera = nullptr;
 LightGroup* InterfaceObject3d::light = nullptr;
-DirectX::XMFLOAT4 InterfaceObject3d::outlineColor;
-float InterfaceObject3d::outlineWidth;
+DirectX::XMFLOAT4 InterfaceObject3d::outlineColor={1,1,1,1};
+float InterfaceObject3d::outlineWidth=0.02f;
 Texture* InterfaceObject3d::cubetex;
 
 using namespace DirectX;
@@ -66,7 +66,7 @@ void InterfaceObject3d::Update()
 		if (camera)
 		{
 			constMap->viewproj = camera->GetView() * camera->GetProjection();
-			constMap->cameraPos = camera->GetEye();;
+			constMap->cameraPos = camera->GetEye();
 		}
 		else
 		{

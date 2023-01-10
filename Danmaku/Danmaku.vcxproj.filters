@@ -68,9 +68,6 @@
     <Filter Include="ゲームシステム\Scene">
       <UniqueIdentifier>{8677fbf2-e109-497b-99fb-14bb695dc881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="シェーダーファイル\NormalMap">
-      <UniqueIdentifier>{110cc445-8ccf-4738-abfc-f7275b52f11a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="シェーダーファイル\Basic">
       <UniqueIdentifier>{a8a993ee-4e2d-4f0e-bfdd-b29afe531222}</UniqueIdentifier>
     </Filter>
@@ -450,12 +447,6 @@
     <FxCompile Include="Resources\Shaders\PostEffectVS.hlsl">
       <Filter>シェーダーファイル\PostEffect</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\NormalMapPS.hlsl">
-      <Filter>シェーダーファイル\NormalMap</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\NormalMapVS.hlsl">
-      <Filter>シェーダーファイル\NormalMap</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shaders\BasicCS.hlsl">
       <Filter>シェーダーファイル\Basic</Filter>
     </FxCompile>
@@ -502,9 +493,6 @@
     </None>
     <None Include="Resources\Shaders\PostEffect.hlsli">
       <Filter>シェーダーファイル\PostEffect</Filter>
-    </None>
-    <None Include="Resources\Shaders\NormalMap.hlsli">
-      <Filter>シェーダーファイル\NormalMap</Filter>
     </None>
     <None Include="Resources\Shaders\DrawLine2D.hlsli">
       <Filter>シェーダーファイル\DrawLine2d</Filter>

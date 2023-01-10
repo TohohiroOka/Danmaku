@@ -1,6 +1,6 @@
 #include "DrawLine3D.hlsli"
 
-VSOutput main( float4 pos : POSITION ) : SV_POSITION
+VSOutput main( float4 pos : POSITION )
 {
 	//ピクセルシェーダーに渡す値
 	VSOutput output;

@@ -78,6 +78,10 @@ void BaseBullet::Update()
 		break;
 	}
 
+	//移動している時に残像としてパーティクルを出す
+	if(move.x==0&& move.y == 0 && move.z == 0){return;}
+
+	//移動している時に残像として出すパーティクル処理
 	for (int i = 0; i < effect_max_num; i++) {
 		if (effectNum[i] >= 512) { continue; }
 		effect[i]->InEmitter(10, pos, { 0,0,0 }, { 0,0,0 }, 5.0f, 0.0f,

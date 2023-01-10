@@ -13,7 +13,7 @@ float4 SetBloom(float4 shadecolor, float4 texcolor, float4 color);
 /// </summary>
 float4 SetToon(float4 shadecolor);
 
-PSOutput main(VSOutput input) : SV_TARGET
+PSOutput main(VSOutput input)
 {
 	// テクスチャマッピング
 	float4 texcolor = tex.Sample(smp, input.uv);

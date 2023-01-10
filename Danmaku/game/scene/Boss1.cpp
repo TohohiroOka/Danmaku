@@ -53,7 +53,7 @@ void Boss1::Initialize()
 	ground = Ground::Create();
 
 	//プレイヤー
-	player = Player::Create(jData->objects[objectName[0]][0].pos);
+	player = Player::Create(jData->objects[objectName[0]][0].pos, cameraAngle);
 
 	//弾マネージャー
 	bullet = BulletManager::Create();
@@ -116,7 +116,7 @@ void Boss1::Update()
 			cameraTarget.pos.y = Easing::OutCubic(cameraTarget.s_pos.y, playerPos.y, ratio);
 			cameraTarget.pos.z = Easing::OutCubic(cameraTarget.s_pos.z, playerPos.z, ratio);
 
-			const float range = 20.0f;
+			const float range = 40.0f;
 			XMFLOAT2 cameraRadius = {
 				DirectX::XMConvertToRadians(cameraAngle.x),
 				DirectX::XMConvertToRadians(cameraAngle.y)
@@ -164,7 +164,18 @@ void Boss1::Update()
 		enemy->CheckCollision();
 
 		//ボスとプレイヤー弾の判定
-		if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPosition(), boss->GetScale() * 2.0f)) {
+		bool bossDamage = false;
+		if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPosition(), boss->GetScale())) {
+			bossDamage = true;
+		} 
+
+		for(int i=0;i<8;i++){
+			if (bullet->CheckPlayerBulletToEnemyCollision(boss->GetPartsPos(i), boss->GetPartsScale(i))) {
+				bossDamage = true;
+			}
+		}
+
+		if (bossDamage) {
 			boss->Damage();
 		}
 
@@ -217,7 +228,7 @@ void Boss1::Update()
 
 			//プレイヤー座標
 			XMFLOAT3 playerPos = player->GetPosition();
-			const float range = 20.0f;
+			const float range = 40.0f;
 			XMFLOAT2 cameraRadius = {
 				DirectX::XMConvertToRadians(cameraAngle.x),
 				DirectX::XMConvertToRadians(cameraAngle.y)
@@ -304,7 +315,7 @@ void Boss1::Update()
 			cameraTarget.pos.y = Easing::OutCubic(cameraTarget.s_pos.y, playerPos.y, ratio);
 			cameraTarget.pos.z = Easing::OutCubic(cameraTarget.s_pos.z, playerPos.z, ratio);
 
-			const float range = 20.0f;
+			const float range = 40.0f;
 			XMFLOAT2 cameraRadius = {
 				DirectX::XMConvertToRadians(cameraAngle.x),
 				DirectX::XMConvertToRadians(cameraAngle.y)
@@ -374,7 +385,7 @@ void Boss1::DrawNotPostA()
 {
 	Sprite::PreDraw(cmdList);
 	ui->Draw();
-	DebugText::GetInstance()->DrawAll();
+	//DebugText::GetInstance()->DrawAll();
 	Sprite::PostDraw();
 }
 
@@ -438,5 +449,5 @@ void Boss1::CameraUpdate(Camera* camera)
 	}
 
 	camera->SetTarget(cameraTarget.pos);
-	camera->SetEye(cameraPos.pos);
+	camera->SetEye({cameraPos.pos.x,cameraPos.pos .y,cameraPos.pos .z});
 }

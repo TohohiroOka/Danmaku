@@ -57,7 +57,6 @@ void MainEngine::Initialize()
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	CubeMap::StaticInitialize(dXCommon->GetDevice());
-
 	scene = SceneManager::Create();
 
 	postEffect = PostEffect::Create();
@@ -105,20 +104,20 @@ void MainEngine::Draw()
 	//imgui表示
 	scene->ImguiDraw();
 
-	XMFLOAT2 toneColor = postEffect->GetToe();
-	XMFLOAT2 linearColor = postEffect->GetLinear();
+	//XMFLOAT2 toneColor = postEffect->GetToe();
+	//XMFLOAT2 linearColor = postEffect->GetLinear();
 
-	ImGui::Begin("shader");
-	ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetWindowSize(ImVec2(300, 130));
-	ImGui::SliderFloat("toe : x", &toneColor.x, 0, 5);
-	ImGui::SliderFloat("toe : y", &toneColor.y, 0, 5);
-	ImGui::SliderFloat("linear : x", &linearColor.x, 0, 5);
-	ImGui::SliderFloat("linear : y", &linearColor.y, 0, 5);
-	ImGui::End();
+	//ImGui::Begin("shader");
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	//ImGui::SetWindowSize(ImVec2(300, 130));
+	//ImGui::SliderFloat("toe : x", &toneColor.x, 0, 5);
+	//ImGui::SliderFloat("toe : y", &toneColor.y, 0, 5);
+	//ImGui::SliderFloat("linear : x", &linearColor.x, 0, 5);
+	//ImGui::SliderFloat("linear : y", &linearColor.y, 0, 5);
+	//ImGui::End();
 
-	postEffect->SetToe(toneColor);
-	postEffect->SetLinear(linearColor);
+	//postEffect->SetToe(toneColor);
+	//postEffect->SetLinear(linearColor);
 
 	//ポストエフェクト描画
 	postEffect->Draw(dXCommon->GetCmdList());

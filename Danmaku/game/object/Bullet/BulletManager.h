@@ -105,18 +105,22 @@ public:
 		bossBullet.emplace_back(BossBulletSnake::Create(_pos, _color));
 	}
 
-	//弾セット
+	//ホーミングする線状の弾1セット
 	static void SetBossBulletHomingLine(XMFLOAT3& _pos, const float speed, const XMFLOAT3& _color, const int _progress);
 
-	//弾セット
+	//ホーミングする線状の弾2セット
 	static void SetBossBulletHomingLine1(XMFLOAT3& _pos, const float speed, const XMFLOAT3& _color);
 
-	//弾セット
+	//爆発してからホーミングする弾1セット
 	static void SetBossBulletBombHoming(XMFLOAT3& _pos, const XMFLOAT3& _moveVec, const XMFLOAT3& _color) {
 		bossBullet.emplace_back(BossBulletBombHoming::Create(_pos, _moveVec, _color));
 	}
 
-	//弾セット
-	static void SetBossBulletBombHoming1(const XMFLOAT3& _pos, const float speed, const XMFLOAT3& _color);
+	//爆発してからホーミングする弾2セット
+	static void SetBossBulletBombHoming1(const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color);
+
+	//ホーミング上下ずらし
+	static void SetBossBulletHomingShift(XMFLOAT3& shift,const XMFLOAT3& _pos,
+		const float _speed, const XMFLOAT3& _color);
 
 };

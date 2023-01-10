@@ -6,6 +6,7 @@ class Player
 {
 private:
 
+	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 
 public:
@@ -13,8 +14,10 @@ public:
 	/// <summary>
 	/// 3Dオブジェクト生成
 	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="cameraAngle">カメラ角度</param>
 	/// <returns></returns>
-	static std::unique_ptr<Player> Create(const XMFLOAT3& _pos);
+	static std::unique_ptr<Player> Create(const XMFLOAT3& _pos,const XMFLOAT2& _cameraAngle);
 
 private:
 
@@ -39,7 +42,8 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="pos">座標</param>
-	Player(const XMFLOAT3& _pos);
+	/// <param name="cameraAngle">カメラ角度</param>
+	Player(const XMFLOAT3& _pos, const XMFLOAT2& _cameraAngle);
 	~Player() {};
 
 	/// <summary>
@@ -51,7 +55,7 @@ public:
 	/// 毎フレーム処理
 	/// </summary>
 	/// <param name="cameraAngle">カメラ角度</param>
-	void Update(const DirectX::XMFLOAT2& _cameraAngle);
+	void Update(const XMFLOAT2& _cameraAngle);
 
 	/// <summary>
 	/// 毎フレーム処理

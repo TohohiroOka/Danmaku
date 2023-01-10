@@ -26,7 +26,7 @@ float GetDistance(XMFLOAT2 startPoint, XMFLOAT2 endPoint) {
 	return sqrt(x + y);
 }
 
-Player::Player(const XMFLOAT3& _pos)
+Player::Player(const XMFLOAT3& _pos, const XMFLOAT2& _cameraAngle)
 {
 	isDraw = true;
 	position = _pos;
@@ -38,17 +38,17 @@ Player::Player(const XMFLOAT3& _pos)
 	speed = { 0,0,0 };
 	hp = maxHp;
 	moveObjAngle = { 0,0,0 };
-	cameraAngle = { 0.0f,0.0f };
+	cameraAngle = _cameraAngle;
 	isDamageStaging = false;
 	damageTimer = 0;
 	bulletEnergy = bulletEnergyMax;
 	isMovie = false;
 }
 
-std::unique_ptr<Player> Player::Create(const XMFLOAT3& _pos)
+std::unique_ptr<Player> Player::Create(const XMFLOAT3& _pos, const XMFLOAT2& _cameraAngle)
 {
 	// 3Dオブジェクトのインスタンスを生成
-	Player* instance = new Player(_pos);
+	Player* instance = new Player(_pos, _cameraAngle);
 	if (instance == nullptr) {
 		return nullptr;
 	}
@@ -221,7 +221,7 @@ void Player::Move()
 	moveObjAngle.y = -cameraAngle.x + 90.0f;
 
 	//y軸の回転・オブジェクトの向き
-	moveObjAngle.x = cameraAngle.y + 90.0f;
+	moveObjAngle.x = cameraAngle.y - 90.0f;
 }
 
 void Player::Collider()
@@ -363,11 +363,18 @@ void Player::Initialize()
 	Object3d::SetOutlineWidth(0.002f);
 	Object3d::SetOutlineColor({ 1,1,1,1 });
 
-	object->SetOutline(true);
+	//object->SetOutline(true);
 	object->SetPosition(position);
 
+	//y軸の回転・オブジェクトの向き
+	moveObjAngle.y = -cameraAngle.x + 90.0f;
+
+	//y軸の回転・オブジェクトの向き
+	moveObjAngle.x = cameraAngle.y - 90.0f;
+	object->SetRotation(moveObjAngle);
+
 	//SetToon(true);
-	scale = 1.0f;
+	scale = 2.0f;
 	object->SetScale({ scale,scale,scale });
 }
 

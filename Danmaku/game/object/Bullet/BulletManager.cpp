@@ -245,3 +245,18 @@ void BulletManager::SetBossBulletBombHoming1(const XMFLOAT3& _pos, const float _
 	moveVec = moveVec.normalize();
 	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x,moveVec.y,moveVec.z }, _speed, _color));
 }
+
+void BulletManager::SetBossBulletHomingShift(XMFLOAT3& shift, const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color)
+{
+	shift.y+=3;
+	if (shift.y > 40) {
+		shift.y=-40;
+	}
+	Vector3 moveVec = { playerPos.x - _pos.x,shift.y + playerPos.y - _pos.y , playerPos.z - _pos.z };
+	moveVec = moveVec.normalize();
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x,moveVec.y,moveVec.z }, _speed, _color));
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x + 0.1f,moveVec.y,moveVec.z + 0.1f }, _speed, _color));
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x + 0.1f,moveVec.y,moveVec.z - 0.1f }, _speed, _color));
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x - 0.1f,moveVec.y,moveVec.z + 0.1f }, _speed, _color));
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x - 0.1f,moveVec.y,moveVec.z - 0.1f }, _speed, _color));
+}

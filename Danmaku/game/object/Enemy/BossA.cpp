@@ -92,8 +92,11 @@ BossA::BossA()
 		addPos.x += partsPos[i].x;
 		addPos.y += partsPos[i].y;
 		addPos.z += partsPos[i].z;
+		parts[i].instance->SetColor({0,0,0,1});
 		parts[i].instance->SetPosition(addPos);
 		parts[i].instance->SetScale({ partsScale ,partsScale ,partsScale });
+		parts[i].instance->SetOutline(true);
+
 	}
 
 	//UŒ‚‰Šú‰»
@@ -161,6 +164,21 @@ void BossA::Update()
 			//UŒ‚
 			Attack();
 		}
+
+		//•ªŠ„Žž‚Ícore‚ª‰ñ“]‚·‚é
+		if (posState == POS_STATE::SPLIT) {
+			XMFLOAT3 rota_core=object->GetRotation();
+			rota_core.x += 5.0f;
+			rota_core.y += 2.0f;
+			rota_core.z += 4.0f;
+
+			rota_core.x = float(int(rota_core.x) % 360);
+			rota_core.y = float(int(rota_core.y) % 360);
+			rota_core.z = float(int(rota_core.z) % 360);
+
+			object->SetRotation(rota_core);
+		}
+
 	}
 	BaseEnemy::Update();
 }
@@ -407,6 +425,15 @@ void BossA::Attack()
 				BulletManager::SetBossBulletHomingLine(itr.HOMING_LINEpos, 5.0f, color, 1);
 			}
 		}
+		//Œy‚¢ƒz[ƒ~ƒ“ƒO‚·‚éƒr[ƒ€
+		if (attack[0].kind == int(BULLET_KIND_SPLIT::HOMING_3WEY) && timer % 15 == 1)
+		{
+			//’Ç”ö’eü
+			for (auto& itr : parts)
+			{
+				BulletManager::SetBossBulletHomingShift(itr.rota, itr.instance->GetPosition(),10.0f,{0.9f,0.2f,0.2f});
+			}
+		}
 	}
 }
 
@@ -419,6 +446,7 @@ void BossA::Move()
 		float ratio = float(moveTimer) / maxTime;
 
 		float endScale = 15.0f;
+		float endScale_core = 7.5f;
 
 		for (int i = 0; i < 8; i++) {
 			XMFLOAT3 inPos = {};
@@ -433,6 +461,10 @@ void BossA::Move()
 			parts[i].instance->SetScale({ inScale ,inScale ,inScale });
 		}
 
+		float inScale_core = 0.0f;
+		inScale_core = Easing::InCirc(3.0f, endScale_core, ratio);
+		object->SetScale({ inScale_core ,inScale_core ,inScale_core });
+
 		if (ratio >= 1.0f) {
 			oldPosState = posState;
 			moveTimer = 0;
@@ -445,6 +477,7 @@ void BossA::Move()
 		float ratio = float(moveTimer) / maxTime;
 
 		float endScale = 15.0f;
+		float endScale_core = 7.5f;
 
 		for (int i = 0; i < 8; i++) {
 			XMFLOAT3 inPos = {};
@@ -458,6 +491,10 @@ void BossA::Move()
 			parts[i].instance->SetPosition(inPos);
 			parts[i].instance->SetScale({ inScale ,inScale ,inScale });
 		}
+
+		float inScale_core = 0.0f;
+		inScale_core = Easing::InCirc(endScale_core, 3.0f, ratio);
+		object->SetScale({ inScale_core ,inScale_core ,inScale_core });
 
 		if (ratio >= 1.0f) {
 			oldPosState = posState;

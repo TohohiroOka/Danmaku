@@ -88,9 +88,6 @@ void ShaderManager::LoadShader()
 	//DrawLine3d
 	shaderObjectVS["DRAW_LINE_3D"] = CompileShader(L"DrawLine3DVS.hlsl", vsModel);
 	shaderObjectPS["DRAW_LINE_3D"] = CompileShader(L"DrawLine3DPS.hlsl", psModel);
-	//NormalMap
-	shaderObjectVS["NORMAMAP"] = CompileShader(L"NormalMapVS.hlsl", vsModel);
-	shaderObjectPS["NORMAMAP"] = CompileShader(L"NormalMapPS.hlsl", psModel);
 	//Sprite
 	shaderObjectVS["SPRITE"] = CompileShader(L"SpriteVS.hlsl", vsModel);
 	shaderObjectPS["SPRITE"] = CompileShader(L"SpritePS.hlsl", psModel);

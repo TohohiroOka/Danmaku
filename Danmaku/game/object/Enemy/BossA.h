@@ -12,8 +12,6 @@ private:
 		NONE,//何もなし
 		CIRCLE,//円状に出る
 		LATTICE_BAEM_SET_X,//格子状ビームセットyz平面
-		LATTICE_BAEM_SET_Y,//格子状ビームセットxz平面
-		LATTICE_BAEM_SET_Z,//格子状ビームセットxy平面
 		FIREWORKE,//花火的なもの
 		HOMING,//ホーミング
 		SNAKE,//うねうね動く
@@ -21,12 +19,15 @@ private:
 		CIRCLE_ROTATE,//円状に出る
 		BOMB_HOMING,//爆破してから
 		SIZE,//合計
+		LATTICE_BAEM_SET_Y,//格子状ビームセットxz平面
+		LATTICE_BAEM_SET_Z,//格子状ビームセットxy平面
 	};
 
 	enum class BULLET_KIND_SPLIT
 	{
 		NONE,//何もなし
 		HOMING_LINE,//追従線(円形に出る)
+		HOMING_3WEY,//3wey弾
 		SIZE,//合計
 	};
 
@@ -35,7 +36,6 @@ private:
 	{
 		CENTER,//中央
 		SPLIT,//分割
-		//ROTATION,//回転
 		SIZE,//合計
 	};
 
@@ -61,6 +61,10 @@ private:
 		XMFLOAT2 radiun;
 		//HOMING_LINE用の座標
 		XMFLOAT3 HOMING_LINEpos;
+		//回転軸
+		XMFLOAT3 rota = { 0,0,0 };
+		//加算フラグ
+		bool isAdd=false;
 	};
 
 	static const int lattice_beam_side_num = 10;
@@ -138,7 +142,12 @@ public:
 	void SetMovie() {
 		isMovie = true;
 	};
-
+	XMFLOAT3 GetPartsPos(int _partsNumber) {
+		return parts[_partsNumber].instance->GetPosition();
+	}
+	float GetPartsScale(int _partsNumber){
+		return parts[_partsNumber].instance->GetScale().x;
+	}
 	void EndMovie() {
 		isMovie = false;
 	}

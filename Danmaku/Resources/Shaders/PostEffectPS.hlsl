@@ -98,10 +98,10 @@ float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor)
 	float yPoutline = uv.y + outlineWidth;
 	float yMoutline = uv.y - outlineWidth;
 
-	float add1 = xPoutline < 1;
-	float add2 = xMoutline > 0;
-	float add3 = yPoutline < 1;
-	float add4 = yMoutline > 0;
+	float add1 = step(xPoutline, 1);
+	float add2 = step(0, xMoutline);
+	float add3 = step(yPoutline, 1);
+	float add4 = step(0, yMoutline);
 
 	outlineTex = outlineTex + outline.Sample(smp, float2(xPoutline, yPoutline)) * (add1 * add3);
 	outlineTex = outlineTex + outline.Sample(smp, float2(xPoutline, yMoutline)) * (add1 * add4);
@@ -130,7 +130,8 @@ float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor)
 
 float4 SetFog(float2 uv)
 {
-	float depth = pow(depthTex.Sample(smp, uv), 10000);
+	float absTex= abs(depthTex.Sample(smp, uv));
+	float depth = pow(absTex, 10000);
 	depth = depth * depth;
 	float4 depthColor = float4(0, depth/2, depth, 1.0);
 
