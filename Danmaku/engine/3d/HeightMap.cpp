@@ -87,13 +87,22 @@ void HeightMap::SetChangeModel(TerrainModel* _beforeModel, TerrainModel* afterMo
 		int i = 0;
 		Mesh& nowMesh = *model->GetModel()->GetMeshes()[0];
 
-		for (auto& vertex : verticesC)
-		{
-			vertex.pos.y = Easing::Lerp(vertices[0][i].pos.y, vertices[1][i].pos.y, _ratio);
-			vertex.normal = Easing::Lerp(vertices[0][i].normal, vertices[1][i].normal, _ratio);
+		if(_ratio<1){
+			for (auto& vertex : verticesC)
+			{
+				vertex.pos.y = Easing::Lerp(vertices[0][i].pos.y, vertices[1][i].pos.y, _ratio);
+				vertex.normal = Easing::Lerp(vertices[0][i].normal, vertices[1][i].normal, _ratio);
 
-			nowMesh.ChangeVertex(vertex, i);
-			i++;
+				nowMesh.ChangeVertex(vertex, i);
+				i++;
+			}
+		} else {
+			for (auto& vertex : verticesC)
+			{
+				vertex.pos.y =vertices[1][i].pos.y;
+				vertex.normal =  vertices[1][i].normal;
+				nowMesh.ChangeVertex(vertex, i);
+			}
 		}
 		nowMesh.SendVertex();
 	}
@@ -108,13 +117,22 @@ void HeightMap::SetChangeModel(TerrainModel* _beforeModel, TerrainModel* afterMo
 
 		int i = 0;
 
-		for (auto& vertex : verticesC)
-		{
-			vertex.pos.y = Easing::Lerp(vertices[0][i].pos.y, vertices[1][i].pos.y, _ratio);
-			vertex.normal = Easing::Lerp(vertices[0][i].normal, vertices[1][i].normal, _ratio);
+		if (_ratio < 1) {
+			for (auto& vertex : verticesC)
+			{
+				vertex.pos.y = Easing::Lerp(vertices[0][i].pos.y, vertices[1][i].pos.y, _ratio);
+				vertex.normal = Easing::Lerp(vertices[0][i].normal, vertices[1][i].normal, _ratio);
 
-			model->SetHitVertices(vertex, i);
-			i++;
+				model->SetHitVertices(vertex, i);
+				i++;
+			}
+		} else {
+			for (auto& vertex : verticesC)
+			{
+				vertex.pos.y = vertices[1][i].pos.y;
+				vertex.normal = vertices[1][i].normal;
+				model->SetHitVertices(vertex, i);
+			}
 		}
 	}
 }

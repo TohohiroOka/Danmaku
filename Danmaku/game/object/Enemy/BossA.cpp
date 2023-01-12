@@ -153,12 +153,7 @@ void BossA::Update()
 			timer = 0;
 		}
 
-		//à⁄ìÆ
-		if (posState != oldPosState)
-		{
-			Move();
-		}
-		else {
+		if (posState == oldPosState) {
 			timer++;
 
 			//çUåÇ
@@ -180,6 +175,17 @@ void BossA::Update()
 		}
 
 	}
+	else {
+		if (posState == POS_STATE::SPLIT&&oldPosState == POS_STATE::SPLIT) {
+			posState = POS_STATE::CENTER;
+		}
+	}
+	//à⁄ìÆ
+	if (posState != oldPosState)
+	{
+		Move();
+	}
+
 	BaseEnemy::Update();
 }
 

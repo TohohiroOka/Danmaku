@@ -78,8 +78,6 @@ public:
 	/// <param name="_cubetex">キューブマップテクスチャ</param>
 	static void SetLightGroup(Texture* _cubetex) { InterfaceObject3d::cubetex = _cubetex; }
 
-private:
-
 	/// <summary>
 	/// 更新
 	/// </summary>

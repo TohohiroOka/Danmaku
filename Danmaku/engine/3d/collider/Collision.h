@@ -109,11 +109,8 @@ public:
 	/// </summary>
 	/// <param name="sphere">球</param>
 	/// <param name="capsule">カプセル</param>
-	/// <param name="_distance">距離（出力用）</param>
-	/// <param name="_inter">交点（出力用）</param>
 	/// <returns></returns>
-	static bool CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule,
-		float* _distance, DirectX::XMVECTOR* _inter);
+	static bool CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule);
 
 	/// <summary>
 	/// カプセルとカプセル

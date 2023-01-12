@@ -53,6 +53,8 @@ void Ground::Initialize()
 	mapName[1] = "heightmap02.bmp";
 	mapName[2] = "heightmap03.bmp";	
 	mapName[3] = "heightmap04.bmp";
+	mapName[4] = "heightmap05.bmp";
+
 	useModel= TerrainModel::FlatlandModelCreate(jimen, kabe);
 	terrainModel[0] = TerrainModel::FlatlandModelCreate(jimen, kabe);
 	for (int i = 0; i < modelNum; i++) {
@@ -99,7 +101,8 @@ void Ground::Update()
 	MeshCollider* collider = new MeshCollider;
 	object->SetCollider(collider);
 	//collider->ConstructTriangles(object->GetModel());
-	collider->ConstructTriangles(terrainModel[ChangeMapKind[1]]->GetHitVertices(), terrainModel[ChangeMapKind[1]]->GetHitIndices());
+	collider->ConstructTriangles(terrainModel[ChangeMapKind[1]]->GetHitVertices(),
+	terrainModel[ChangeMapKind[1]]->GetHitIndices());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 	for (auto& i : ChangeMapKind) {

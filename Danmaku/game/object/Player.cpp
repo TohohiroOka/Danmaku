@@ -394,7 +394,7 @@ void Player::Update(const DirectX::XMFLOAT2& _cameraAngle)
 		//当たり判定
 		Collider();
 
-		if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
+		if ((input->PushKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
 		{
 			SetBullet();
 			bulletEnergy--;

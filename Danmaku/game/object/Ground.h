@@ -61,7 +61,7 @@ public:
 private:
 
 	//使用するマップの名前配列
-	static const int modelNum = 4;
+	static const int modelNum = 5;
 	std::array<std::string, modelNum> mapName;
 
 	//マップを覆うキューブ

@@ -13,10 +13,10 @@ const bool operator==(const XMINT2& a, const XMINT2& b) {
 }
 
 const bool operator!=(const XMINT2& a, const XMINT2& b) {
-	bool x = a.x != b.x;
-	bool y = a.y != b.y;
+	bool x = a.x == b.x;
+	bool y = a.y == b.y;
 
-	return x * y;
+	return !x || !y;
 }
 
 void MeshCollider::MinMax(Model* _model)
@@ -297,9 +297,6 @@ void MeshCollider::ConstructTriangles(const std::vector<Mesh::VERTEX>& _vertices
 		object->SetVertex(vertices[idx1].pos);
 		object->SetVertex(vertices[idx2].pos);
 	}
-
-	int a = 0;
-	a = 1;
 }
 
 void MeshCollider::Update()
@@ -406,7 +403,7 @@ bool MeshCollider::CheckCollisionRay(const Ray& _ray, float* _distance, DirectX:
 	return false;
 }
 
-bool MeshCollider::CheckCollisionCapsule(const Capsule& _capsule, float* _distance, DirectX::XMVECTOR* _inter)
+bool MeshCollider::CheckCollisionCapsule(const Capsule& _capsule)
 {
 	// オブジェクトのローカル座標系での球を得る（半径はXスケールを参照)
 	Capsule localCapsule;
@@ -440,7 +437,7 @@ bool MeshCollider::CheckCollisionCapsule(const Capsule& _capsule, float* _distan
 		for (; it != triangle[Octree[i].x][Octree[i].y].cend(); ++it) {
 			const Triangle& mesh = *it;
 
-			if (Collision::CheckTriangleCapsule(mesh, localCapsule, _distance, _inter)){
+			if (Collision::CheckTriangleCapsule(mesh, localCapsule)){
 				return true;
 			}
 		}

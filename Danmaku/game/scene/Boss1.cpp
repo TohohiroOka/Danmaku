@@ -359,6 +359,8 @@ void Boss1::Draw()
 
 	InterfaceObject3d::SetCmdList(cmdList);
 
+	PrimitiveObject3D::PreDraw();
+	//ground->CDraw();
 	HeightMap::PreDraw();
 	ground->Draw();
 
@@ -367,12 +369,6 @@ void Boss1::Draw()
 	player->Draw();
 	enemy->Draw();
 	boss->Draw();
-
-	//if (scene == SCENE::SET)
-	//{
-	//	PrimitiveObject3D::PreDraw();
-	//	ground->CDraw();
-	//}
 
 	InterfaceObject3d::ReleaseCmdList();
 
@@ -395,43 +391,6 @@ void Boss1::Finalize()
 
 void Boss1::ImguiDraw()
 {
-	//float baseColor[3];//ベースカラ―
-	//float metalness;//金属度(0 or 1)
-	//float specular;//鏡面反射度
-	//float roughness;//粗さ
-
-	//baseColor[0] = anm->GetBaseColor().x;
-	//baseColor[1] = anm->GetBaseColor().y;
-	//baseColor[2] = anm->GetBaseColor().z;
-	//metalness = anm->GetMetalness();
-	//specular = anm->GetSpecular();
-	//roughness = anm->GetRoughness();
-
-	////ライトon/off
-	//static bool lightAct1 = false;
-	//static bool lightAct2 = false;
-	//static bool lightAct3 = false;
-
-	//ImGui::Begin("Material");
-	//ImGui::SetWindowPos(ImVec2(0, 0));
-	//ImGui::SetWindowSize(ImVec2(300, 130));
-	//ImGui::ColorEdit3("baseColor", baseColor, ImGuiColorEditFlags_Float);
-	//ImGui::SliderFloat("metalness", &metalness, 0, 1);
-	//ImGui::SliderFloat("specular", &specular, 0, 1);
-	//ImGui::SliderFloat("roughness", &roughness, 0, 1);
-	//ImGui::Checkbox("Light1", &lightAct1);
-	//ImGui::Checkbox("Light2", &lightAct2);
-	//ImGui::Checkbox("Light3", &lightAct3);
-	//ImGui::End();
-
-	//anm->SetBaseColor({ baseColor[0],baseColor[1],baseColor[2] });
-	//anm->SetMetalness(metalness);
-	//anm->SetSpecular(specular);
-	//anm->SetRoughness(roughness);
-
-	//light->SetDirLightActive(0, lightAct1);
-	//light->SetDirLightActive(1, lightAct2);
-	//light->SetDirLightActive(2, lightAct3);
 }
 
 void Boss1::CameraUpdate(Camera* camera)

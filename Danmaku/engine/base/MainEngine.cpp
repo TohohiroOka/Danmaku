@@ -104,20 +104,26 @@ void MainEngine::Draw()
 	//imgui表示
 	scene->ImguiDraw();
 
-	//XMFLOAT2 toneColor = postEffect->GetToe();
-	//XMFLOAT2 linearColor = postEffect->GetLinear();
+	{
+		//XMFLOAT2 toneColor = postEffect->GetToe();
+		//XMFLOAT2 linearColor = postEffect->GetLinear();
+		//XMFLOAT2 shoulderColor = postEffect->GetShoulder();
 
-	//ImGui::Begin("shader");
-	//ImGui::SetWindowPos(ImVec2(0, 0));
-	//ImGui::SetWindowSize(ImVec2(300, 130));
-	//ImGui::SliderFloat("toe : x", &toneColor.x, 0, 5);
-	//ImGui::SliderFloat("toe : y", &toneColor.y, 0, 5);
-	//ImGui::SliderFloat("linear : x", &linearColor.x, 0, 5);
-	//ImGui::SliderFloat("linear : y", &linearColor.y, 0, 5);
-	//ImGui::End();
+		//ImGui::Begin("shader");
+		//ImGui::SetWindowPos(ImVec2(0, 0));
+		//ImGui::SetWindowSize(ImVec2(300, 130));
+		//ImGui::SliderFloat("toe : x", &toneColor.x, 0, 0.4f);
+		//ImGui::SliderFloat("toe : y", &toneColor.y, 0, 0.4f);
+		//ImGui::SliderFloat("linear : x", &linearColor.x, 0.4f, 5);
+		//ImGui::SliderFloat("linear : y", &linearColor.y, 0.4f, 0.8f);
+		//ImGui::SliderFloat("shoulder : x", &shoulderColor.x, 5, 20);
+		//ImGui::SliderFloat("shoulder : y", &shoulderColor.y, 0.8f, 1);
+		//ImGui::End();
 
-	//postEffect->SetToe(toneColor);
-	//postEffect->SetLinear(linearColor);
+		//postEffect->SetToe(toneColor);
+		//postEffect->SetLinear(linearColor);
+		//postEffect->SetShoulder(shoulderColor);
+	}
 
 	//ポストエフェクト描画
 	postEffect->Draw(dXCommon->GetCmdList());
@@ -132,10 +138,3 @@ void MainEngine::FrameControl()
 {
 	fps->FixedFps();
 }
-
-//void MainEngine::debugNum(float x, float y, float z)
-//{
-//	//数字のデバッグ
-//	swprintf_s(str, L"%f,%f,%f\n", x, y, z);
-//	OutputDebugString(str);
-//}

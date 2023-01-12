@@ -213,9 +213,7 @@ bool CollisionManager::QueryCapsule(const Capsule& _capsule, const unsigned shor
 		} else if (colA->GetShapeType() == COLLISIONSHAPE_MESH) {
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 
-			float tempDistance;
-			if (!meshCollider->CheckCollisionCapsule(_capsule, &tempDistance, _inter)) continue;
-			//if (tempDistance >= distance) continue;
+			if (!meshCollider->CheckCollisionCapsule(_capsule)) continue;
 
 			result = true;
 			inter = {};

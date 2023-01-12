@@ -6,13 +6,15 @@ class PostEffect : public Sprite
 public: // サブクラス
 
 	// 定数バッファ用データ構造体B0
-	struct CONST_BUFFER_DATA
+	struct CONST_BUFFER_DATA_POST
 	{
+		XMFLOAT3 outlineColor;//アウトラインの色
+		float outlineWidth;//アウトラインの太さ
+		bool isFog;//フォグの有無
+		float pad1;
 		XMFLOAT2 toe;
 		XMFLOAT2 linear;
-		XMFLOAT4 outlineColor;//アウトラインの色
-		float outlineWidth;//アウトラインの太さ
-		unsigned int isFog;//フォグの有無
+		XMFLOAT2 shoulder;
 	};
 
 	enum TEX_TYPE
@@ -107,6 +109,7 @@ private://メンバ変数
 	//トーンマップ用
 	XMFLOAT2 toe;
 	XMFLOAT2 linear;
+	XMFLOAT2 shoulder;
 
 public:
 
@@ -128,5 +131,13 @@ public:
 
 	XMFLOAT2 GetLinear() {
 		return linear;
+	}
+
+	void SetShoulder(const XMFLOAT2& _shoulder) {
+		shoulder = _shoulder;
+	}
+
+	XMFLOAT2 GetShoulder() {
+		return shoulder;
 	}
 };

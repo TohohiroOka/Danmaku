@@ -163,13 +163,14 @@ void DirectXCommon::Initialize()
 
 	//IDXGISwapChain1のComPtrを用意
 	ComPtr<IDXGISwapChain1> swapchain1;
-	dxgiFactory->CreateSwapChainForHwnd(
+	result = dxgiFactory->CreateSwapChainForHwnd(
 		cmdQueue.Get(),
 		WindowApp::GetHwnd(),
 		&swapchainDesc,
 		nullptr,
 		nullptr,
 		&swapchain1);
+	if (FAILED(result)) { assert(0); }
 
 	//生成したIDXGISwapChain1のオブジェクトをIDXGISwapChain4に変換する
 	swapchain1.As(&swapchain);

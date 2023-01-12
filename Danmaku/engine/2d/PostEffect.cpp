@@ -15,8 +15,9 @@ GraphicsPipelineManager::GRAPHICS_PIPELINE PostEffect::pipeline;
 PostEffect::PostEffect()
 	:Sprite()
 {
-	toe = {1.125f,1.5f};
-	linear = { 1.5f,0.0f };
+	toe = { 0.125f,0.125f };
+	linear = { 0.82f,0.8f };
+	shoulder = { 20.0f,1.0f };
 }
 
 PostEffect::~PostEffect()
@@ -73,7 +74,7 @@ void PostEffect::Initialize()
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	// アップロード可能
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CONST_BUFFER_DATA) + 0xff) & ~0xff),
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CONST_BUFFER_DATA_POST) + 0xff) & ~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuff));
@@ -81,7 +82,7 @@ void PostEffect::Initialize()
 
 	//テクスチャバッファ生成用変数
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R16G16B16A16_FLOAT,
 		WindowApp::GetWindowWidth(), (UINT)WindowApp::GetWindowHeight(),
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
@@ -100,33 +101,14 @@ void PostEffect::Initialize()
 			D3D12_HEAP_FLAG_NONE,
 			&texresDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ用指定
-			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clearColor[clear_color_num]),
+			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R16G16B16A16_FLOAT, clearColor[clear_color_num]),
 			IID_PPV_ARGS(&texture[i]->texBuffer));
 		if (FAILED(result)) { assert(0); }
-
-		//テクスチャを赤クリア
-		{
-			//画素数
-			const UINT pixel_count = WindowApp::GetWindowWidth() * WindowApp::GetWindowHeight();
-			//画素一行分のデータサイズ
-			const UINT row_pitch = sizeof(UINT) * WindowApp::GetWindowWidth();
-			//画素全体のデータサイズ
-			const UINT depth_pitch = row_pitch * WindowApp::GetWindowHeight();
-			//画素イメージ
-			UINT* img = new UINT[pixel_count];
-			for (UINT j = 0; j < pixel_count; j++) { img[j] = 0xff0000ff; }
-
-			// テクスチャバッファにデータ転送
-			result = texture[i]->texBuffer->WriteToSubresource(0, nullptr,
-				img, row_pitch, depth_pitch);
-			if (FAILED(result)) { assert(0); }
-			delete[] img;
-		}
 	}
 
 	//SRV設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
@@ -227,13 +209,14 @@ std::unique_ptr<PostEffect> PostEffect::Create()
 void PostEffect::Draw(ID3D12GraphicsCommandList* _cmdList)
 {
 	// 定数バッファへデータ転送
-	CONST_BUFFER_DATA* constMap = nullptr;
+	CONST_BUFFER_DATA_POST* constMap = nullptr;
 	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->outlineColor = InterfaceObject3d::GetOutlineColor();
+	constMap->outlineColor = {1.0f,1.0f, 1.0f};
 	constMap->outlineWidth = InterfaceObject3d::GetOutlineWidth();
 	constMap->isFog = isFog;
 	constMap->toe = toe;
 	constMap->linear = linear;
+	constMap->shoulder = shoulder;
 	constBuff->Unmap(0, nullptr);
 
 	// パイプラインステートの設定

@@ -315,8 +315,7 @@ bool Collision::CheckSphereCapsule(const Sphere& _sphere, const Capsule& _capsul
 	return *_distance < _capsule.radius + _sphere.radius;
 }
 
-bool Collision::CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule,
-	float* _distance, DirectX::XMVECTOR* _inter)
+bool Collision::CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _capsule)
 {
 	//1.カプセル内の線分のスタート位置からエンド位置へのベクトルを作る
 	Vector3 vStartToEnd = _capsule.endPosition - _capsule.startPosition;
@@ -329,7 +328,15 @@ bool Collision::CheckTriangleCapsule(const Triangle& _triangle, const Capsule& _
 	ray.start = { _capsule.startPosition.x,_capsule.startPosition.y,_capsule.startPosition.z,0.0f };
 	ray.dir = { n.x,n.y,n.z,1.0f };
 
-	return CheckRay2Triangle(ray, _triangle, _distance, _inter);
+	float hitDistance;
+	XMVECTOR inter;
+	bool ishit = CheckRay2Triangle(ray, _triangle, &hitDistance, &inter);
+
+	if (ishit) {
+		return vStartToEnd.length() > hitDistance;
+	} else {
+		return false;
+	}
 }
 
 bool Collision::CheckCapsuleCapsule(const Capsule& capsule1, const Capsule& capsule2)

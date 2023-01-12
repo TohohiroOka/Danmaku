@@ -19,7 +19,7 @@ float4 SetBloom(float2 uv);
 /// <summary>
 /// アウトライン処理
 /// </summary>
-float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor);
+float4 SetOutline(float2 uv, float outlineWidth, float3 outlineColor);
 
 /// <summary>
 /// フォグ処理
@@ -27,9 +27,15 @@ float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor);
 float4 SetFog(float2 uv);
 
 /// <summary>
+/// トーンマップの色変更処理
+/// </summary>
+float ToneChange(float mainColor, float2 toeColor, float2 linearColor, float2 shoulderColor,
+	float a1, float b1, float at, float bt, float ct, float as, float bs, float cs);
+
+/// <summary>
 /// トーンマップ処理
 /// </summary>
-float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor);
+float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor, float2 shoulderColor);
 
 float4 main(VSOutput input) : SV_TARGET
 {
@@ -50,7 +56,7 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	//トーンマップ処理
-	float3 toneMapColor = ToneMap(float3(mainColor.rgb + bloom.rgb), toeColor, linearColor);
+	float3 toneMapColor = ToneMap(float3(mainColor.rgb + bloom.rgb), toeColor, linearColor, shoulder);
 
 	//ポストエフェクトの合成
 	return float4(toneMapColor, 1.0) + outline + fog;
@@ -65,7 +71,7 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma)
 float4 SetBloom(float2 uv)
 {
 	float totalWeight = 0;
-	float sigma = 0.01;
+	float sigma = 0.005;
 	float stepWidth = 0.001;
 	float4 color = { 0, 0, 0, 0 };
 
@@ -84,12 +90,12 @@ float4 SetBloom(float2 uv)
 
 	color.rgb = color.rgb / totalWeight;
 
-	//0.3以下切り捨て
-	//color = color * step(0.8,color.r + color.g);
+	//一定以下切り捨て
+	color = color * step(0.4, color.r + color.g + color.b);
 	return color;
 }
 
-float4 SetOutline(float2 uv, float outlineWidth, float4 outlineColor)
+float4 SetOutline(float2 uv, float outlineWidth, float3 outlineColor)
 {
 	float4 outlineTex = float4(0, 0, 0, 0);
 
@@ -138,40 +144,43 @@ float4 SetFog(float2 uv)
 	return depthColor;
 }
 
-float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor)
+float ToneChange(float mainColor, float2 toeColor, float2 linearColor, float2 shoulderColor,
+	float a1, float b1, float at, float bt, float ct, float as, float bs, float cs)
 {
-	const float3 RGB2Y = float3(+0.29900f, +0.58700f, +0.11400f);
-	const float3 RGB2Cb = float3(-0.16874f, -0.33126f, +0.50000f);
-	const float3 RGB2Cr = float3(+0.50000f, -0.41869f, -0.08131f);
-	const float3 YCbCr2R = float3(+1.00000f, +0.00000f, +1.40200f);
-	const float3 YCbCr2G = float3(+1.00000f, -0.34414f, -0.71414f);
-	const float3 YCbCr2B = float3(+1.00000f, +1.77200f, +0.00000f);
-	
-	float4 info = float4(toeColor, linearColor.x, linearColor.y);
-	float3 texel = mainColor.rgb;
-	
-	float coeff = 0.18 * exp(-info.g);
-	float l_max = coeff * info.r;
-	
-	// YCbCr系に変換
-	float3 YCbCr;
-	YCbCr.y = dot(RGB2Cb, texel);
-	YCbCr.z = dot(RGB2Cr, texel);
-	
-	// 色の強さは補正
-	float lum = coeff * dot(RGB2Y, texel);
-	YCbCr.x = lum * (1.0f + lum / (l_max * l_max)) / (1.0f + lum);
-	
-	// RGB系にして出力
-	float3 color;
-	color.r = dot(YCbCr2R, YCbCr);
-	color.g = dot(YCbCr2G, YCbCr);
-	color.b = dot(YCbCr2B, YCbCr);
+	float r_toe = (-a1 / (mainColor + b1) + ct) * step(mainColor, toeColor.x);
+	float r_linear = (a1 * mainColor + b1) * step(toeColor.x, mainColor) * step(mainColor, linearColor.x);
+	float r_shoulder = (-as / (mainColor + bs) + cs) * step(linearColor.x, mainColor) * step(mainColor, shoulderColor.x);
 
-	//return color;
+	float color = r_toe + r_linear + r_shoulder;
 
-	float LuminousIntensity = dot(mainColor.rgb, float3(0.2125, 0.7154, 0.0712));
-	float3 returnColor = mainColor * (1 - smoothstep(0.0, 1.0, LuminousIntensity)) + color * smoothstep(0.0, 1.0, LuminousIntensity);
+	return color;
+}
+
+float3 ToneMap(float3 mainColor, float2 toeColor, float2 linearColor, float2 shoulderColor)
+{
+	float a1 = (linearColor.y - toeColor.y) / (linearColor.x - toeColor.x);
+	float b1 = toeColor.y - (a1 * toeColor.x);
+
+	float f_a = toeColor.y - a1 * toeColor.x;
+	float at = (a1 * toeColor.x * toeColor.x * toeColor.y * toeColor.y) / (f_a * f_a);
+	float bt = (a1 * toeColor.x * toeColor.x) / f_a;
+	float ct = (toeColor.y * toeColor.y) / f_a;
+
+	float x2_x3 = linearColor.x - shoulderColor.x;
+	float as = (a1 * x2_x3 * x2_x3 * (linearColor.y - shoulderColor.y) * (linearColor.y - shoulderColor.y)) /
+		((a1 * x2_x3 - linearColor.y + shoulderColor.y) * (a1 * x2_x3 - linearColor.y + shoulderColor.y));
+	float bs = (a1 * linearColor.x * (shoulderColor.x - linearColor.x) + shoulderColor.x * (linearColor.y - shoulderColor.y)) /
+		(a1 * x2_x3 - linearColor.y + shoulderColor.y);
+	float cs = (shoulderColor.y * (a1 * x2_x3 + linearColor.y) - (linearColor.y * linearColor.y)) /
+		(a1 * x2_x3 - linearColor.y + shoulderColor.y);
+
+	//色の値によって使う修正色を変更
+	float3 returnColor = float3(0, 0, 0);
+
+	//色を修正
+	returnColor.x = ToneChange(mainColor.x, toeColor, linearColor, shoulderColor, a1, b1, at, bt, ct, as, bs, cs);
+	returnColor.y = ToneChange(mainColor.y, toeColor, linearColor, shoulderColor, a1, b1, at, bt, ct, as, bs, cs);
+	returnColor.z = ToneChange(mainColor.z, toeColor, linearColor, shoulderColor, a1, b1, at, bt, ct, as, bs, cs);
 
 	return returnColor;
 }

@@ -101,6 +101,8 @@ void InterfaceObject3d::Draw()
 
 void InterfaceObject3d::ColliderDraw()
 {
+	Update();
+
 	collider->Draw();
 }
 
