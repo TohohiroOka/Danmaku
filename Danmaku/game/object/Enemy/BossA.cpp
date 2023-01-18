@@ -432,12 +432,12 @@ void BossA::Attack()
 			}
 		}
 		//軽いホーミングするビーム
-		if (attack[0].kind == int(BULLET_KIND_SPLIT::HOMING_3WEY) && timer % 15 == 1)
+		if (attack[0].kind == int(BULLET_KIND_SPLIT::HOMING_3WEY))
 		{
 			//追尾弾線
 			for (auto& itr : parts)
 			{
-				BulletManager::SetBossBulletHomingShift(itr.rota, itr.instance->GetPosition(),10.0f,{0.9f,0.2f,0.2f});
+				BulletManager::SetBossBulletHomingShift(itr.rota, itr.instance->GetPosition(),30.0f,{0.9f,0.2f,0.2f});
 			}
 		}
 	}
@@ -474,6 +474,12 @@ void BossA::Move()
 		if (ratio >= 1.0f) {
 			oldPosState = posState;
 			moveTimer = 0;
+
+			XMFLOAT3 cpos=object->GetPosition();
+			for (auto& itr : parts){
+				XMFLOAT3 ppos= itr.instance->GetPosition();
+				itr.rota.x= GetAngle({ ppos .x,ppos .z},{ cpos .x,cpos .z});
+			}
 		}
 	}
 	//分割から中央

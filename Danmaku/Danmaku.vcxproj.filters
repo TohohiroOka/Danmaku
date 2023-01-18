@@ -316,9 +316,6 @@
     <ClCompile Include="engine\base\Quaternion.cpp">
       <Filter>エンジンシステム\Base\Helpar</Filter>
     </ClCompile>
-    <ClCompile Include="game\GameCollision.cpp">
-      <Filter>ゲームシステム</Filter>
-    </ClCompile>
     <ClCompile Include="game\scene\Title.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
@@ -690,9 +687,6 @@
     </ClInclude>
     <ClInclude Include="engine\base\Quaternion.h">
       <Filter>エンジンシステム\Base\Helpar</Filter>
-    </ClInclude>
-    <ClInclude Include="game\GameCollision.h">
-      <Filter>ゲームシステム</Filter>
     </ClInclude>
     <ClInclude Include="game\scene\Title.h">
       <Filter>ゲームシステム\Scene</Filter>

@@ -6,17 +6,11 @@
 using namespace DirectX;
 
 const bool operator==(const XMINT2& a, const XMINT2& b) {
-	bool x = a.x == b.x;
-	bool y = a.y == b.y;
-
-	return x * y;
+	return (a.x == b.x) * (a.y == b.y);
 }
 
 const bool operator!=(const XMINT2& a, const XMINT2& b) {
-	bool x = a.x == b.x;
-	bool y = a.y == b.y;
-
-	return !x || !y;
+	return !(a.x == b.x) || !(a.y == b.y);
 }
 
 void MeshCollider::MinMax(Model* _model)

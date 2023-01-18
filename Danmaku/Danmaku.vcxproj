@@ -148,7 +148,6 @@
     <ClCompile Include="engine\particle\Emitter.cpp" />
     <ClCompile Include="engine\particle\ParticleManager.cpp" />
     <ClCompile Include="engine\scene\SceneManager.cpp" />
-    <ClCompile Include="game\GameCollision.cpp" />
     <ClCompile Include="game\object\Beam\BaseBeam.cpp" />
     <ClCompile Include="game\object\Beam\BeamManager.cpp" />
     <ClCompile Include="game\object\Beam\LatticeBeam.cpp" />
@@ -392,7 +391,6 @@
     <ClInclude Include="engine\particle\ParticleManager.h" />
     <ClInclude Include="engine\scene\InterfaceScene.h" />
     <ClInclude Include="engine\scene\SceneManager.h" />
-    <ClInclude Include="game\GameCollision.h" />
     <ClInclude Include="game\GameHelper.h" />
     <ClInclude Include="game\object\Beam\BaseBeam.h" />
     <ClInclude Include="game\object\Beam\BeamManager.h" />

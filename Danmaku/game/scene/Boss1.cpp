@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <memory>
 
-#include "GameCollision.h"
 #include "GameHelper.h"
 #include "JsonLoder.h"
 

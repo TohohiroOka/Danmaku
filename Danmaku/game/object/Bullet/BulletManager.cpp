@@ -252,11 +252,17 @@ void BulletManager::SetBossBulletHomingShift(XMFLOAT3& shift, const XMFLOAT3& _p
 	if (shift.y > 40) {
 		shift.y=-40;
 	}
-	Vector3 moveVec = { playerPos.x - _pos.x,shift.y + playerPos.y - _pos.y , playerPos.z - _pos.z };
-	moveVec = moveVec.normalize();
-	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x,moveVec.y,moveVec.z }, _speed, _color));
-	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x + 0.1f,moveVec.y,moveVec.z + 0.1f }, _speed, _color));
-	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x + 0.1f,moveVec.y,moveVec.z - 0.1f }, _speed, _color));
-	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x - 0.1f,moveVec.y,moveVec.z + 0.1f }, _speed, _color));
-	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec.x - 0.1f,moveVec.y,moveVec.z - 0.1f }, _speed, _color));
+
+	XMFLOAT2 radun = { 
+		DirectX::XMConvertToRadians(shift.x + 30.0f),
+		DirectX::XMConvertToRadians(shift.x - 30.0f) };
+
+	Vector3 moveVec2 = { 5.0f * sinf(radun.x) + playerPos.x - _pos.x,shift.y + playerPos.y - _pos.y , 5.0f * cosf(radun.x) + playerPos.z - _pos.z };
+	Vector3 moveVec3 = { 5.0f * sinf(radun.y) + playerPos.x - _pos.x,shift.y + playerPos.y - _pos.y , 5.0f * cosf(radun.y) + playerPos.z - _pos.z };
+
+	moveVec2 = moveVec2.normalize();
+	moveVec3 = moveVec3.normalize();
+
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec2.x,moveVec2.y,moveVec2.z }, _speed, _color));
+	bossBullet.emplace_back(BossBulletNormal::Create(_pos, { moveVec3.x,moveVec3.y,moveVec3.z }, _speed, _color));
 }
