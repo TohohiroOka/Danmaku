@@ -10,11 +10,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "Ground.h"
-#include "Player.h"
+#include "TerrainBox.h"
 
-static const float mapSizeX = 255.0f * Ground::GetScale();
-static const float mapSizeZ = 253.0f * Ground::GetScale();
+static const float mapSize = 255.0f * TerrainBox::GetScale();
 
 /// <summary>
 /// Œ…”æ“¾

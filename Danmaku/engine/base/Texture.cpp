@@ -79,6 +79,7 @@ void Texture::LoadTexture(const std::string& _fileName)
 		D3D12_RESOURCE_STATE_GENERIC_READ,//テクスチャ用指定
 		nullptr,
 		IID_PPV_ARGS(&texBuffer));
+	assert(SUCCEEDED(result));
 
 	//テクスチャバッファにデータ転送
 	result = texBuffer->WriteToSubresource(
@@ -88,6 +89,7 @@ void Texture::LoadTexture(const std::string& _fileName)
 		(UINT)img->rowPitch,//１ラインサイズ
 		(UINT)img->slicePitch//1枚サイズ
 	);
+	assert(SUCCEEDED(result));
 
 	//シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};//設定構造体

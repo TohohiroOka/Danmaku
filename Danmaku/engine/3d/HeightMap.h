@@ -71,7 +71,15 @@ public:
 	/// <param name="_beforeModel">変更前</param>
 	/// <param name="afterModel">変更後</param>
 	/// <param name="_ratio">変換割合</param>
-	void SetChangeModel(TerrainModel* _beforeModel, TerrainModel* afterModel, const float _ratio = 1.0f);
+	void SetChangeDrawModel(TerrainModel* _beforeModel, TerrainModel* afterModel, const float _ratio = 1.0f);
+
+	/// <summary>
+	/// モデルの変換
+	/// </summary>
+	/// <param name="_beforeModel">変更前</param>
+	/// <param name="afterModel">変更後</param>
+	/// <param name="_ratio">変換割合</param>
+	void SetChangeHitModel(TerrainModel* _beforeModel, TerrainModel* afterModel, const float _ratio = 1.0f);
 
 private:
 

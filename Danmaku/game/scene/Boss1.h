@@ -1,30 +1,14 @@
 #pragma once
 #include "InterfaceScene.h"
-#include "Player.h"
-#include "Ground.h"
-#include "TouchableObject.h"
 #include <array>
 
+#include "Player.h"
+#include "TerrainBox.h"
 #include "BulletManager.h"
-#include "EnemyManager.h"
-#include "BeamManager.h"
-#include "BossA.h"
-
-#include "UiManager.h"
 
 class Boss1 : public InterfaceScene
 {
 private:
-
-	enum class SCENE {
-		SET,//準備
-		SET_FROM_PLAY,//準備からゲームプレイまでの移行
-		PLAY,//ゲームプレイ
-		PLAY_FROM_MAP_CHANGE,//プレイからマップの変更
-		MAP_CHANGE,//マップの変更
-		MAP_CHANGE_FROM_PLAY,//マップの変更からプレイ
-		HOME,//ホーム画面
-	};
 
 	struct EASING_POS {
 		XMFLOAT3 pos = {};
@@ -76,8 +60,6 @@ public:
 
 private:
 
-	//シーン
-	SCENE scene;
 	//カメラの座標
 	EASING_POS cameraPos;
 	//カメラのターゲット
@@ -92,26 +74,18 @@ private:
 	int timer;
 	//カメラの一番奥
 	float cameraBack;
+	
+	//lightの位置角度
+	float lightAngle;
+
+
+	//地形
+	std::unique_ptr<TerrainBox> terrain;
+
+	//弾
+	std::unique_ptr<BulletManager> bullet;
 
 	//プレイヤー
 	std::unique_ptr<Player> player;
 
-	//地形
-	std::unique_ptr<Ground> ground;
-
-	//弾
-	std::unique_ptr<BulletManager> bullet;
-	
-	//ビーム
-	std::unique_ptr<BeamManager> beam;
-
-	//敵
-	std::unique_ptr<EnemyManager> enemy;
-
-	//ボス
-	std::unique_ptr<BossA> boss;
-	int terrainChangeNum;
-
-	//UI
-	std::unique_ptr<UiManager> ui;
 };

@@ -122,23 +122,8 @@
     <Filter Include="ゲームシステム\object">
       <UniqueIdentifier>{d9aada42-7d56-457d-bb40-6ec31093798e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ゲームシステム\object\Ground">
-      <UniqueIdentifier>{12d2ba67-d429-4db9-aa2d-c60f1ccf1397}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\object\player">
-      <UniqueIdentifier>{a15f0d01-4f6d-4e9a-a4a0-6a27daf39fc2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\object\Bullet">
-      <UniqueIdentifier>{6e14a1ca-e053-469a-9e2d-6dc1f9574b93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="エンジンシステム\Base\Scene">
       <UniqueIdentifier>{f22beb32-3746-4c9a-99e6-f06cfe08ba98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\object\Beam">
-      <UniqueIdentifier>{62db2f1e-94c3-44e6-b572-e684262e0ae9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\object\TouchableObject">
-      <UniqueIdentifier>{6255b243-2811-4e38-8770-7b4529e36078}</UniqueIdentifier>
     </Filter>
     <Filter Include="エンジンシステム\Base\Helpar\Easing">
       <UniqueIdentifier>{dcc10f48-e82b-48b9-b179-b571095ffe54}</UniqueIdentifier>
@@ -148,9 +133,6 @@
     </Filter>
     <Filter Include="エンジンシステム\Base\Helpar\Singleton">
       <UniqueIdentifier>{436617b7-49ce-48ec-902c-d3b0bc7ea860}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\ui">
-      <UniqueIdentifier>{8dc139d4-0190-4bcb-8e9d-eb8d45c139bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="シェーダーファイル\InstanceObject">
       <UniqueIdentifier>{7fc18359-a4db-42fb-957c-579db00601d4}</UniqueIdentifier>
@@ -164,8 +146,14 @@
     <Filter Include="エンジンシステム\Base\FileLoder\CSV">
       <UniqueIdentifier>{89695aff-10b9-4ffc-a805-fceb5d716a93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ゲームシステム\object\Enemy">
-      <UniqueIdentifier>{5254ab8a-bd70-46e2-b059-23696d304e03}</UniqueIdentifier>
+    <Filter Include="ゲームシステム\object\TerrainBox">
+      <UniqueIdentifier>{c51c884e-53b1-4e40-8f6c-bdcbc0553895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\object\Bullet">
+      <UniqueIdentifier>{c065035f-839d-43bf-b306-4acf187efa9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\object\Player">
+      <UniqueIdentifier>{b61bcc2f-81f0-4ecf-a8cd-b69f984f4621}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,26 +307,20 @@
     <ClCompile Include="game\scene\Title.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\TouchableObject.cpp">
-      <Filter>ゲームシステム\object\TouchableObject</Filter>
+    <ClCompile Include="game\scene\Boss1.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\Ground.cpp">
-      <Filter>ゲームシステム\object\Ground</Filter>
+    <ClCompile Include="engine\3d\InstanceObject.cpp">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\Enemy\EnemyManager.cpp">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClCompile Include="engine\base\JsonLoder.cpp">
+      <Filter>エンジンシステム\Base\FileLoder</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\Enemy\BaseEnemy.cpp">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClCompile Include="engine\3d\TerrainModel.cpp">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\Enemy\BossA.cpp">
-      <Filter>ゲームシステム\object\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Enemy\EnemyA.cpp">
-      <Filter>ゲームシステム\object\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Bullet\BossBulletFireWorke.cpp">
-      <Filter>ゲームシステム\object\Bullet</Filter>
+    <ClCompile Include="game\object\TerrainBox.cpp">
+      <Filter>ゲームシステム\object\TerrainBox</Filter>
     </ClCompile>
     <ClCompile Include="game\object\Bullet\BulletManager.cpp">
       <Filter>ゲームシステム\object\Bullet</Filter>
@@ -349,59 +331,11 @@
     <ClCompile Include="game\object\Bullet\BaseBullet.cpp">
       <Filter>ゲームシステム\object\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="game\object\Bullet\BossBulletCircle.cpp">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="game\scene\Boss1.cpp">
-      <Filter>ゲームシステム\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Player.cpp">
-      <Filter>ゲームシステム\object\player</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Bullet\BossBulletSnake.cpp">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Bullet\BossBulletHomingLine.cpp">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Bullet\BossBulletBombHoming.cpp">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClCompile>
     <ClCompile Include="game\object\Bullet\BossBulletNormal.cpp">
       <Filter>ゲームシステム\object\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\BossHpUi.cpp">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="game\ui\UiManager.cpp">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="game\ui\BaseUi.cpp">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\3d\InstanceObject.cpp">
-      <Filter>エンジンシステム\Object\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\base\JsonLoder.cpp">
-      <Filter>エンジンシステム\Base\FileLoder</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Enemy\TutorialEnemy.cpp">
-      <Filter>ゲームシステム\object\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="game\ui\PlayerUi.cpp">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Beam\BeamManager.cpp">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Beam\LatticeBeam.cpp">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClCompile>
-    <ClCompile Include="game\object\Beam\BaseBeam.cpp">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\3d\TerrainModel.cpp">
-      <Filter>エンジンシステム\Object\3d</Filter>
+    <ClCompile Include="game\object\Player.cpp">
+      <Filter>ゲームシステム\object\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -691,26 +625,26 @@
     <ClInclude Include="game\scene\Title.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\TouchableObject.h">
-      <Filter>ゲームシステム\object\TouchableObject</Filter>
+    <ClInclude Include="game\scene\Boss1.h">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Ground.h">
-      <Filter>ゲームシステム\object\Ground</Filter>
+    <ClInclude Include="engine\base\SafeDelete.h">
+      <Filter>エンジンシステム\Base\Helpar</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Enemy\EnemyA.h">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClInclude Include="game\GameHelper.h">
+      <Filter>ゲームシステム</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Enemy\EnemyManager.h">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClInclude Include="engine\3d\InstanceObject.h">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Enemy\BaseEnemy.h">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClInclude Include="engine\base\JsonLoder.h">
+      <Filter>エンジンシステム\Base\FileLoder</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Enemy\BossA.h">
-      <Filter>ゲームシステム\object\Enemy</Filter>
+    <ClInclude Include="engine\3d\TerrainModel.h">
+      <Filter>エンジンシステム\Object\3d</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Bullet\BossBulletFireWorke.h">
-      <Filter>ゲームシステム\object\Bullet</Filter>
+    <ClInclude Include="game\object\TerrainBox.h">
+      <Filter>ゲームシステム\object\TerrainBox</Filter>
     </ClInclude>
     <ClInclude Include="game\object\Bullet\BulletManager.h">
       <Filter>ゲームシステム\object\Bullet</Filter>
@@ -721,65 +655,11 @@
     <ClInclude Include="game\object\Bullet\BaseBullet.h">
       <Filter>ゲームシステム\object\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Bullet\BossBulletCircle.h">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="game\scene\Boss1.h">
-      <Filter>ゲームシステム\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Player.h">
-      <Filter>ゲームシステム\object\player</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\base\SafeDelete.h">
-      <Filter>エンジンシステム\Base\Helpar</Filter>
-    </ClInclude>
-    <ClInclude Include="game\GameHelper.h">
-      <Filter>ゲームシステム</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Bullet\BossBulletSnake.h">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Bullet\BossBulletHomingLine.h">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClInclude>
     <ClInclude Include="game\object\Bullet\BossBulletNormal.h">
       <Filter>ゲームシステム\object\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="game\object\Bullet\BossBulletBombHoming.h">
-      <Filter>ゲームシステム\object\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\BaseUi.h">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\BossHpUi.h">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\UiManager.h">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\3d\InstanceObject.h">
-      <Filter>エンジンシステム\Object\3d</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\base\JsonLoder.h">
-      <Filter>エンジンシステム\Base\FileLoder</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Enemy\TutorialEnemy.h">
-      <Filter>ゲームシステム\object\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\PlayerUi.h">
-      <Filter>ゲームシステム\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Beam\BaseBeam.h">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Beam\BeamManager.h">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClInclude>
-    <ClInclude Include="game\object\Beam\LatticeBeam.h">
-      <Filter>ゲームシステム\object\Beam</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\3d\TerrainModel.h">
-      <Filter>エンジンシステム\Object\3d</Filter>
+    <ClInclude Include="game\object\Player.h">
+      <Filter>ゲームシステム\object\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

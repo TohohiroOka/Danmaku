@@ -109,7 +109,7 @@ void SceneManager::Initialize()
 	light = LightGroup::Create();
 	light->SetDirLightActive(0, true);
 	light->SetDirLightColor(0, { 1,1,1 });
-	light->SetDirLightDir(0, { 0.0f, 0.0f, 1.0f, 0 });
+	light->SetDirLightDir(0, { 0.0f, 1.0f, 0.0f, 0 });
 
 	//最初のシーン設定
 	Title* firstScene = new Title();
@@ -369,6 +369,10 @@ void SceneManager::Update()
 		scene->Initialize();
 	}
 
+	//ライト
+	light->Update();
+	scene->SetLight(light.get());
+
 	//シーン更新
 	scene->Update();
 
@@ -385,10 +389,6 @@ void SceneManager::Update()
 	ParticleManager::SetCamera(camera.get());
 	CubeMap::SetCamera(camera.get());
 	HeightMap::SetCamera(camera.get());
-
-	//ライト
-	light->Update();
-	scene->SetLight(light.get());
 
 	// 3Dオブエクトにライトをセット
 	InstanceObject::SetLightGroup(light.get());

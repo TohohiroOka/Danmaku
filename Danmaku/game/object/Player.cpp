@@ -183,18 +183,18 @@ void Player::Move()
 	//移動制限
 	if (position.x < 0.0f) {
 		position.x = 0.0f;
-	} else if (position.x > mapSizeX) {
-		position.x = mapSizeX;
+	} else if (position.x > mapSize) {
+		position.x = mapSize;
 	}
 	if (position.y < 5.0f) {
 		position.y = 5.0f;
-	} else if (position.y > 420) {
+	} else if (position.y > mapSize) {
 		position.y = 420;
 	}
 	if (position.z < 0.0f) {
 		position.z = 0.0f;
-	} else if (position.z > mapSizeZ - 5.0f) {
-		position.z = mapSizeZ - 5.0f;
+	} else if (position.z > mapSize - 5.0f) {
+		position.z = mapSize - 5.0f;
 	}
 
 	//角度の変更
@@ -394,7 +394,7 @@ void Player::Update(const DirectX::XMFLOAT2& _cameraAngle)
 		//当たり判定
 		Collider();
 
-		if ((input->PushKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
+		if ((input->TriggerKey(DIK_SPACE) || Xinput->PushButton(XInputManager::PUD_BUTTON::PAD_RB)) && bulletEnergy > 1)
 		{
 			SetBullet();
 			bulletEnergy--;

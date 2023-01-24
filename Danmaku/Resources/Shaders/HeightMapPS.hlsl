@@ -141,8 +141,8 @@ float4 main(VSOutput input) : SV_TARGET
 
 	//float stepNum1 = 2.5;
 	//float stepNum2 = 3.5;
-	float stepNum1 = 2.0;
-	float stepNum2 = 3.0;
+	float stepNum1 = 620;
+	float stepNum2 = 650;
 	float4 addColor = smoothstep(stepNum1, stepNum2, input.localpos.y) * color1 + (1 - smoothstep(stepNum1, stepNum2, input.localpos.y)) * color2;
 
 	float4 mainColor = shadecolor * addColor;

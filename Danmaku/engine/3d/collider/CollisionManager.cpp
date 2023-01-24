@@ -109,6 +109,7 @@ bool CollisionManager::Raycast(const Ray& _ray, const unsigned short& _attribute
 			distance = tempDistance;
 			inter = tempInter;
 			it_hit = it;
+			break;
 		}
 	}
 

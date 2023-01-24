@@ -2,17 +2,11 @@
 #include "Vector3.h"
 #include "PlayerBullet.h"
 #include "BossBulletNormal.h"
-#include "BossBulletCircle.h"
-#include "BossBulletFireWorke.h"
-#include "BossBulletSnake.h"
-#include "BossBulletHomingLine.h"
-#include "BossBulletBombHoming.h"
 
 class BulletManager
 {
 private:
 
-	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 
@@ -81,47 +75,9 @@ public:
 		playerBullet.emplace_back(PlayerBullet::Create(_pos, _moveVec, _speed, _color));
 	}
 
-	//弾セット
-	static void SetEnemyBullet(const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color);
-
 	//通常弾セット
 	static void SetBossBulletNormal(const XMFLOAT3& _pos, const XMFLOAT3& _moveVec,
 		const float _speed, const XMFLOAT3& _color) {
 		bossBullet.emplace_back(BossBulletNormal::Create(_pos, _moveVec, _speed, _color));
 	}
-
-	//円状の弾セット
-	static void SetBossBulletCircle(const XMFLOAT3& _pos, const XMFLOAT3& _moveVec, const float _speed) {
-		bossBullet.emplace_back(BossBulletCircle::Create(_pos, _moveVec, _speed));
-	}
-
-	//花火弾セット
-	static void SetBossBulletFireWorke(const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color);
-
-	//ホーミング弾セット
-	static void SetBossBulletHoming(const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color);
-
-	//平面状のウネウネ弾セット
-	static void SetBossBulletSnake(const XMFLOAT3& _pos, const XMFLOAT3& _color) {
-		bossBullet.emplace_back(BossBulletSnake::Create(_pos, _color));
-	}
-
-	//ホーミングする線状の弾1セット
-	static void SetBossBulletHomingLine(XMFLOAT3& _pos, const float speed, const XMFLOAT3& _color, const int _progress);
-
-	//ホーミングする線状の弾2セット
-	static void SetBossBulletHomingLine1(XMFLOAT3& _pos, const float speed, const XMFLOAT3& _color);
-
-	//爆発してからホーミングする弾1セット
-	static void SetBossBulletBombHoming(XMFLOAT3& _pos, const XMFLOAT3& _moveVec, const XMFLOAT3& _color) {
-		bossBullet.emplace_back(BossBulletBombHoming::Create(_pos, _moveVec, _color));
-	}
-
-	//爆発してからホーミングする弾2セット
-	static void SetBossBulletBombHoming1(const XMFLOAT3& _pos, const float _speed, const XMFLOAT3& _color);
-
-	//ホーミング上下ずらし
-	static void SetBossBulletHomingShift(XMFLOAT3& shift,const XMFLOAT3& _pos,
-		const float _speed, const XMFLOAT3& _color);
-
 };

@@ -59,7 +59,7 @@ void TerrainModel::Draw(ID3D12GraphicsCommandList* _cmdList)
 bool TerrainModel::FlatlandMap()
 {
 	//平面用テクスチャ
-	std::string flatlandFilename = "heightmap02.bmp";
+	std::string flatlandFilename = "heightmap0.bmp";
 	texture[TEXTURE::HEIGHT_MAP_TEX] = Texture::Create(baseDirectory + flatlandFilename);
 
 	hmInfo.terrainWidth = 256;

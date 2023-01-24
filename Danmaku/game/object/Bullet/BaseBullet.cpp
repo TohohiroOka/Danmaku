@@ -50,7 +50,7 @@ void BaseBullet::Update()
 	if (!isAlive) { return; }
 
 	//Å‘å’l‚É‚¢‚Á‚½‚ç¶‘¶ƒtƒ‰ƒO‚ğÁ‚·
-	if (pos.x < 0.0f || pos.x>mapSizeX || pos.y > 430 || pos.y < -1.0f || pos.z < 0.0f || pos.z>mapSizeZ) {
+	if (pos.x <-1.0f || pos.x>mapSize || pos.y > mapSize || pos.y < -1.0f || pos.z < -1.0f || pos.z>mapSize) {
 		isAlive = false;
 	}
 
