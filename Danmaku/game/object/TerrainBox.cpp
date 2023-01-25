@@ -32,31 +32,31 @@ void TerrainBox::Initialize()
 	//モデル読み込み
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
-	terrainModel[0] = TerrainModel::FlatlandModelCreate(jimen, kabe);
+	for (int i = 0; i < box_surface_num; i++) {
+		terrainModel[0].model[i] = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), jimen, kabe);
+	}
 	std::string mapName="heightmap";
 	//使用する地形の生成
 	for (int i = 1; i < model_num; i++) {
-		terrainModel[i] = TerrainModel::Create(mapName + std::to_string(i) + ".bmp", jimen, kabe);
+		for (int j = 0; j < box_surface_num; j++) {
+			terrainModel[i].model[j] = TerrainModel::Create(mapName + std::to_string(i) + ".bmp",
+				TerrainModel::FACE_DIRECTION(j), jimen, kabe);
+		}
 	}
 
 	//地形ごとの座標
 	std::array<XMFLOAT3, box_surface_num> surfacePos = {
-		XMFLOAT3{0,0,0},{1275,1275,0},{0,0,1275},{0,1275,0},{1275,0,0},{0,1275,0}
-	};
-
-	//地形ごとの角度
-	std::array<XMFLOAT3, box_surface_num> surfaceRota = {
-		XMFLOAT3{0,0,0},{0,0,180},{-90,0,0},{90,0,0},{0,0,90},{0,0,-90}
+		XMFLOAT3{0,0,0},{1275,0,1275},{0,0,0},{0,1275,1275},{1275,0,0},{0,0,1275}
 	};
 
 	//地形ごとの攻撃方向
 	std::array<XMFLOAT3, box_surface_num> surfaceDirection = {
-		XMFLOAT3{0,-1,0},{0,1,0},{0,0,-1},{0,0,1},{-1,0,0},{1,0,0}
+		XMFLOAT3{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{1,0,0},{-1,0,0}
 	};
 
 	//ボックスの面用に平面生成
 	for (int i = 0; i < box_surface_num; i++) {
-		surface[i].model = TerrainModel::FlatlandModelCreate(jimen, kabe);
+		surface[i].model = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), jimen, kabe);
 		surface[i].object = HeightMap::Create(surface[i].model.get());
 		surface[i].state = SURFACE_STATE::STOP;
 		surface[i].attackDirection = surfaceDirection[i];
@@ -70,16 +70,12 @@ void TerrainBox::Initialize()
 		//マップ情報変更
 		surface[i].object->SetPosition(surfacePos[i]);
 		surface[i].object->SetScale({ box_scale,box_scale,box_scale });
-		surface[i].object->SetRotation(surfaceRota[i]);
 
 		// コライダーの追加
-		MeshCollider* collider = new MeshCollider;
-		surface[i].object->SetCollider(collider);
-		collider->ConstructTriangles(surface[i].object->GetHitVertices(), surface[i].object->GetHitIndices());
-		collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+		SetCollider(surface[i]);
 	}
 
-	SetChangeTerrain();
+	//SetChangeTerrain();
 
 	//タイマー
 	timer = 0;
@@ -139,7 +135,6 @@ void TerrainBox::SetCollider(TERRAIN_INFO& _surface)
 	// コライダーの追加
 	MeshCollider* collider = new MeshCollider;
 	_surface.object->SetCollider(collider);
-	//collider->ConstructTriangles(object->GetModel());
 	collider->ConstructTriangles(_surface.object->GetHitVertices(), _surface.object->GetHitIndices());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 }
@@ -153,11 +148,12 @@ void TerrainBox::SetChangeTerrain()
 	//防御面
 	int defense = -1;
 	do {
-		defense = Randomint(model_num - 1) + 1;
-	} while (surface[changeTerrain].reverseSurface == defense);
+		defense = Randomint(model_num - 2) + 1;
+	} while (surface[changeTerrain].reverseSurface == defense && changeTerrain != defense);
 
 	int range= MODEL_NUMBER::DEFENSE - MODEL_NUMBER::ATTACK;
-	surface[defense].changeModelNum[1] = Randomint(range - 1) + MODEL_NUMBER::ATTACK - 1;
+	surface[defense].changeModelNum[1] = Randomint(range - 1);
+	surface[defense].changeModelNum[1] += MODEL_NUMBER::ATTACK - 1;
 	surface[defense].state = SURFACE_STATE::CHANGE_DEFENSE;
 }
 
@@ -167,44 +163,44 @@ void TerrainBox::ChangeTerrain()
 	const float maxTime = 100;
 
 	//地形変更
-	for (auto& itr : surface)
+	for (int i = 0; i < box_surface_num; i++)
 	{
 		//チェンジフラグがtrue
-		if (itr.state != SURFACE_STATE::CHANGE_ATTACK &&
-			itr.state != SURFACE_STATE::CHANGE_DEFENSE) {continue;}
+		if (surface[i].state != SURFACE_STATE::CHANGE_ATTACK &&
+			surface[i].state != SURFACE_STATE::CHANGE_DEFENSE) {continue;}
 
 		//地形変化
-		itr.object->SetChangeDrawModel(terrainModel[itr.changeModelNum[0]].get(),
-			terrainModel[itr.changeModelNum[1]].get(), float(timer) / maxTime);
+		surface[i].object->SetChangeDrawModel(terrainModel[surface[i].changeModelNum[0]].model[i].get(),
+			terrainModel[surface[i].changeModelNum[1]].model[i].get(), float(timer) / maxTime);
 
 		//衝突判定変化
 		if (timer % 10 == 0) {
 			//判定用頂点変換
-			itr.object->SetChangeHitModel(terrainModel[itr.changeModelNum[0]].get(),
-				terrainModel[itr.changeModelNum[1]].get(), float(timer) / maxTime);
+			surface[i].object->SetChangeHitModel(terrainModel[surface[i].changeModelNum[0]].model[i].get(),
+				terrainModel[surface[i].changeModelNum[1]].model[i].get(), float(timer) / maxTime);
 
-			SetCollider(itr);
+			SetCollider(surface[i]);
 		}
 
 		//変化し終えたら
 		if (timer < maxTime) { continue; }
 
 		//判定用頂点変換
-		itr.object->SetChangeHitModel(terrainModel[itr.changeModelNum[0]].get(),
-			terrainModel[itr.changeModelNum[1]].get(), 1.0f);
+		surface[i].object->SetChangeHitModel(terrainModel[surface[i].changeModelNum[0]].model[i].get(),
+			terrainModel[surface[i].changeModelNum[1]].model[i].get(), float(timer) / maxTime);
 
-		SetCollider(itr);
+		SetCollider(surface[i]);
 
 		//状態を変更
 		//攻撃用
-		if(itr.state == SURFACE_STATE::CHANGE_ATTACK){
-			itr.state = SURFACE_STATE::ATTACK;
+		if(surface[i].state == SURFACE_STATE::CHANGE_ATTACK){
+			surface[i].state = SURFACE_STATE::ATTACK;
 		}
 		//防御用
-		else if (itr.state == SURFACE_STATE::CHANGE_DEFENSE) {
-			itr.state = SURFACE_STATE::DEFENSE;
+		else if (surface[i].state == SURFACE_STATE::CHANGE_DEFENSE) {
+			surface[i].state = SURFACE_STATE::DEFENSE;
 		}
-		itr.changeModelNum[0] = itr.changeModelNum[1];
+		surface[i].changeModelNum[0] = surface[i].changeModelNum[1];
 	}
 
 	//変化し終えたら
@@ -260,8 +256,8 @@ void TerrainBox::Attack()
 		const int maxBullet = 50;
 		for (int i = 0; i < maxBullet; i++) {
 
-			BulletManager::SetBossBulletNormal(initPos, itr.attackDirection,
-				10.0f, { 0.8f,0.2f,0.8f });
+			//BulletManager::SetBossBulletNormal(initPos, itr.attackDirection,
+			//	10.0f, { 0.8f,0.2f,0.8f });
 
 			//縦or横長に弾が伸びて撃たれる
 			if (initPos.x != 0) {

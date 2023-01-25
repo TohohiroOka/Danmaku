@@ -12,6 +12,23 @@ private:// エイリアス
 
 private:
 
+	//フィールドを覆うキューブ数
+	static const int cube_num = 2;
+	//保持モデル数
+	static const int model_num = 6;
+	//地形の数
+	static const int box_surface_num = 6;
+	//地形の大きさ
+	static const float box_scale;
+
+	enum MODEL_NUMBER {
+		FLAT = 0,//平面番号
+		ATTACK = 3,//この番号まで攻撃用地形
+		DEFENSE = model_num,//この番号まで防御地形
+	};
+
+private:
+
 	//周りの箱
 	struct CUBE_INFO {
 		//モデル
@@ -27,6 +44,11 @@ private:
 		CHANGE_DEFENSE,
 		ATTACK,
 		DEFENSE,
+	};
+
+	//地形モデル
+	struct TERRAIN_MODEL {
+		std::array<std::unique_ptr<TerrainModel>, box_surface_num> model;
 	};
 
 	//地形情報
@@ -107,29 +129,12 @@ private:
 
 private:
 
-	//フィールドを覆うキューブ数
-	static const int cube_num = 2;
-	//保持モデル数
-	static const int model_num = 6;
-	//地形の数
-	static const int box_surface_num = 6;
-	//地形の大きさ
-	static const float box_scale;
-
-	enum MODEL_NUMBER {
-		FLAT = 0,//平面番号
-		ATTACK = 3,//この番号まで攻撃用地形
-		DEFENSE = model_num,//この番号まで防御地形
-	};
-
-private:
-
 	//タイマー
 	int timer;
 	//フィールドを覆うキューブ
 	std::array<CUBE_INFO, cube_num> cube;
 	//保持モデル
-	std::array<std::unique_ptr<TerrainModel>, model_num> terrainModel;
+	std::array<TERRAIN_MODEL, model_num> terrainModel;
 	//地形描画
 	std::array<TERRAIN_INFO, box_surface_num> surface;
 	//現在の地形の状態

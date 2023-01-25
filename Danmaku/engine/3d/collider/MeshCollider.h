@@ -21,6 +21,8 @@ public:
 		shapeType = COLLISIONSHAPE_MESH;
 	}
 
+private:
+
 	/// <summary>
 	/// 八分木の最大最小の保存
 	/// </summary>
@@ -34,11 +36,18 @@ public:
 	void MinMax(const std::vector<Mesh::VERTEX>& _vertices);
 
 	/// <summary>
+	/// 八分木の区切り範囲
+	/// </summary>
+	void SetOctreeRange();
+
+	/// <summary>
 	/// 八分木の現在地セット
 	/// </summary>
 	/// <param name="_pos">座標</param>
 	/// <returns>現在番号</returns>
-	DirectX::XMINT2 OctreeSet(const DirectX::XMFLOAT3& _pos);
+	DirectX::XMINT3 OctreeSet(const DirectX::XMFLOAT3& _pos);
+
+public:
 
 	/// <summary>
 	/// 三角形の配列を構築する
@@ -92,14 +101,14 @@ private:
 
 	//八分木分割個数
 	static const int octreeSplit = 8;
-	//判定用メッシュの情報
-	std::array<std::array<std::vector<Triangle>, octreeSplit>, octreeSplit> triangle;
+	//八分木の分割範囲
+	DirectX::XMFLOAT3 octreeRange[9];
 	//八分木の最小値
 	DirectX::XMVECTOR min = {};
 	//八分木の最大値
 	DirectX::XMVECTOR max = {};
-	//八分木の分割範囲
-	DirectX::XMFLOAT3 octtreeRange[9] = {};
+	//判定用メッシュの情報
+	std::array<std::array<std::array<std::vector<Triangle>, octreeSplit>, octreeSplit>, octreeSplit> triangle;
 	// ワールド行列
 	DirectX::XMMATRIX matWorld;
 	// ワールド行列の逆行列

@@ -16,6 +16,16 @@ private:
 		XMFLOAT3 e_pos = {};
 	};
 
+	enum class SCENE {
+		SET,//準備
+		SET_FROM_PLAY,//準備からゲームプレイまでの移行
+		PLAY,//ゲームプレイ
+		PLAY_FROM_MAP_CHANGE,//プレイからマップの変更
+		MAP_CHANGE,//マップの変更
+		MAP_CHANGE_FROM_PLAY,//マップの変更からプレイ
+		HOME,//ホーム画面
+	};
+
 public:
 
 	/// <summary>
@@ -78,6 +88,8 @@ private:
 	//lightの位置角度
 	float lightAngle;
 
+	//シーン
+	SCENE scene;
 
 	//地形
 	std::unique_ptr<TerrainBox> terrain;

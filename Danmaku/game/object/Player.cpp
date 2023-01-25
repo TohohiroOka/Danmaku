@@ -73,7 +73,7 @@ void Player::Move()
 	float radiusUD = XMConvertToRadians(cameraAngle.x);
 
 	//最大速度
-	const float maxSpeed = 2.0f;
+	const float maxSpeed = 5.0f;
 
 	//二つ以上のキーが押されたとき一定以上の速度にならないように調整するためのフラグ
 	std::array<bool, 4> isSpeed = { false,false, false, false };
@@ -181,21 +181,21 @@ void Player::Move()
 	position.z += moveVec[2].z;
 
 	//移動制限
-	if (position.x < 0.0f) {
-		position.x = 0.0f;
-	} else if (position.x > mapSize) {
-		position.x = mapSize;
-	}
-	if (position.y < 5.0f) {
-		position.y = 5.0f;
-	} else if (position.y > mapSize) {
-		position.y = 420;
-	}
-	if (position.z < 0.0f) {
-		position.z = 0.0f;
-	} else if (position.z > mapSize - 5.0f) {
-		position.z = mapSize - 5.0f;
-	}
+	//if (position.x < 0.0f) {
+	//	position.x = 0.0f;
+	//} else if (position.x > mapSize) {
+	//	position.x = mapSize;
+	//}
+	//if (position.y < 5.0f) {
+	//	position.y = 5.0f;
+	//} else if (position.y > mapSize) {
+	//	position.y = 420;
+	//}
+	//if (position.z < 0.0f) {
+	//	position.z = 0.0f;
+	//} else if (position.z > mapSize - 5.0f) {
+	//	position.z = mapSize - 5.0f;
+	//}
 
 	//角度の変更
 	if (isSpeed[0] == true != isSpeed[1] == true)
