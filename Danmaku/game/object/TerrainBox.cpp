@@ -29,34 +29,34 @@ std::unique_ptr<TerrainBox> TerrainBox::Create()
 
 void TerrainBox::Initialize()
 {
+	//地形ごとの座標
+	const std::array<XMFLOAT3, box_surface_num> surfacePos = {
+		XMFLOAT3{0,0,0},{1275,0,1275},{0,0,0},{0,1275,1275},{1275,0,0},{0,0,1275}
+	};
+
+	//地形ごとの攻撃方向
+	const std::array<XMFLOAT3, box_surface_num> surfaceDirection = {
+		XMFLOAT3{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{1,0,0},{-1,0,0}
+	};
+
 	//モデル読み込み
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
 	for (int i = 0; i < box_surface_num; i++) {
-		terrainModel[0].model[i] = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), jimen, kabe);
+		terrainModel[0].model[i] = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), surfacePos[i], box_scale, jimen, kabe);
 	}
 	std::string mapName="heightmap";
 	//使用する地形の生成
 	for (int i = 1; i < model_num; i++) {
 		for (int j = 0; j < box_surface_num; j++) {
 			terrainModel[i].model[j] = TerrainModel::Create(mapName + std::to_string(i) + ".bmp",
-				TerrainModel::FACE_DIRECTION(j), jimen, kabe);
+				TerrainModel::FACE_DIRECTION(j), surfacePos[j], box_scale, jimen, kabe);
 		}
 	}
 
-	//地形ごとの座標
-	std::array<XMFLOAT3, box_surface_num> surfacePos = {
-		XMFLOAT3{0,0,0},{1275,0,1275},{0,0,0},{0,1275,1275},{1275,0,0},{0,0,1275}
-	};
-
-	//地形ごとの攻撃方向
-	std::array<XMFLOAT3, box_surface_num> surfaceDirection = {
-		XMFLOAT3{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{1,0,0},{-1,0,0}
-	};
-
 	//ボックスの面用に平面生成
 	for (int i = 0; i < box_surface_num; i++) {
-		surface[i].model = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), jimen, kabe);
+		surface[i].model = TerrainModel::FlatlandModelCreate(TerrainModel::FACE_DIRECTION(i), surfacePos[i], box_scale, jimen, kabe);
 		surface[i].object = HeightMap::Create(surface[i].model.get());
 		surface[i].state = SURFACE_STATE::STOP;
 		surface[i].attackDirection = surfaceDirection[i];
@@ -67,15 +67,14 @@ void TerrainBox::Initialize()
 		} else {
 			surface[i].reverseSurface = i - 1;
 		}
-		//マップ情報変更
-		surface[i].object->SetPosition(surfacePos[i]);
-		surface[i].object->SetScale({ box_scale,box_scale,box_scale });
+
+		surface[i].object->SetScale({ box_scale ,box_scale ,box_scale});
 
 		// コライダーの追加
 		SetCollider(surface[i]);
 	}
 
-	//SetChangeTerrain();
+	SetChangeTerrain();
 
 	//タイマー
 	timer = 0;

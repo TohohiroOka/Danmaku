@@ -397,6 +397,7 @@ bool MeshCollider::CheckCollisionRay(const Ray& _ray, float* _distance, DirectX:
 	Ray localRay;
 	localRay.start = XMVector3Transform(_ray.start, invMatWorld);
 	localRay.dir = XMVector3TransformNormal(_ray.dir, invMatWorld);
+	localRay.dir=XMVector3Normalize(localRay.dir);
 
 	XMVECTOR worldmax = XMVector3Transform(max, matWorld);
 	XMVECTOR worldmin = XMVector3Transform(min, matWorld);

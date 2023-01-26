@@ -80,10 +80,10 @@ void Boss1::Update()
 			float lightRadius = DirectX::XMConvertToRadians(lightAngle);
 			light->SetDirLightDir(0, { sinf(lightRadius), cosf(lightRadius), 1.0f, 0 });
 
-			DebugText* text = DebugText::GetInstance();
-			std::string strlightAngle = std::to_string(lightAngle);
-			text->Print("lightAngle : " + strlightAngle, 100, 100);
-			text = nullptr;
+			//DebugText* text = DebugText::GetInstance();
+			//std::string strlightAngle = std::to_string(lightAngle);
+			//text->Print("lightAngle : " + strlightAngle, 100, 100);
+			//text = nullptr;
 		}
 
 		player->Update(cameraAngle);
@@ -154,11 +154,11 @@ void Boss1::Draw()
 
 	InterfaceObject3d::SetCmdList(cmdList);
 
-	//HeightMap::PreDraw();
-	//terrain->Draw();
+	HeightMap::PreDraw();
+	terrain->Draw();
 
-	PrimitiveObject3D::PreDraw();
-	terrain->HitDraw();
+	//PrimitiveObject3D::PreDraw();
+	//terrain->HitDraw();
 
 	Object3d::PreDraw();
 	player->Draw();
